@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "819593897704",
+    "project_id": "aapka-aadhaar-2",
+    "storage_bucket": "aapka-aadhaar-2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819593897704:android:4ffc9ba1e9273ea7ed8b5d",
+        "android_client_info": {
+          "package_name": "com.example.aapka_aadhaar_operator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819593897704-dna4lcqugvrd8nh5a0ag3kfloehg25ki.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aapka_aadhaar_operator",
+            "certificate_hash": "c139a268dfd75c4b14d7dc6f04b6ecd84c1c57bf"
+          }
+        },
+        {
+          "client_id": "819593897704-asgqvt1rfjafcdcqcpdpdie9ms7olfnc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkK07H_RBRxPdHLGFf80GzawgrU5fgjBI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819593897704-asgqvt1rfjafcdcqcpdpdie9ms7olfnc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
