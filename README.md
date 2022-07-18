@@ -1,6 +1,6 @@
 # mobile-operator-booking-platform
 
-SIH 2022 Problem Statement - PK836 | Team CODE APOCALYPSE
+SIH2022 Problem Statement - PK836 | Team CODE APOCALYPSE
 
 ## Getting Started
 
