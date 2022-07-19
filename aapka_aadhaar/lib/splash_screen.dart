@@ -1,4 +1,4 @@
-import 'package:aapka_aadhaar/login_page.dart';
+import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,11 +15,10 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     navigateToLogin();
-    
   }
 
   navigateToLogin() async {
-    await Future.delayed(Duration(milliseconds:2800), () {});
+    await Future.delayed(Duration(milliseconds: 2800), () {});
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -37,20 +36,19 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Color(0xfff23f44),
       body: TweenAnimationBuilder(
-        tween : Tween<double>(begin: 1 , end:2),
+        tween: Tween<double>(begin: 1, end: 2),
         duration: Duration(milliseconds: 800),
-        builder: (context, double scale , child){
-          return Transform.scale(scale: scale , child: child);
+        builder: (context, double scale, child) {
+          return Transform.scale(scale: scale, child: child);
         },
         child: Center(
           child: Container(
               child: Image.asset(
-            'assets/Aapka Aadhaar Final Logo.png',
-             width: width * 0.38,
+            'assets/user_app_logo.png',
+            width: width * 0.38,
           )),
         ),
       ),
-      
     );
   }
 }
