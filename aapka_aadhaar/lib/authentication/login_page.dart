@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar/authentication/otp.dart';
+import 'package:aapka_aadhaar/authentication/register_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -9,6 +10,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  void navigateToRegister() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegisterPage(),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +86,12 @@ class _LoginPageState extends State<LoginPage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
+                      cursorColor: Colors.black,
                       decoration: InputDecoration(
+                        label: Text('Mobile'),
+                        labelStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                        ),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(10)),
@@ -152,15 +167,18 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        Text(
-                          'Register now',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFF23F44),
+                        GestureDetector(
+                          onTap: navigateToRegister,
+                          child: Text(
+                            'Register now',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFF23F44),
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
