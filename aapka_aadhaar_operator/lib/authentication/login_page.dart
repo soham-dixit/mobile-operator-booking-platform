@@ -50,7 +50,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                   height: 10,
                 ),
                 const Text(
-                  "Enter your Operator ID and Passsword",
+                  "Enter your Operator ID and Password",
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 14,
@@ -116,16 +116,16 @@ class _OperatorLoginState extends State<OperatorLogin> {
                             //   size: 32,
                             // ),
                           ),
-                          // validator: (value) {
-                          //   try {
-                          //     if (value!.isEmpty ||
-                          //         !RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
-                          //       return 'Please Enter a valid 10 digit Mobile Number';
-                          //     } else {
-                          //       return null;
-                          //     }
-                          //   } catch (e) {}
-                          // },
+                          validator: (value) {
+                            try {
+                              if (value!.isEmpty ||
+                                  !RegExp(r'^[0-9]*$').hasMatch(value)) {
+                                return 'Only digits are allowed';
+                              } else {
+                                return null;
+                              }
+                            } catch (e) {}
+                          },
                         ),
                         const SizedBox(
                           height: 15,
@@ -222,7 +222,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                             child: const Padding(
                               padding: EdgeInsets.all(14.0),
                               child: Text(
-                                'Send',
+                                'Login',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Poppins',
