@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.aapka_aadhaar_operator">
    <application
-        android:label="aapka_aadhaar_operator"
+        android:label="Aapka Aadhaar Operator"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -33,4 +33,6 @@
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDkK07H_RBRxPdHLGFf80GzawgrU5fgjBI"/>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
