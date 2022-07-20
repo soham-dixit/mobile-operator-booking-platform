@@ -10,7 +10,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   void navigateToRegister() {
     Navigator.pushReplacement(
       context,
@@ -19,8 +18,10 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Color(0xFFFBF9F6),
@@ -77,6 +78,8 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
+                child: Form(
+                  key: formKey,
                   child: Column(
                     children: [
                       TextFormField(
@@ -93,6 +96,12 @@ class _LoginPageState extends State<LoginPage> {
                           labelStyle: TextStyle(
                             color: Colors.grey.shade700,
                           ),
+                          errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10)),
@@ -116,6 +125,16 @@ class _LoginPageState extends State<LoginPage> {
                           //   size: 32,
                           // ),
                         ),
+                        validator: (value) {
+                          try {
+                            if (value!.isEmpty ||
+                                !RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
+                              return 'Please Enter a valid 10 digit Mobile Number';
+                            } else {
+                              return null;
+                            }
+                          } catch (e) {}
+                        },
                       ),
                       SizedBox(
                         height: 22,
@@ -124,9 +143,11 @@ class _LoginPageState extends State<LoginPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => Otp()),
-                            );
+                            if(formKey.currentState!.validate()) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => Otp()),
+                              );
+                            }
                           },
                           style: ButtonStyle(
                             foregroundColor:
@@ -185,6 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
+                ),
                 ),
               ],
             ),
