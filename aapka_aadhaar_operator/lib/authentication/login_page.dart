@@ -50,7 +50,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                   height: 10,
                 ),
                 const Text(
-                  "Enter your Operator ID and Password",
+                  "Enter your Enrollment ID and Password",
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 14,
@@ -83,7 +83,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                           ),
                           cursorColor: Colors.black,
                           decoration: InputDecoration(
-                            label: const Text('Operator ID'),
+                            label: const Text('Enrollment ID'),
                             labelStyle: TextStyle(
                               color: Colors.grey.shade700,
                             ),
@@ -94,10 +94,12 @@ class _OperatorLoginState extends State<OperatorLogin> {
                                 borderSide: const BorderSide(color: Colors.red),
                                 borderRadius: BorderRadius.circular(10)),
                             enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.black12),
+                                borderSide:
+                                    const BorderSide(color: Colors.black12),
                                 borderRadius: BorderRadius.circular(10)),
                             focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.black12),
+                                borderSide:
+                                    const BorderSide(color: Colors.black12),
                                 borderRadius: BorderRadius.circular(10)),
                             // prefix: Padding(
                             //   padding: EdgeInsets.symmetric(horizontal: 8),
@@ -119,8 +121,8 @@ class _OperatorLoginState extends State<OperatorLogin> {
                           validator: (value) {
                             try {
                               if (value!.isEmpty ||
-                                  !RegExp(r'^[0-9]*$').hasMatch(value)) {
-                                return 'Only digits are allowed';
+                                  !RegExp(r'^\d{8}$').hasMatch(value)) {
+                                return 'Only 8 digits are allowed';
                               } else {
                                 return null;
                               }
@@ -151,10 +153,12 @@ class _OperatorLoginState extends State<OperatorLogin> {
                                 borderSide: const BorderSide(color: Colors.red),
                                 borderRadius: BorderRadius.circular(10)),
                             enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.black12),
+                                borderSide:
+                                    const BorderSide(color: Colors.black12),
                                 borderRadius: BorderRadius.circular(10)),
                             focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.black12),
+                                borderSide:
+                                    const BorderSide(color: Colors.black12),
                                 borderRadius: BorderRadius.circular(10)),
                             // prefix: Padding(
                             //   padding: EdgeInsets.symmetric(horizontal: 8),
@@ -183,16 +187,15 @@ class _OperatorLoginState extends State<OperatorLogin> {
                               },
                             ),
                           ),
-                          // validator: (value) {
-                          //   try {
-                          //     if (value!.isEmpty ||
-                          //         !RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
-                          //       return 'Please Enter a valid 10 digit Mobile Number';
-                          //     } else {
-                          //       return null;
-                          //     }
-                          //   } catch (e) {}
-                          // },
+                          validator: (value) {
+                            try {
+                              if (value!.isEmpty) {
+                                return 'Please enter your password';
+                              } else {
+                                return null;
+                              }
+                            } catch (e) {}
+                          },
                         ),
                         const SizedBox(
                           height: 22,
@@ -210,8 +213,8 @@ class _OperatorLoginState extends State<OperatorLogin> {
                             style: ButtonStyle(
                               foregroundColor: MaterialStateProperty.all<Color>(
                                   Colors.white),
-                              backgroundColor:
-                                  MaterialStateProperty.all(const Color(0xFFF23F44)),
+                              backgroundColor: MaterialStateProperty.all(
+                                  const Color(0xFFF23F44)),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
