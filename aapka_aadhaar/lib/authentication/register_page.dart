@@ -1,6 +1,9 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:aapka_aadhaar/authentication/otp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -19,11 +22,94 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
+  bool already_exists = false;
+
+  verifyPhone() async {
+    PhoneVerificationCompleted verficationCompleted =
+        (PhoneAuthCredential phoneAuthCredential) async {
+      print("Verification completed");
+    };
+    PhoneVerificationFailed verificationFailed =
+        (FirebaseAuthException exception) {
+      print("Verification failed");
+    };
+    PhoneCodeSent codeSent =
+        (String verificationId, int? forceResendingToken) async {
+      print("Code has been sent");
+      final pref = await SharedPreferences.getInstance();
+      pref.setString('verification_id', verificationId);
+      // setState(() {
+      //   _verificationCode = verificationId;
+      // });
+    };
+    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {
+      print("Time out");
+    };
+
+    try {
+      print('+91 ${_phoneController.text}');
+      await _auth.verifyPhoneNumber(
+          phoneNumber: '+91 ${_phoneController.text}',
+          verificationCompleted: verficationCompleted,
+          verificationFailed: verificationFailed,
+          codeSent: codeSent,
+          codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+    } catch (e) {
+      print('Catch block');
+    }
+  }
 
   final formKey = GlobalKey<FormState>();
+
+  // saveUserInfo() async {
+  //   showDialog(
+  //       context: context,
+  //       barrierDismissible: false,
+  //       builder: (BuildContext c) {
+  //         return ProgressDialog(
+  //           message: "Processing, please wait...",
+  //         );
+  //       });
+  // }
+
+  List inputs = [];
+  check_if_already_exists() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    if (databaseData['users'] != null) {
+      dynamic keys_list = databaseData['users'].keys.toList();
+      for (int i = 0; i < keys_list.length; i++) {
+        if (databaseData['users'][keys_list[i]]
+                .containsValue(_phoneController.text) ||
+            databaseData['users'][keys_list[i]]
+                .containsValue(_emailController.text)) {
+          already_exists = true;
+        }
+      }
+    }
+
+    final snackBar = SnackBar(
+      content: const Text(
+        'Email or mobile already exists!',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+        ),
+      ),
+    );
+
+    // Find the ScaffoldMessenger in the widget tree
+    // and use it to show a SnackBar.
+    already_exists
+        ? ScaffoldMessenger.of(context).showSnackBar(snackBar)
+        : null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +242,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         validator: (value) {
                           try {
                             if (value!.isEmpty ||
-                                !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$').hasMatch(value)) {
+                                !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
+                                    .hasMatch(value)) {
                               return 'Please Enter a valid Email ID';
                             } else {
                               return null;
@@ -211,7 +298,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           fontFamily: 'Poppins',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          
                         ),
                         validator: (value) {
                           try {
@@ -235,7 +321,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           labelStyle: TextStyle(
                             color: Colors.grey.shade700,
                           ),
-                          
+
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10)),
@@ -250,7 +336,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 fontFamily: 'Poppins',
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                
                               ),
                             ),
                           ),
@@ -268,10 +353,25 @@ class _RegisterPageState extends State<RegisterPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            if(formKey.currentState!.validate()) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => Otp()),
-                              );
+                            if (formKey.currentState!.validate()) {
+                              inputs = [
+                                _nameController.text,
+                                _emailController.text,
+                                _phoneController.text,
+                              ];
+                              check_if_already_exists().whenComplete(() {
+                                already_exists
+                                    ? null
+                                    : verifyPhone().whenComplete(() {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) => Otp(),
+                                              settings: RouteSettings(
+                                                arguments: inputs,
+                                              )),
+                                        );
+                                      });
+                              });
                             }
                           },
                           style: ButtonStyle(
@@ -279,8 +379,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 MaterialStateProperty.all<Color>(Colors.white),
                             backgroundColor:
                                 MaterialStateProperty.all(Color(0xFFF23F44)),
-                            shape:
-                                MaterialStateProperty.all<RoundedRectangleBorder>(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24.0),
                               ),

@@ -1,5 +1,9 @@
+import 'package:aapka_aadhaar/authentication/register_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Otp extends StatefulWidget {
   const Otp({Key? key}) : super(key: key);
@@ -9,12 +13,72 @@ class Otp extends StatefulWidget {
 }
 
 class _OtpState extends State<Otp> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String verification_id = '';
+  String _smsCode = '';
+  bool incorrect_otp = false;
+
+  saveUserInfo(args) async {
+    String fullname = args[0];
+    String email = args[1];
+    String phoneNumber = args[2];
+
+    // showDialog(
+    //     context: context,
+    //     barrierDismissible: false,
+    //     builder: (BuildContext c) {
+    //       return ProgressDialog(
+    //         message: "Processing, please wait...",
+    //       );
+    //     });
+    final databaseReference = FirebaseDatabase.instance.ref();
+    //push data to database
+    databaseReference.child("users").push().set(
+        {"fullname": fullname, "email": email, "phoneNumber": phoneNumber});
+
+    // print('Contains --- ${databaseData['users']['keys_list[0]']}');
+
+    //push data to database
+  }
+
+  verifyOtp(String verificationCode1, String smsCode) async {
+    try {
+      AuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: verificationCode1, smsCode: smsCode);
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+    } catch (exception) {
+      incorrect_otp = true;
+      print(exception);
+    }
+  }
+
+  show_incorrect_otp() {
+    incorrect_otp = false;
+
+    final snackBar = SnackBar(
+      content: const Text(
+        'Incorrect OTP',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+
+    // Find the ScaffoldMessenger in the widget tree
+    // and use it to show a SnackBar.
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final List args = ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Color(0xFFFBF9F6),
-      body: SingleChildScrollView (
+      body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
@@ -75,7 +139,7 @@ class _OtpState extends State<Otp> {
                 Column(
                   children: [
                     OtpTextField(
-                      autoFocus: true,                    
+                      autoFocus: true,
                       numberOfFields: 6,
                       focusedBorderColor: Color(0xFFF23F44),
                       //set to true to show as box or false to show as dash
@@ -85,7 +149,14 @@ class _OtpState extends State<Otp> {
                         //handle validation or checks here
                       },
                       //runs when every textfield is filled
-                      onSubmit: (String code) async {}, // end onSubmit
+                      onSubmit: (String code) async {
+                        final pref = await SharedPreferences.getInstance();
+                        verification_id =
+                            pref.getString('verification_id').toString();
+                        _smsCode = code;
+                        print('veri $verification_id');
+                        print('sms $_smsCode');
+                      }, // end onSubmit
                     ),
                     SizedBox(
                       height: 22,
@@ -93,7 +164,13 @@ class _OtpState extends State<Otp> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          verifyOtp(verification_id, _smsCode).whenComplete(() {
+                            incorrect_otp
+                                ? show_incorrect_otp()
+                                : saveUserInfo(args);
+                          });
+                        },
                         style: ButtonStyle(
                           foregroundColor:
                               MaterialStateProperty.all<Color>(Colors.white),
