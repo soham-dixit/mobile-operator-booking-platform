@@ -31,11 +31,14 @@ class _OtpState extends State<Otp> {
     //         message: "Processing, please wait...",
     //       );
     //     });
-
     final databaseReference = FirebaseDatabase.instance.ref();
     //push data to database
     databaseReference.child("users").push().set(
         {"fullname": fullname, "email": email, "phoneNumber": phoneNumber});
+
+    // print('Contains --- ${databaseData['users']['keys_list[0]']}');
+
+    //push data to database
   }
 
   verifyOtp(String verificationCode1, String smsCode) async {
@@ -52,7 +55,7 @@ class _OtpState extends State<Otp> {
 
   show_incorrect_otp() {
     incorrect_otp = false;
-    
+
     final snackBar = SnackBar(
       content: const Text(
         'Incorrect OTP',
@@ -163,7 +166,9 @@ class _OtpState extends State<Otp> {
                       child: ElevatedButton(
                         onPressed: () {
                           verifyOtp(verification_id, _smsCode).whenComplete(() {
-                            incorrect_otp ? show_incorrect_otp() : saveUserInfo(args);
+                            incorrect_otp
+                                ? show_incorrect_otp()
+                                : saveUserInfo(args);
                           });
                         },
                         style: ButtonStyle(

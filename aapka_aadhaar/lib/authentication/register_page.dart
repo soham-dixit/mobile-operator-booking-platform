@@ -1,8 +1,10 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:aapka_aadhaar/authentication/otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
@@ -20,11 +22,11 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
+  bool already_exists = false;
 
   verifyPhone() async {
     PhoneVerificationCompleted verficationCompleted =
@@ -35,10 +37,11 @@ class _RegisterPageState extends State<RegisterPage> {
         (FirebaseAuthException exception) {
       print("Verification failed");
     };
-    PhoneCodeSent codeSent = (String verificationId, int? forceResendingToken) async{
+    PhoneCodeSent codeSent =
+        (String verificationId, int? forceResendingToken) async {
       print("Code has been sent");
       final pref = await SharedPreferences.getInstance();
-      pref.setString('verification_id' , verificationId);
+      pref.setString('verification_id', verificationId);
       // setState(() {
       //   _verificationCode = verificationId;
       // });
@@ -74,7 +77,39 @@ class _RegisterPageState extends State<RegisterPage> {
   //       });
   // }
 
-  List inputs = ['hello'];
+  List inputs = [];
+  check_if_already_exists() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    if (databaseData['users'] != null) {
+      dynamic keys_list = databaseData['users'].keys.toList();
+      for (int i = 0; i < keys_list.length; i++) {
+        if (databaseData['users'][keys_list[i]]
+                .containsValue(_phoneController.text) ||
+            databaseData['users'][keys_list[i]]
+                .containsValue(_emailController.text)) {
+          already_exists = true;
+        }
+      }
+    }
+
+    final snackBar = SnackBar(
+      content: const Text(
+        'Email or mobile already exists!',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+        ),
+      ),
+    );
+
+    // Find the ScaffoldMessenger in the widget tree
+    // and use it to show a SnackBar.
+    already_exists
+        ? ScaffoldMessenger.of(context).showSnackBar(snackBar)
+        : null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -324,14 +359,18 @@ class _RegisterPageState extends State<RegisterPage> {
                                 _emailController.text,
                                 _phoneController.text,
                               ];
-                              verifyPhone().whenComplete(() {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) => Otp(),
-                                      settings: RouteSettings(
-                                        arguments: inputs,
-                                      )),
-                                );
+                              check_if_already_exists().whenComplete(() {
+                                already_exists
+                                    ? null
+                                    : verifyPhone().whenComplete(() {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) => Otp(),
+                                              settings: RouteSettings(
+                                                arguments: inputs,
+                                              )),
+                                        );
+                                      });
                               });
                             }
                           },
