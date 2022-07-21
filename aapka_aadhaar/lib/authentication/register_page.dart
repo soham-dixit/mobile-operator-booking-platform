@@ -1,7 +1,8 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:aapka_aadhaar/authentication/otp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
@@ -19,9 +20,46 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
+
+  verifyPhone() async {
+    PhoneVerificationCompleted verficationCompleted =
+        (PhoneAuthCredential phoneAuthCredential) async {
+      print("Verification completed");
+    };
+    PhoneVerificationFailed verificationFailed =
+        (FirebaseAuthException exception) {
+      print("Verification failed");
+    };
+    PhoneCodeSent codeSent = (String verificationId, int? forceResendingToken) async{
+      print("Code has been sent");
+      final pref = await SharedPreferences.getInstance();
+      pref.setString('verification_id' , verificationId);
+      // setState(() {
+      //   _verificationCode = verificationId;
+      // });
+    };
+    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {
+      print("Time out");
+    };
+
+    try {
+      print('+91 ${_phoneController.text}');
+      await _auth.verifyPhoneNumber(
+          phoneNumber: '+91 ${_phoneController.text}',
+          verificationCompleted: verficationCompleted,
+          verificationFailed: verificationFailed,
+          codeSent: codeSent,
+          codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+    } catch (e) {
+      print('Catch block');
+    }
+  }
 
   final formKey = GlobalKey<FormState>();
 
@@ -36,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
   //       });
   // }
 
-  List inputs = [];
+  List inputs = ['hello'];
 
   @override
   Widget build(BuildContext context) {
@@ -284,15 +322,17 @@ class _RegisterPageState extends State<RegisterPage> {
                               inputs = [
                                 _nameController.text,
                                 _emailController.text,
-                                _phoneController.text
+                                _phoneController.text,
                               ];
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => Otp(),
-                                    settings: RouteSettings(
-                                      arguments: inputs,
-                                    )),
-                              );
+                              verifyPhone().whenComplete(() {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => Otp(),
+                                      settings: RouteSettings(
+                                        arguments: inputs,
+                                      )),
+                                );
+                              });
                             }
                           },
                           style: ButtonStyle(
