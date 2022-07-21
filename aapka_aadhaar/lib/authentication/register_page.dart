@@ -1,6 +1,5 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:aapka_aadhaar/authentication/otp.dart';
-import 'package:aapka_aadhaar/widgets/progress_dialog.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -288,10 +287,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                 _phoneController.text
                               ];
                               Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => Otp(),
-                                settings: RouteSettings(
-                                  arguments: inputs,
-                                )),
+                                MaterialPageRoute(
+                                    builder: (context) => Otp(),
+                                    settings: RouteSettings(
+                                      arguments: inputs,
+                                    )),
                               );
                             }
                           },

@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
@@ -9,12 +10,33 @@ class Otp extends StatefulWidget {
 }
 
 class _OtpState extends State<Otp> {
+  saveUserInfo(args) async {
+    String fullname = args[0];
+    String email = args[1];
+    String phoneNumber = args[2];
+
+    // showDialog(
+    //     context: context,
+    //     barrierDismissible: false,
+    //     builder: (BuildContext c) {
+    //       return ProgressDialog(
+    //         message: "Processing, please wait...",
+    //       );
+    //     });
+
+    final databaseReference = FirebaseDatabase.instance.ref();
+    //push data to database
+    databaseReference.child("users").push().set(
+        {"fullname": fullname, "email": email, "phoneNumber": phoneNumber});
+  }
+
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Color(0xFFFBF9F6),
-      body: SingleChildScrollView (
+      body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
@@ -75,7 +97,7 @@ class _OtpState extends State<Otp> {
                 Column(
                   children: [
                     OtpTextField(
-                      autoFocus: true,                    
+                      autoFocus: true,
                       numberOfFields: 6,
                       focusedBorderColor: Color(0xFFF23F44),
                       //set to true to show as box or false to show as dash
