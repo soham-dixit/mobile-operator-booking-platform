@@ -1,5 +1,6 @@
 import 'package:aapka_aadhaar/authentication/otp.dart';
 import 'package:aapka_aadhaar/authentication/register_page.dart';
+import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:aapka_aadhaar/widgets/progress_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -213,6 +214,25 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ],
                         ),
+                        GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: ((context) => HomePage())
+                                  )
+                                );
+                              },
+                              child: Text(
+                                'Home Page',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFFF23F44),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                       ],
                     ),
                   ),
