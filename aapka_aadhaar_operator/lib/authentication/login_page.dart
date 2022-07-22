@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar_operator/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 class OperatorLogin extends StatefulWidget {
@@ -234,6 +235,25 @@ class _OperatorLoginState extends State<OperatorLogin> {
                             ),
                           ),
                         ),
+                        GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: ((context) => HomePage())
+                                  )
+                                );
+                              },
+                              child: Text(
+                                'Home Page',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFFF23F44),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                         // SizedBox(
                         //   height: 18,
                         // ),
