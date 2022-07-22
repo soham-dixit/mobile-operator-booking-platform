@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Color(0xFFF23F44),
         foregroundColor: Color(0xFFFFFFFF),
         title: Text(
-          'Aapka Aadhar',
+          'Aapka Aadhaar',
           style: TextStyle(
             fontFamily: 'Poppins',
             // fontSize: 16
