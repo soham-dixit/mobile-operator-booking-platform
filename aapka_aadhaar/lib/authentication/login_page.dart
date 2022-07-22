@@ -1,7 +1,9 @@
 import 'package:aapka_aadhaar/authentication/otp.dart';
 import 'package:aapka_aadhaar/authentication/register_page.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
+import 'package:aapka_aadhaar/services/otp_verification.dart';
 import 'package:aapka_aadhaar/widgets/progress_dialog.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,6 +21,41 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context) => RegisterPage(),
       ),
     );
+  }
+
+  OTPVerification otpVerification = OTPVerification();
+  TextEditingController phone = TextEditingController();
+  bool phone_exists = false;
+
+  check_phone_exists(phoneNumber) async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    if (databaseData['users'] != null) {
+      dynamic keys_list = databaseData['users'].keys.toList();
+      for (int i = 0; i < keys_list.length; i++) {
+        if (databaseData['users'][keys_list[i]].containsValue(phoneNumber)) {
+          phone_exists = true;
+        }
+      }
+    }
+  }
+
+  showSnackBar() {
+    final snackBar = SnackBar(
+      content: const Text(
+        'Account not registered!',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+
+    // Find the ScaffoldMessenger in the widget tree
+    // and use it to show a SnackBar.
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -93,6 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.bold,
                           ),
                           cursorColor: Colors.black,
+                          controller: phone,
                           decoration: InputDecoration(
                             label: Text('Mobile'),
                             labelStyle: TextStyle(
@@ -146,10 +184,21 @@ class _LoginPageState extends State<LoginPage> {
                           child: ElevatedButton(
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) => Otp()),
-                                );
+                                check_phone_exists(phone.text).whenComplete(() {
+                                  phone_exists
+                                      ? otpVerification
+                                          .verifyPhone(phone.text)
+                                          .whenComplete(() {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) => Otp(),
+                                              settings:
+                                                  RouteSettings(arguments: []),
+                                            ),
+                                          );
+                                        })
+                                      : showSnackBar();
+                                });
                               }
                               // showDialog(
                               //     context: context,
@@ -215,24 +264,22 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                         GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: ((context) => HomePage())
-                                  )
-                                );
-                              },
-                              child: Text(
-                                'Home Page',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFF23F44),
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                          onTap: () {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: ((context) => HomePage())));
+                          },
+                          child: Text(
+                            'Home Page',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFF23F44),
                             ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ],
                     ),
                   ),

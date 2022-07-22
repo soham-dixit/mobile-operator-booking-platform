@@ -1,5 +1,6 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:aapka_aadhaar/authentication/otp.dart';
+import 'package:aapka_aadhaar/services/otp_verification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -29,41 +30,9 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   bool already_exists = false;
+  OTPVerification otpVerification = OTPVerification();
 
-  verifyPhone(String phone) async {
-    PhoneVerificationCompleted verficationCompleted =
-        (PhoneAuthCredential phoneAuthCredential) async {
-      print("Verification completed");
-    };
-    PhoneVerificationFailed verificationFailed =
-        (FirebaseAuthException exception) {
-      print("Verification failed");
-    };
-    PhoneCodeSent codeSent =
-        (String verificationId, int? forceResendingToken) async {
-      print("Code has been sent");
-      final pref = await SharedPreferences.getInstance();
-      pref.setString('verification_id', verificationId);
-      // setState(() {
-      //   _verificationCode = verificationId;
-      // });
-    };
-    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-        (String verificationId) {
-      print("Time out");
-    };
-
-    try {
-      await _auth.verifyPhoneNumber(
-          phoneNumber: '+91 ${phone}',
-          verificationCompleted: verficationCompleted,
-          verificationFailed: verificationFailed,
-          codeSent: codeSent,
-          codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
-    } catch (e) {
-      print('Catch block');
-    }
-  }
+  
 
   final formKey = GlobalKey<FormState>();
 
@@ -363,7 +332,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               check_if_already_exists().whenComplete(() {
                                 already_exists
                                     ? null
-                                    : verifyPhone(_phoneController.text)
+                                    : otpVerification.verifyPhone(_phoneController.text)
                                         .whenComplete(() {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
