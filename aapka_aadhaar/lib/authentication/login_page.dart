@@ -263,23 +263,23 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ],
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: ((context) => HomePage())));
-                          },
-                          child: Text(
-                            'Home Page',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFFF23F44),
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     Navigator.of(context).pushReplacement(
+                        //         MaterialPageRoute(
+                        //             builder: ((context) => HomePage())));
+                        //   },
+                        //   child: Text(
+                        //     'Home Page',
+                        //     style: TextStyle(
+                        //       fontFamily: 'Poppins',
+                        //       fontSize: 18,
+                        //       fontWeight: FontWeight.bold,
+                        //       color: Color(0xFFF23F44),
+                        //     ),
+                        //     textAlign: TextAlign.center,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
