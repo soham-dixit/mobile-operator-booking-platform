@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar/authentication/register_page.dart';
+import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +34,17 @@ class _OtpState extends State<Otp> {
     //     });
     final databaseReference = FirebaseDatabase.instance.ref();
     //push data to database
-    databaseReference.child("users").push().set(
-        {"fullname": fullname, "email": email, "phoneNumber": phoneNumber});
+    databaseReference.child("users").push().set({
+      "fullname": fullname,
+      "email": email,
+      "phoneNumber": phoneNumber
+    }).whenComplete(
+      () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
+      ),
+    );
 
     // print('Contains --- ${databaseData['users']['keys_list[0]']}');
 
@@ -70,6 +80,17 @@ class _OtpState extends State<Otp> {
     // Find the ScaffoldMessenger in the widget tree
     // and use it to show a SnackBar.
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  login_or_register(args) {
+    args.length == 3
+        ? saveUserInfo(args)
+        : Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => HomePage(),
+            ),
+          );
+    ;
   }
 
   @override
@@ -168,7 +189,7 @@ class _OtpState extends State<Otp> {
                           verifyOtp(verification_id, _smsCode).whenComplete(() {
                             incorrect_otp
                                 ? show_incorrect_otp()
-                                : saveUserInfo(args);
+                                : login_or_register(args);
                           });
                         },
                         style: ButtonStyle(
