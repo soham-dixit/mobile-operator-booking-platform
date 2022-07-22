@@ -22,13 +22,15 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   bool already_exists = false;
 
-  verifyPhone() async {
+  verifyPhone(String phone) async {
     PhoneVerificationCompleted verficationCompleted =
         (PhoneAuthCredential phoneAuthCredential) async {
       print("Verification completed");
@@ -52,9 +54,8 @@ class _RegisterPageState extends State<RegisterPage> {
     };
 
     try {
-      print('+91 ${_phoneController.text}');
       await _auth.verifyPhoneNumber(
-          phoneNumber: '+91 ${_phoneController.text}',
+          phoneNumber: '+91 ${phone}',
           verificationCompleted: verficationCompleted,
           verificationFailed: verificationFailed,
           codeSent: codeSent,
@@ -362,7 +363,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               check_if_already_exists().whenComplete(() {
                                 already_exists
                                     ? null
-                                    : verifyPhone().whenComplete(() {
+                                    : verifyPhone(_phoneController.text)
+                                        .whenComplete(() {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (context) => Otp(),
