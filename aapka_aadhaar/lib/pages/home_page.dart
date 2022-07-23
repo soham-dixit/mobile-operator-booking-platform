@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    getLocation();
+    // getLocation();
     return Scaffold(
       drawer: NavigationDrawer(),
       appBar: AppBar(
