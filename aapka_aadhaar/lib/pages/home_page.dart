@@ -14,6 +14,7 @@ class _HomePageState extends State<HomePage> {
   GoogleMapController? _controller;
   Location currentLocation = Location();
   Set<Marker> _markers = {};
+  late BitmapDescriptor mapMarker;
 
   void getLocation() async {
     var location = await currentLocation.getLocation();
@@ -28,9 +29,15 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _markers.add(Marker(
             markerId: MarkerId('User Location'),
-            position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0)));
+            position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
+            icon: mapMarker));
       });
     });
+  }
+
+  void setCustomMarker() async {
+    mapMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), 'assets/user-marker.png');
   }
 
   @override
@@ -38,6 +45,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     setState(() {
       getLocation();
+      setCustomMarker();
     });
   }
 
