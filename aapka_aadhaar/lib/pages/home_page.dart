@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -46,6 +47,12 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       getLocation();
       setCustomMarker();
+      if (FirebaseAuth.instance.currentUser != null) {
+        print("logged in");
+      }
+      else{
+        print("not logged in");
+      }
     });
   }
 
