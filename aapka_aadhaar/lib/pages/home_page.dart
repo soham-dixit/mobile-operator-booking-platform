@@ -1,5 +1,6 @@
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -15,7 +16,45 @@ class _HomePageState extends State<HomePage> {
   GoogleMapController? _controller;
   Location currentLocation = Location();
   Set<Marker> _markers = {};
-  late BitmapDescriptor mapMarker;
+  late BitmapDescriptor mapMarker, femaleMarker, maleMarker;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  List latitudes = [];
+  List longitudes = [];
+  List genders = [];
+  List operatorNames = [];
+
+  getOperatorLocation() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    if (databaseData['operators'] != null) {
+      dynamic keys_list = databaseData['operators'].keys.toList();
+      for (int i = 0; i < keys_list.length; i++) {
+        if (databaseData['operators'][keys_list[i]]['latitude'] != null) {
+          latitudes.add(databaseData['operators'][keys_list[i]]['latitude']);
+        }
+        if (databaseData['operators'][keys_list[i]]['longitude'] != null) {
+          longitudes.add(databaseData['operators'][keys_list[i]]['longitude']);
+        }
+        if (databaseData['operators'][keys_list[i]]['gender'] != null) {
+          genders.add(databaseData['operators'][keys_list[i]]['gender']);
+        }
+        if (databaseData['operators'][keys_list[i]]['fullname'] != null) {
+          operatorNames
+              .add(databaseData['operators'][keys_list[i]]['fullname']);
+        }
+      }
+
+      for (int i = 0; i < latitudes.length; i++) {
+        _markers.add(
+          Marker(
+              markerId: MarkerId(operatorNames[i]),
+              position: LatLng(latitudes[i], longitudes[i]),
+              icon: genders[i] == 'Male' ? maleMarker : femaleMarker),
+        );
+      }
+    }
+  }
 
   void getLocation() async {
     var location = await currentLocation.getLocation();
@@ -27,11 +66,14 @@ class _HomePageState extends State<HomePage> {
       )));
       print(loc.latitude);
       print(loc.longitude);
+
       setState(() {
-        _markers.add(Marker(
-            markerId: MarkerId('User Location'),
-            position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
-            icon: mapMarker));
+        _markers.addAll([
+          Marker(
+              markerId: MarkerId('User Location'),
+              position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
+              icon: mapMarker),
+        ]);
       });
     });
   }
@@ -39,18 +81,22 @@ class _HomePageState extends State<HomePage> {
   void setCustomMarker() async {
     mapMarker = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(), 'assets/user-marker.png');
+    femaleMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), 'assets/Female-Operator.png');
+    maleMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), 'assets/Male-Operator.png');
   }
 
   @override
   void initState() {
     super.initState();
+    getOperatorLocation();
     setState(() {
       getLocation();
       setCustomMarker();
       if (FirebaseAuth.instance.currentUser != null) {
         print("logged in");
-      }
-      else{
+      } else {
         print("not logged in");
       }
     });
