@@ -1,5 +1,6 @@
 import 'package:aapka_aadhaar/authentication/register_page.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
+import 'package:aapka_aadhaar/services/otp_verification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class _OtpState extends State<Otp> {
   String verification_id = '';
   String _smsCode = '';
   bool incorrect_otp = false;
+  OTPVerification otpVerification = OTPVerification();
 
   saveUserInfo(args) async {
     String fullname = args[0];
@@ -234,15 +236,31 @@ class _OtpState extends State<Otp> {
                 SizedBox(
                   height: 18,
                 ),
-                Text(
-                  "Resend new code",
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFF23F44),
+                InkWell(
+                  onTap: () {
+                    otpVerification.verifyPhone(args[2]).whenComplete(() {
+                      final snackBar = SnackBar(
+                        content: const Text(
+                          'Code has been sent',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 16,
+                          ),
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    });
+                  },
+                  child: Text(
+                    "Resend new code",
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFF23F44),
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ],
             ),
