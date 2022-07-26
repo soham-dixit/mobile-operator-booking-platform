@@ -19,6 +19,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   Future getCurrentUser() async {
     print(auth.currentUser!.displayName);
     print(auth.currentUser!.email);
+    setState(() {});
     return auth.currentUser;
   }
 
@@ -51,18 +52,30 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(auth.currentUser!.displayName.toString(),
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        )),
-                    Text(auth.currentUser!.email.toString(),
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        )),
+                    auth.currentUser!.displayName != null
+                        ? Text(
+                            auth.currentUser!.displayName.toString(),
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        : Center(
+                            child: CupertinoActivityIndicator(),
+                          ),
+                    auth.currentUser!.email != null
+                        ? Text(
+                            auth.currentUser!.email.toString(),
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        : Center(
+                            child: CupertinoActivityIndicator(),
+                          ),
                   ],
                 ),
               ),
