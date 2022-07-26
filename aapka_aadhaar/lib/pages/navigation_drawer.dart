@@ -15,9 +15,10 @@ class NavigationDrawer extends StatefulWidget {
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  late Future getUser;
 
   Future getCurrentUser() async {
+    print(auth.currentUser!.displayName);
+    print(auth.currentUser!.email);
     return auth.currentUser;
   }
 
@@ -25,7 +26,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUser = getCurrentUser();
+    getCurrentUser();
     
   }
 
@@ -51,41 +52,8 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     SizedBox(
                       height: 10,
                     ),
-                    FutureBuilder(
-                        future: getUser,
-                        builder: (context, AsyncSnapshot snapshot) {
-
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  snapshot.data.displayName,
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                Text(
-                                  snapshot.data.email,
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                  ),
-                                )
-                              ],
-                            );
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.active) {
-                            return Text('active');
-                          } else {
-                            return Text('Error');
-                          }
-                        }),
+                    Text(auth.currentUser!.displayName.toString()),
+                    Text(auth.currentUser!.email.toString()),
                   ],
                 ),
               ),
