@@ -48,9 +48,14 @@ class _HomePageState extends State<HomePage> {
       for (int i = 0; i < latitudes.length; i++) {
         _markers.add(
           Marker(
-              markerId: MarkerId(operatorNames[i]),
-              position: LatLng(latitudes[i], longitudes[i]),
-              icon: genders[i] == 'Male' ? maleMarker : femaleMarker),
+            markerId: MarkerId(operatorNames[i]),
+            position: LatLng(latitudes[i], longitudes[i]),
+            icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
+            onTap: () {
+              print("ontap");
+              openDialog();
+            },
+          ),
         );
       }
     }
@@ -145,4 +150,10 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Future openDialog() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text("Operator Details"),
+          ));
 }
