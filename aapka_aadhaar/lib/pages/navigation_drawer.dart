@@ -18,7 +18,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   late Future getUser;
 
   Future getCurrentUser() async {
-    print('done');
     return auth.currentUser;
   }
 
@@ -27,6 +26,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     // TODO: implement initState
     super.initState();
     getUser = getCurrentUser();
+    
   }
 
   @override
@@ -57,7 +57,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Center(child: CupertinoActivityIndicator());
+                            return Center(child: CircularProgressIndicator());
                           } else if (snapshot.connectionState ==
                               ConnectionState.done) {
                             return Column(
