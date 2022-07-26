@@ -27,7 +27,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     // TODO: implement initState
     super.initState();
     getCurrentUser();
-    
   }
 
   @override
@@ -52,8 +51,18 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(auth.currentUser!.displayName.toString()),
-                    Text(auth.currentUser!.email.toString()),
+                    Text(auth.currentUser!.displayName.toString(),
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        )),
+                    Text(auth.currentUser!.email.toString(),
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        )),
                   ],
                 ),
               ),
