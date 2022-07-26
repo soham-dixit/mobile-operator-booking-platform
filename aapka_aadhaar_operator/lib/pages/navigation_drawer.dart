@@ -64,8 +64,44 @@ class NavigationDrawer extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => OperatorLogin()));
+                  Widget cancelButton = FlatButton(
+                    child: Text("Cancel"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  );
+
+                  Widget logoutButton = ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => OperatorLogin()));
+                    },
+                    child: Text('Log out'),
+                    style: ElevatedButton.styleFrom(
+                        shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: const Text("Are you sure you want to log out?",
+                        style: TextStyle(fontFamily: 'Poppins', fontSize: 18)),
+                    content: const Text(
+                        "(Note: You will no longer be available to users looking for operator near your location.)",
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Poppins',
+                            color: Color(0xFFF23F44))),
+                    actions: [
+                      cancelButton,
+                      logoutButton,
+                    ],
+                  );
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
                 },
                 icon: Icon(Icons.logout),
                 label: Text('Log Out'),
