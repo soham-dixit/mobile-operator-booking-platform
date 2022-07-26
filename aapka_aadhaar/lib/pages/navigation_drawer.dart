@@ -81,10 +81,38 @@ class NavigationDrawer extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                  print("logged out");
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => LoginPage()));
+                  Widget cancelButton = FlatButton(
+                    child: Text("Cancel"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  );
+                  Widget logoutButton = ElevatedButton(
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                      print("logged out");
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    },
+                    child: Text('Log out'),
+                    style: ElevatedButton.styleFrom(
+                        shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+                  );
+
+                  AlertDialog alert = AlertDialog(
+                    title: const Text("Are you sure you want to log out?",
+                        style: TextStyle(fontFamily: 'Poppins', fontSize: 18)),
+                    actions: [
+                      cancelButton,
+                      logoutButton,
+                    ],
+                  );
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
                 },
                 icon: Icon(Icons.logout),
                 label: Text('Log Out'),
