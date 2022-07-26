@@ -41,11 +41,17 @@ class _OtpState extends State<Otp> {
       "email": email,
       "phoneNumber": phoneNumber
     }).whenComplete(
-      () => Navigator.of(context).push(
+      () {
+         _auth.currentUser!.updateDisplayName(fullname);
+         _auth.currentUser!.updateEmail(email);
+        //  _auth.currentUser.reload();
+        // _auth.currentUser!.updateEmail(email);
+        Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => HomePage(),
         ),
-      ),
+      );
+      } 
     );
 
     // print('Contains --- ${databaseData['users']['keys_list[0]']}');

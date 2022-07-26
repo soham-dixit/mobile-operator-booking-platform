@@ -1,12 +1,33 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationDrawer extends StatefulWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
+
+  @override
+  State<NavigationDrawer> createState() => _NavigationDrawerState();
+}
+
+class _NavigationDrawerState extends State<NavigationDrawer> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  late Future getUser;
+
+  Future getCurrentUser() async {
+    print('done');
+    return auth.currentUser;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUser = getCurrentUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +51,41 @@ class NavigationDrawer extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      'User Name',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 24,
-                      ),
-                    ),
-                    Text('Email ID'),
+                    FutureBuilder(
+                        future: getUser,
+                        builder: (context, AsyncSnapshot snapshot) {
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CupertinoActivityIndicator());
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  snapshot.data.displayName,
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Text(
+                                  snapshot.data.email,
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16,
+                                  ),
+                                )
+                              ],
+                            );
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.active) {
+                            return Text('active');
+                          } else {
+                            return Text('Error');
+                          }
+                        }),
                   ],
                 ),
               ),
