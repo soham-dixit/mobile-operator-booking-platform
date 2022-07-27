@@ -41,11 +41,13 @@ class _OtpState extends State<Otp> {
       "email": email,
       "phoneNumber": phoneNumber
     }).whenComplete(
-      () => Navigator.of(context).push(
+      () {
+        Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => HomePage(),
         ),
-      ),
+      );
+      } 
     );
 
     // print('Contains --- ${databaseData['users']['keys_list[0]']}');
