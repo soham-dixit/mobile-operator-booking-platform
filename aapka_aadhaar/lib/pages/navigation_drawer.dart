@@ -1,12 +1,47 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationDrawer extends StatefulWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
+
+  @override
+  State<NavigationDrawer> createState() => _NavigationDrawerState();
+}
+
+class _NavigationDrawerState extends State<NavigationDrawer> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  String userName = '', userEmail = '';
+
+  getData() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    User user = await auth.currentUser!;
+    String phone = user.phoneNumber!.substring(3);
+    String key = '';
+    if (databaseData['users'] != null) {
+      dynamic keys_list = databaseData['users'].keys.toList();
+      for (int i = 0; i < keys_list.length; i++) {
+        if (databaseData['users'][keys_list[i]].containsValue(phone)) {
+          key = keys_list[i];
+          userName = databaseData['users'][key]['fullname'];
+          userEmail = databaseData['users'][key]['email'];
+        }
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +65,24 @@ class NavigationDrawer extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      'User Name',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 24,
-                      ),
-                    ),
-                    Text('Email ID'),
+                    userName == ''
+                        ? Center(child: CupertinoActivityIndicator())
+                        : Text(
+                            userName,
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 18,
+                            ),
+                          ),
+                    userEmail == ''
+                        ? Center(child: CupertinoActivityIndicator())
+                        : Text(
+                            userEmail,
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 18,
+                            ),
+                          ),
                   ],
                 ),
               ),
