@@ -42,11 +42,7 @@ class _OtpState extends State<Otp> {
       "phoneNumber": phoneNumber
     }).whenComplete(
       () {
-        _auth.currentUser!.updateDisplayName(fullname);
-        _auth.currentUser!.updateEmail(email);
-        //  _auth.currentUser.reload();
-        // _auth.currentUser!.updateEmail(email);
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => HomePage(),
         ),

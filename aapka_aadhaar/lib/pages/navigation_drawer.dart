@@ -15,19 +15,32 @@ class NavigationDrawer extends StatefulWidget {
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  String userName = '', userEmail = '';
 
-  Future getCurrentUser() async {
-    print(auth.currentUser!.displayName);
-    print(auth.currentUser!.email);
-    setState(() {});
-    return auth.currentUser;
+  getData() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    User user = await auth.currentUser!;
+    String phone = user.phoneNumber!.substring(3);
+    String key = '';
+    if (databaseData['users'] != null) {
+      dynamic keys_list = databaseData['users'].keys.toList();
+      for (int i = 0; i < keys_list.length; i++) {
+        if (databaseData['users'][keys_list[i]].containsValue(phone)) {
+          key = keys_list[i];
+          userName = databaseData['users'][key]['fullname'];
+          userEmail = databaseData['users'][key]['email'];
+        }
+      }
+    }
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getCurrentUser();
+    getData();
   }
 
   @override
@@ -52,29 +65,23 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     SizedBox(
                       height: 10,
                     ),
-                    auth.currentUser!.displayName != null
-                        ? Text(
-                            auth.currentUser!.displayName.toString(),
+                    userName == ''
+                        ? Center(child: CupertinoActivityIndicator())
+                        : Text(
+                            userName,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 18,
-                              fontWeight: FontWeight.w500,
                             ),
-                          )
-                        : Center(
-                            child: CupertinoActivityIndicator(),
                           ),
-                    auth.currentUser!.email != null
-                        ? Text(
-                            auth.currentUser!.email.toString(),
+                    userEmail == ''
+                        ? Center(child: CupertinoActivityIndicator())
+                        : Text(
+                            userEmail,
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
                             ),
-                          )
-                        : Center(
-                            child: CupertinoActivityIndicator(),
                           ),
                   ],
                 ),
