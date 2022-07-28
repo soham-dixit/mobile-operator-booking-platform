@@ -74,8 +74,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                     child: Column(
                       children: [
                         TextFormField(
-                          keyboardType: TextInputType.number,
-                          maxLength: 8,
+                          keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           style: const TextStyle(
                             fontFamily: 'Poppins',
@@ -84,7 +83,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                           ),
                           cursorColor: Colors.black,
                           decoration: InputDecoration(
-                            label: const Text('Enrollment ID'),
+                            label: const Text('Email ID'),
                             labelStyle: TextStyle(
                               color: Colors.grey.shade700,
                             ),
@@ -122,8 +121,8 @@ class _OperatorLoginState extends State<OperatorLogin> {
                           validator: (value) {
                             try {
                               if (value!.isEmpty ||
-                                  !RegExp(r'^\d{8}$').hasMatch(value)) {
-                                return 'Only 8 digits are allowed';
+                                  !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$').hasMatch(value)) {
+                                return 'Please enter a valid Email Address';
                               } else {
                                 return null;
                               }
