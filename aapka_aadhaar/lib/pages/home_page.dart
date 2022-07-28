@@ -165,6 +165,160 @@ class _HomePageState extends State<HomePage> {
   Future openDialog() => showDialog(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text("Operator Details"),
+            insetPadding: EdgeInsets.all(20),
+            contentPadding: EdgeInsets.all(10),
+            actions: [
+              Align(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: () {
+                    print("clicked on book");
+                  },
+                  child: Text('BOOK',
+                      style: TextStyle(fontSize: 16, fontFamily: 'Poppins')),
+                  style: ElevatedButton.styleFrom(
+                      shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+                ),
+              ),
+            ],
+            title: Container(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Name",
+                      style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 100.0,
+                  ),
+                  Expanded(
+                    child: CircleAvatar(
+                      backgroundColor: Color(0xFFF23F44),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Divider(
+                  color: Color(0xFF808080),
+                  thickness: 1,
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      Row(children: [
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Text("28th Jun, 22",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                              Text("Thursday",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                              Icon(Icons.circle,
+                                  size: 20, color: Color(0xFF7FD958)),
+                              Text("Available",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 14.0,
+                          height: 80.0,
+                          child: VerticalDivider(
+                            thickness: 1,
+                            width: 20,
+                            color: Color(0xFF808080),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Text("29th Jun, 22",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                              Text("Friday",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                              Icon(Icons.circle,
+                                  size: 20, color: Color(0xFFF23F44)),
+                              Text("Unavailable",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 14.0,
+                          height: 80.0,
+                          child: VerticalDivider(
+                            thickness: 1,
+                            width: 20,
+                            color: Color(0xFF808080),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Text("30th Jun, 22",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                              Text("Saturday",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                              Icon(Icons.circle,
+                                  size: 20, color: Color(0xFF7FD958)),
+                              Text("Available",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 14.0,
+                          height: 80.0,
+                          child: VerticalDivider(
+                            thickness: 1,
+                            width: 20,
+                            color: Color(0xFF808080),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Text("31st Jun, 22",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                              Text("Sunday",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                              Icon(Icons.circle,
+                                  size: 20, color: Color(0xFF7FD958)),
+                              Text("Available",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                      ]),
+                      Divider(
+                        color: Color(0xFF808080),
+                        thickness: 1,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ));
 }
