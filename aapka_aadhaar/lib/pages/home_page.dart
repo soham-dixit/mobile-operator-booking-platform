@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   List longitudes = [];
   List genders = [];
   List operatorNames = [];
+  String? key;
 
   getOperatorLocation() async {
     final databaseReference = FirebaseDatabase.instance.ref();
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
     if (databaseData['operators'] != null) {
       dynamic keys_list = databaseData['operators'].keys.toList();
       for (int i = 0; i < keys_list.length; i++) {
+        key = keys_list[i];
         if (databaseData['operators'][keys_list[i]]['latitude'] != null) {
           latitudes.add(databaseData['operators'][keys_list[i]]['latitude']);
         }
@@ -53,12 +55,21 @@ class _HomePageState extends State<HomePage> {
             icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
             onTap: () {
               print("ontap");
+              getSlotData(key);
               openDialog();
             },
           ),
         );
       }
     }
+  }
+
+  getSlotData(String? key) async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    Map<dynamic, dynamic> operatorData = databaseData['operators'][key];
+    print('DATA ----------- ${operatorData['slots']}');
   }
 
   void getLocation() async {
