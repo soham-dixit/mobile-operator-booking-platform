@@ -165,6 +165,116 @@ class _HomePageState extends State<HomePage> {
   Future openDialog() => showDialog(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text("Operator Details"),
+            insetPadding: EdgeInsets.all(20),
+            contentPadding: EdgeInsets.all(10),
+            title: Container(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Name",
+                      style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 100.0,
+                  ),
+                  Expanded(
+                    child: CircleAvatar(
+                      backgroundColor: Color(0xFFF23F44),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  child: Row(children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text("28th Jun, 22",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                          Text("Thursday",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                          Icon(Icons.circle,
+                              size: 20, color: Color(0xFF7FD958)),
+                          Text("Available",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 14.0,
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text("29th Jun, 22",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                          Text("Friday",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                          Icon(Icons.circle,
+                              size: 20, color: Color(0xFFF23F44)),
+                          Text("Unavailable",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 14.0,
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text("30th Jun, 22",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                          Text("Saturday",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                          Icon(Icons.circle,
+                              size: 20, color: Color(0xFF7FD958)),
+                          Text("Available",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 14.0,
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text("30th Jun, 22",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                          Text("Saturday",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                          Icon(Icons.circle,
+                              size: 20, color: Color(0xFF7FD958)),
+                          Text("Available",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                  ]),
+                ),
+              ],
+            ),
           ));
 }
