@@ -1,10 +1,9 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
+import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class NavigationDrawer extends StatefulWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -118,6 +117,22 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               text: 'Recent Blogs',
               icon: Icons.chat,
               onTap: () {},
+            ),
+            SizedBox(
+              height: 11,
+            ),
+            buildMenuItem(
+              text: 'Book Slots (test)',
+              icon: Icons.book_online,
+              onTap: () {
+                //call book slots
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BookSlots(),
+                  ),
+                );
+              },
             ),
             SizedBox(
               height: 11,
