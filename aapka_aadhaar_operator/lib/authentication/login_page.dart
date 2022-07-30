@@ -1,5 +1,10 @@
 import 'package:aapka_aadhaar_operator/pages/home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+// import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 
 class OperatorLogin extends StatefulWidget {
   const OperatorLogin({Key? key}) : super(key: key);
@@ -11,6 +16,81 @@ class OperatorLogin extends StatefulWidget {
 class _OperatorLoginState extends State<OperatorLogin> {
   final formKey = GlobalKey<FormState>();
   bool showPass = false;
+  TextEditingController email = TextEditingController();
+  TextEditingController pass = TextEditingController();
+  var key = '';
+  String encrypted = '', decrypted = '';
+  var password = '';
+  bool showSnack_account = false, showSnack_pass = false;
+  bool isEmailVerified = false;
+
+  // PlatformStringCryptor cryptor = PlatformStringCryptor();
+
+  showSnackPass() {
+    showSnack_pass = false;
+    final snackBar = SnackBar(
+      content: Text(
+        'Incorrect password!',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  showSnackAcc() {
+    showSnack_account = false;
+    final snackBar = SnackBar(
+      content: Text(
+        'Account not registered.',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+  // encrypt() async {
+  //   final salt = await cryptor.generateSalt();
+  //   password = pass.text;
+  //   key = await cryptor.generateKeyFromPassword(password, salt);
+  //   encrypted = await cryptor.encrypt(password, key);
+  //   print(encrypted);
+  // }
+
+  // decrypt() async {
+  //   try {
+  //     decrypted = await cryptor.decrypt(encrypted, key);
+  //     print(decrypted);
+  //   } on MacMismatchException {}
+  // }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    if (!isEmailVerified) {
+      sendEmailVerificationLink();
+    }
+  }
+
+  Future sendEmailVerificationLink() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      await user?.sendEmailVerification();
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +131,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                   height: 10,
                 ),
                 const Text(
-                  "Enter your Enrollment ID and Password",
+                  "Enter your Email ID and Password",
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 14,
@@ -74,6 +154,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: email,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           style: const TextStyle(
@@ -121,7 +202,8 @@ class _OperatorLoginState extends State<OperatorLogin> {
                           validator: (value) {
                             try {
                               if (value!.isEmpty ||
-                                  !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$').hasMatch(value)) {
+                                  !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
+                                      .hasMatch(value)) {
                                 return 'Please enter a valid Email Address';
                               } else {
                                 return null;
@@ -133,6 +215,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                           height: 15,
                         ),
                         TextFormField(
+                          controller: pass,
                           obscureText: !showPass,
                           keyboardType: TextInputType.visiblePassword,
                           style: const TextStyle(
@@ -204,11 +287,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                // Navigator.of(context).push(
-                                // MaterialPageRoute(builder: (context) => Otp()),
-                                // );
-                              }
+                              if (formKey.currentState!.validate()) {}
                             },
                             style: ButtonStyle(
                               foregroundColor: MaterialStateProperty.all<Color>(
@@ -234,25 +313,23 @@ class _OperatorLoginState extends State<OperatorLogin> {
                             ),
                           ),
                         ),
-                        GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: ((context) => HomePage())
-                                  )
-                                );
-                              },
-                              child: Text(
-                                'Home Page',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFF23F44),
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     Navigator.of(context).pushReplacement(
+                        //         MaterialPageRoute(
+                        //             builder: ((context) => HomePage())));
+                        //   },
+                        //   child: Text(
+                        //     'Home Page',
+                        //     style: TextStyle(
+                        //       fontFamily: 'Poppins',
+                        //       fontSize: 18,
+                        //       fontWeight: FontWeight.bold,
+                        //       color: Color(0xFFF23F44),
+                        //     ),
+                        //     textAlign: TextAlign.center,
+                        //   ),
+                        // ),
                         // SizedBox(
                         //   height: 18,
                         // ),

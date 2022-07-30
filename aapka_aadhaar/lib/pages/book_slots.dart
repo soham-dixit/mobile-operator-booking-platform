@@ -1,5 +1,7 @@
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 class BookSlots extends StatefulWidget {
   const BookSlots({Key? key}) : super(key: key);
@@ -9,8 +11,23 @@ class BookSlots extends StatefulWidget {
 }
 
 class _BookSlotsState extends State<BookSlots> {
+  final _currentDate = DateTime.now();
+  final _dayFormatter = DateFormat('dd-MM-yyyy');
+  final _monthFormatter = DateFormat('MMM');
+  List dates = [];
+
   @override
   Widget build(BuildContext context) {
+    dates.clear();
+    for (int i = 0; i < 4; i++) {
+      final date = _currentDate.add(Duration(days: i));
+      dates.add(
+        _dayFormatter.format(date),
+        // _monthFormatter.format(date),
+      );
+    }
+
+    print('DATES ------- $dates');
     return Scaffold(
       drawer: NavigationDrawer(),
       appBar: AppBar(
@@ -32,20 +49,71 @@ class _BookSlotsState extends State<BookSlots> {
           ),
         ],
       ),
-      body: MyCardWidget(),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top : 30, left : 15),
+                height: 30,
+                width: 100,
+                child: Card(
+                  child: Text(dates[0],
+                      style: TextStyle(fontFamily: 'Poppins', fontSize: 14)),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top : 30, left : 15),
+                height: 30,
+                width: 100,
+                child: Card(
+                  child: Text(dates[1],
+                      style: TextStyle(fontFamily: 'Poppins', fontSize: 14)),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top : 30, left : 15),
+                height: 30,
+                width: 100,
+                child: Card(
+                  child: Text(dates[2],
+                      style: TextStyle(fontFamily: 'Poppins', fontSize: 14)),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top : 30, left : 15),
+                height: 30,
+                width: 100,
+                child: Card(
+                  child: Text(dates[3],
+                      style: TextStyle(fontFamily: 'Poppins', fontSize: 14)),
+                ),
+              ),
+            ],
+          ),
+
+          // TableCalendar(
+          //   firstDay: DateTime.parse(dates[0]),
+          //   lastDay: DateTime.parse(dates[3]),
+          //   focusedDay: DateTime.parse(dates[0]),
+          // ),
+          // MyCardWidget(time: '10AM - 11AM'),
+        ],
+      ),
     );
   }
 }
 
 class MyCardWidget extends StatefulWidget {
-  MyCardWidget({Key? key}) : super(key: key);
+  String? time;
+
+  MyCardWidget({Key? key, this.time}) : super(key: key);
 
   @override
   State<MyCardWidget> createState() => _MyCardWidgetState();
 }
 
 class _MyCardWidgetState extends State<MyCardWidget> {
-  @override
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -61,7 +129,7 @@ class _MyCardWidgetState extends State<MyCardWidget> {
         elevation: 10,
         child: ListTile(
           title: Text(
-            "10:00 AM - 11:00 AM",
+            widget.time.toString(),
             style: TextStyle(fontFamily: 'Poppins', fontSize: 12),
           ),
         ),
