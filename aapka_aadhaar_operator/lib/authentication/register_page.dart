@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar_operator/authentication/login_page.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
+  TextEditingController _genderController = TextEditingController();
   bool already_exists = false;
 
   final formKey = GlobalKey<FormState>();
@@ -73,6 +75,13 @@ class _OperatorRegisterState extends State<OperatorRegister> {
         ? ScaffoldMessenger.of(context).showSnackBar(snackBar)
         : null;
   }
+
+  final List<String> genderItems = [
+    'Male',
+    'Female',
+  ];
+
+  String? selectedValue;
 
   @override
   Widget build(BuildContext context) {
@@ -190,14 +199,14 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                           // ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 22,
                       ),
                       TextFormField(
                         controller: _emailController,
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -257,7 +266,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                         controller: _phoneController,
                         keyboardType: TextInputType.number,
                         maxLength: 10,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -291,7 +300,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10)),
-                          prefix: Padding(
+                          prefix: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8),
                             child: Text(
                               '(+91)',
@@ -310,6 +319,71 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                         ),
                       ),
                       const SizedBox(
+                        height: 14,
+                      ),
+                      DropdownButtonFormField2(
+                        decoration: InputDecoration(
+                          //Add isDense true and zero Padding.
+                          //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          //Add more decoration as you want here
+                          //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                        ),
+                        isExpanded: true,
+                        hint: const Text(
+                          'Gender',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color(0xFF616161),
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black45,
+                        ),
+                        iconSize: 30,
+                        buttonHeight: 60,
+                        buttonPadding:
+                            const EdgeInsets.only(left: 20, right: 10),
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        items: genderItems
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select gender';
+                          }
+                        },
+                        onChanged: (value) {
+                          //Do something when changing the item if you want.
+                        },
+                        onSaved: (value) {
+                          selectedValue = value.toString();
+                          controller: _genderController;
+                        },
+                      ),
+                      const SizedBox(
                         height: 22,
                       ),
                       SizedBox(
@@ -321,6 +395,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                                 _nameController.text,
                                 _emailController.text,
                                 _phoneController.text,
+                                _genderController.text,
                               ];
                               // check_if_already_exists().whenComplete(() {
                               //   already_exists
@@ -369,7 +444,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            'Already a user? ',
+                            'Already operator? ',
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 18,
