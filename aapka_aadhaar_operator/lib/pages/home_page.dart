@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Color(0xFFF23F44),
         foregroundColor: Color(0xFFFFFFFF),
-        title: Text(
+        title: const Text(
           'Aapka Aadhaar Operator',
           style: TextStyle(
             fontFamily: 'Poppins',
