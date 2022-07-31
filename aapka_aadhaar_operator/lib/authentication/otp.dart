@@ -25,7 +25,7 @@ class _OtpState extends State<Otp> {
     String fullname = args[0];
     String email = args[1];
     String phoneNumber = args[2];
-
+    String gender = args[3];
     // showDialog(
     //     context: context,
     //     barrierDismissible: false,
@@ -39,7 +39,8 @@ class _OtpState extends State<Otp> {
     databaseReference.child("operators").push().set({
       "fullname": fullname,
       "email": email,
-      "phoneNumber": phoneNumber
+      "phoneNumber": phoneNumber,
+      "gender" : gender
     }).whenComplete(() {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -85,7 +86,7 @@ class _OtpState extends State<Otp> {
   }
 
   login_or_register(args) {
-    args.length == 3
+    args.length == 4
         ? saveUserInfo(args)
         : Navigator.of(context).push(
             MaterialPageRoute(
