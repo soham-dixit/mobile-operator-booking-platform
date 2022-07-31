@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar_operator/pages/navigation_drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,6 +10,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      if (FirebaseAuth.instance.currentUser != null) {
+        print("logged in");
+      } else {
+        print("not logged in");
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
