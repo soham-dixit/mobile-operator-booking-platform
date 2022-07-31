@@ -157,7 +157,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                           try {
                             if (value!.isEmpty ||
                                 !RegExp(r'^[a-zA-Z ]*$').hasMatch(value)) {
-                              return 'Please Enter a valid Full Name';
+                              return 'Please enter a valid Full Name';
                             } else {
                               return null;
                             }
@@ -216,7 +216,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                             if (value!.isEmpty ||
                                 !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
                                     .hasMatch(value)) {
-                              return 'Please Enter a valid Email ID';
+                              return 'Please enter a valid Email ID';
                             } else {
                               return null;
                             }
@@ -275,7 +275,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                           try {
                             if (value!.isEmpty ||
                                 !RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
-                              return 'Please Enter a valid Mobile Number';
+                              return 'Please enter a valid Mobile Number';
                             } else {
                               return null;
                             }
@@ -326,7 +326,13 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                           //Add isDense true and zero Padding.
                           //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                           isDense: true,
-                          contentPadding: EdgeInsets.zero,
+                          contentPadding: EdgeInsets.symmetric(horizontal: -8),
+                          errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10)),
@@ -372,7 +378,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                             .toList(),
                         validator: (value) {
                           if (value == null) {
-                            return 'Please select gender';
+                            return '\t\t\t\t\t\t\tPlease select Gender';
                           }
                         },
                         onChanged: (value) {
@@ -380,7 +386,8 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                         },
                         onSaved: (value) {
                           selectedValue = value.toString();
-                          controller: _genderController;
+                          controller:
+                          _genderController;
                         },
                       ),
                       const SizedBox(
