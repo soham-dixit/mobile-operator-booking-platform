@@ -28,7 +28,8 @@ class _OperatorRegisterState extends State<OperatorRegister> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _genderController = TextEditingController();
-  bool already_exists = false;
+  bool already_exists_phone = false;
+  bool already_exists_email = false;
   OTPVerification otpVerification = OTPVerification();
 
   final formKey = GlobalKey<FormState>();
@@ -52,12 +53,21 @@ class _OperatorRegisterState extends State<OperatorRegister> {
     if (databaseData['operatorsEmailList'] != null &&
         databaseData['operatorsPhoneList'] != null) {
       // dynamic keys_list = databaseData['operators'].keys.toList();
-      print('TYPE ====== ${databaseData['operatorsEmailList'].runtimeType}');
-      if (databaseData['operatorsEmailList'].contains(_emailController.text) ||
-          databaseData['operatorsPhoneList'].contains(_phoneController.text)) {
-        already_exists = true;
+      print('Res --- ${databaseData['operatorsPhoneList'][5].runtimeType}');
+      int i = int.parse(_phoneController.text.toString());
+      if (databaseData['operatorsPhoneList'].contains(i)) {
+        already_exists_phone = true;
+      }
+
+      if (databaseData['operatorsEmailList'].contains(_emailController.text)) {
+        already_exists_email = true;
       }
     }
+  }
+
+  showSnackBar() {
+    already_exists_email = false;
+    already_exists_phone = false;
     const snackBar = SnackBar(
       content: Text(
         'Invalid Operator',
@@ -67,9 +77,8 @@ class _OperatorRegisterState extends State<OperatorRegister> {
         ),
       ),
     );
-    already_exists
-        ? null
-        : ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   final List<String> genderItems = [
@@ -377,7 +386,6 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                             return '\t\t\t\t\t\t\tPlease select Gender';
                           }
                         },
-                        
                         onChanged: (value) {
                           //Do something when changing the item if you want.
                           selectedValue = value.toString();
@@ -403,7 +411,9 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                                 selectedValue
                               ];
                               check_if_already_exists().whenComplete(() {
-                                already_exists
+                                print('res --- $already_exists_email');
+                                print('res ------ $already_exists_phone');
+                                already_exists_phone && already_exists_email
                                     ? otpVerification
                                         .verifyPhone(_phoneController.text)
                                         .whenComplete(() {
@@ -414,7 +424,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                                                   arguments: inputs,
                                                 )));
                                       })
-                                    : null;
+                                    : showSnackBar();
                               });
                               // check_if_already_exists().whenComplete(() {
                               //   already_exists
