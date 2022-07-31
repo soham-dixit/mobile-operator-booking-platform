@@ -1,4 +1,6 @@
 import 'package:aapka_aadhaar_operator/authentication/login_page.dart';
+import 'package:aapka_aadhaar_operator/authentication/otp.dart';
+import 'package:aapka_aadhaar_operator/services/otp_verification.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -26,7 +28,9 @@ class _OperatorRegisterState extends State<OperatorRegister> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _genderController = TextEditingController();
-  bool already_exists = false;
+  bool already_exists_phone = false;
+  bool already_exists_email = false;
+  OTPVerification otpVerification = OTPVerification();
 
   final formKey = GlobalKey<FormState>();
 
@@ -46,21 +50,27 @@ class _OperatorRegisterState extends State<OperatorRegister> {
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
-    if (databaseData['operators'] != null) {
-      dynamic keys_list = databaseData['operators'].keys.toList();
-      for (int i = 0; i < keys_list.length; i++) {
-        if (databaseData['operators'][keys_list[i]]
-                .containsValue(_phoneController.text) ||
-            databaseData['operators'][keys_list[i]]
-                .containsValue(_emailController.text)) {
-          already_exists = true;
-        }
+    if (databaseData['operatorsEmailList'] != null &&
+        databaseData['operatorsPhoneList'] != null) {
+      // dynamic keys_list = databaseData['operators'].keys.toList();
+      print('Res --- ${databaseData['operatorsPhoneList'][5].runtimeType}');
+      int i = int.parse(_phoneController.text.toString());
+      if (databaseData['operatorsPhoneList'].contains(i)) {
+        already_exists_phone = true;
+      }
+
+      if (databaseData['operatorsEmailList'].contains(_emailController.text)) {
+        already_exists_email = true;
       }
     }
+  }
 
+  showSnackBar() {
+    already_exists_email = false;
+    already_exists_phone = false;
     const snackBar = SnackBar(
       content: Text(
-        'Email already exists!',
+        'Invalid Operator',
         style: TextStyle(
           fontFamily: 'Poppins',
           fontSize: 16,
@@ -68,12 +78,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
       ),
     );
 
-    // Find the ScaffoldMessenger in the widget tree
-    // and use it to show a SnackBar.
-    already_exists
-        // ignore: use_build_context_synchronously
-        ? ScaffoldMessenger.of(context).showSnackBar(snackBar)
-        : null;
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   final List<String> genderItems = [
@@ -383,6 +388,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                         },
                         onChanged: (value) {
                           //Do something when changing the item if you want.
+                          selectedValue = value.toString();
                         },
                         onSaved: (value) {
                           selectedValue = value.toString();
@@ -402,8 +408,24 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                                 _nameController.text,
                                 _emailController.text,
                                 _phoneController.text,
-                                _genderController.text,
+                                selectedValue
                               ];
+                              check_if_already_exists().whenComplete(() {
+                                print('res --- $already_exists_email');
+                                print('res ------ $already_exists_phone');
+                                already_exists_phone && already_exists_email
+                                    ? otpVerification
+                                        .verifyPhone(_phoneController.text)
+                                        .whenComplete(() {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) => Otp(),
+                                                settings: RouteSettings(
+                                                  arguments: inputs,
+                                                )));
+                                      })
+                                    : showSnackBar();
+                              });
                               // check_if_already_exists().whenComplete(() {
                               //   already_exists
                               //       ? null

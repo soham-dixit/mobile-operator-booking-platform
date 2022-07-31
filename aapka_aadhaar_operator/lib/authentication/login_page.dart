@@ -32,9 +32,9 @@ class _OperatorLoginState extends State<OperatorLogin> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
       dynamic keys_list = databaseData['operators'].keys.toList();
+      
       for (int i = 0; i < keys_list.length; i++) {
-        if (databaseData['operators'][keys_list[i]]
-            .containsValue(phoneNumber)) {
+        if (databaseData['operators'][keys_list[i]].containsValue(phoneNumber)) {
           phone_exists = true;
         }
       }
@@ -47,8 +47,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
         'Account not registered!',
         style: TextStyle(
           fontFamily: 'Poppins',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+          fontSize: 16,
         ),
       ),
     );

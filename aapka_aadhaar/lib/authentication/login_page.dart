@@ -47,8 +47,7 @@ class _LoginPageState extends State<LoginPage> {
         'Account not registered!',
         style: TextStyle(
           fontFamily: 'Poppins',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+          fontSize: 16,
         ),
       ),
     );
