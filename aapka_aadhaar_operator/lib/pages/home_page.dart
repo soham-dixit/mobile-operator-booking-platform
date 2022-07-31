@@ -1,5 +1,6 @@
 import 'package:aapka_aadhaar_operator/pages/navigation_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -12,8 +13,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  GoogleMapController? _controller;
   Location currentLocation = Location();
+  String userid = '';
+
   @override
   void initState() {
     super.initState();
@@ -27,7 +29,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  @override
   void getLocation() async {
     var location = await currentLocation.getLocation();
     currentLocation.onLocationChanged.listen((LocationData loc) {
