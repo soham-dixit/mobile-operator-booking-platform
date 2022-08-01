@@ -51,45 +51,63 @@ class _BookSlotsState extends State<BookSlots> {
       ),
       body: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                margin: EdgeInsets.only(top : 30, left : 15),
-                height: 30,
-                width: 100,
-                child: Card(
-                  child: Text(dates[0],
-                      style: TextStyle(fontFamily: 'Poppins', fontSize: 14)),
-                ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        dates[0],
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 14
+                        ),
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        dates[1],
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 14
+                        ),
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        dates[2],
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 14
+                        ),
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        dates[3],
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 14
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                margin: EdgeInsets.only(top : 30, left : 15),
-                height: 30,
-                width: 100,
-                child: Card(
-                  child: Text(dates[1],
-                      style: TextStyle(fontFamily: 'Poppins', fontSize: 14)),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top : 30, left : 15),
-                height: 30,
-                width: 100,
-                child: Card(
-                  child: Text(dates[2],
-                      style: TextStyle(fontFamily: 'Poppins', fontSize: 14)),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top : 30, left : 15),
-                height: 30,
-                width: 100,
-                child: Card(
-                  child: Text(dates[3],
-                      style: TextStyle(fontFamily: 'Poppins', fontSize: 14)),
-                ),
-              ),
-            ],
+            ),
           ),
 
           // TableCalendar(
