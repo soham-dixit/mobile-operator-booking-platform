@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
+import 'package:aapka_aadhaar/pages/contact_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -99,10 +100,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               height: 11,
             ),
             buildMenuItem(
-              text: 'Contact Us',
-              icon: Icons.call,
-              onTap: () {},
-            ),
+                text: 'Contact Us',
+                icon: Icons.call,
+                onTap: () {
+                  redirectToContactUs();
+                }),
             SizedBox(
               height: 11,
             ),
@@ -194,6 +196,15 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         style: TextStyle(color: color, fontFamily: 'Poppins', fontSize: 16),
       ),
       onTap: onTap,
+    );
+  }
+
+  void redirectToContactUs() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ContactPage(),
+      ),
     );
   }
 }
