@@ -30,6 +30,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
   TextEditingController _genderController = TextEditingController();
   bool already_exists_phone = false;
   bool already_exists_email = false;
+  bool already_exists = false;
   OTPVerification otpVerification = OTPVerification();
 
   final formKey = GlobalKey<FormState>();
@@ -63,6 +64,38 @@ class _OperatorRegisterState extends State<OperatorRegister> {
         already_exists_email = true;
       }
     }
+  }
+
+  already_registered() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    if (databaseData['operators'] != null) {
+      dynamic keys_list = databaseData['operators'].keys.toList();
+      for (int i = 0; i < keys_list.length; i++) {
+        if (databaseData['operators'][keys_list[i]]
+                .containsValue(_phoneController.text) ||
+            databaseData['operators'][keys_list[i]]
+                .containsValue(_emailController.text)) {
+          already_exists = true;
+        }
+      }
+    }
+  }
+
+  showSnack() {
+    already_exists = false;
+    const snackBar = SnackBar(
+      content: Text(
+        'Already registered , please Login.',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+        ),
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   showSnackBar() {
@@ -411,20 +444,25 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                                 selectedValue
                               ];
                               check_if_already_exists().whenComplete(() {
-                                print('res --- $already_exists_email');
-                                print('res ------ $already_exists_phone');
-                                already_exists_phone && already_exists_email
-                                    ? otpVerification
-                                        .verifyPhone(_phoneController.text)
-                                        .whenComplete(() {
-                                        Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                                builder: (context) => Otp(),
-                                                settings: RouteSettings(
-                                                  arguments: inputs,
-                                                )));
-                                      })
-                                    : showSnackBar();
+                                already_registered().whenComplete(() {
+                                  already_exists
+                                      ? showSnack()
+                                      : already_exists_phone &&
+                                              already_exists_email
+                                          ? otpVerification
+                                              .verifyPhone(
+                                                  _phoneController.text)
+                                              .whenComplete(() {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Otp(),
+                                                      settings: RouteSettings(
+                                                        arguments: inputs,
+                                                      )));
+                                            })
+                                          : showSnackBar();
+                                });
                               });
                               // check_if_already_exists().whenComplete(() {
                               //   already_exists
