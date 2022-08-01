@@ -200,7 +200,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   }
 
   void redirectToContactUs() {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ContactPage(),
