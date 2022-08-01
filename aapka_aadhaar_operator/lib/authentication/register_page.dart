@@ -87,7 +87,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
     already_exists = false;
     const snackBar = SnackBar(
       content: Text(
-        'Already registered , please Login.',
+        'Already registered, please login',
         style: TextStyle(
           fontFamily: 'Poppins',
           fontSize: 16,
