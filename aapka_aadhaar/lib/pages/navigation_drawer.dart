@@ -100,10 +100,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               height: 11,
             ),
             buildMenuItem(
-              text: 'Contact Us',
-              icon: Icons.call,
-              onTap: () {},
-            ),
+                text: 'Contact Us',
+                icon: Icons.call,
+                onTap: () {
+                  redirectToContactUs();
+                }),
             SizedBox(
               height: 11,
             ),
