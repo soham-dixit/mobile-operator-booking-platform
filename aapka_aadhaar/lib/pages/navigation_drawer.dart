@@ -200,7 +200,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   }
   
   void redirectToPressReleases() {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PressReleases(),
