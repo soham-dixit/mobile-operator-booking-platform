@@ -56,7 +56,8 @@ class _OtpState extends State<Otp> {
     databaseReference.child("operators").child(uid).set({
       "fullname": fullname,
       "email": email,
-      "phoneNumber": phoneNumber
+      "phoneNumber": phoneNumber,
+      "gender": gender
     }).whenComplete(() {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -64,7 +65,6 @@ class _OtpState extends State<Otp> {
         ),
       );
     });
-
 
     // print('Contains --- ${databaseData['users']['keys_list[0]']}');
 
