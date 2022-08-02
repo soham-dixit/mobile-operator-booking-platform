@@ -14,7 +14,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Location currentLocation = Location();
-  String userid = '';
 
   @override
   void initState() {
@@ -31,9 +30,19 @@ class _HomePageState extends State<HomePage> {
 
   void getLocation() async {
     var location = await currentLocation.getLocation();
-    currentLocation.onLocationChanged.listen((LocationData loc) {
+    currentLocation.onLocationChanged.listen((LocationData loc) async {
       print(loc.latitude);
       print(loc.longitude);
+      final databaseReference = FirebaseDatabase.instance.ref();
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final User user = await auth.currentUser!;
+      final uid = user.uid;
+      // print(uid);
+      databaseReference
+          .child("operators")
+          .child(uid)
+          .child("location")
+          .update({"latitude": loc.latitude, "longitude": loc.longitude});
     });
   }
 

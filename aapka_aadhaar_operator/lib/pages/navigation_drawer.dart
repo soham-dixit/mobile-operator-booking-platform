@@ -83,7 +83,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
                       print('logged out');
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => OperatorLogin()));
                     },
                     child: Text('Log out'),

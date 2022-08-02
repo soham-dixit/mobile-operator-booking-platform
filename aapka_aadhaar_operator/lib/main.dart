@@ -1,4 +1,3 @@
-import 'package:aapka_aadhaar_operator/authentication/login_page.dart';
 import 'package:aapka_aadhaar_operator/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
