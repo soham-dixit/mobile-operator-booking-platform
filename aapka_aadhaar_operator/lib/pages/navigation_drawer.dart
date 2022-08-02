@@ -1,11 +1,19 @@
 import 'package:aapka_aadhaar_operator/authentication/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationDrawer extends StatefulWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
+
+  @override
+  State<NavigationDrawer> createState() => _NavigationDrawerState();
+}
+
+class _NavigationDrawerState extends State<NavigationDrawer> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +81,8 @@ class NavigationDrawer extends StatelessWidget {
 
                   Widget logoutButton = ElevatedButton(
                     onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                      print('logged out');
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => OperatorLogin()));
                     },

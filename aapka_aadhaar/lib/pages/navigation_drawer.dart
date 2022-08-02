@@ -1,11 +1,10 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:aapka_aadhaar/pages/press-releases.dart';
+import 'package:aapka_aadhaar/pages/contact_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class NavigationDrawer extends StatefulWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -99,10 +98,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               height: 11,
             ),
             buildMenuItem(
-              text: 'Contact Us',
-              icon: Icons.call,
-              onTap: () {},
-            ),
+                text: 'Contact Us',
+                icon: Icons.call,
+                onTap: () {
+                  redirectToContactUs();
+                }),
             SizedBox(
               height: 11,
             ),
@@ -198,12 +198,20 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       onTap: onTap,
     );
   }
-  
+
   void redirectToPressReleases() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PressReleases(),
+      ),
+    );
+  }
+
+  void redirectToContactUs() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PressReleases(),
+        builder: (context) => ContactPage(),
       ),
     );
   }
