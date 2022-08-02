@@ -32,11 +32,16 @@ class _HomePageState extends State<HomePage> {
       dynamic keys_list = databaseData['operators'].keys.toList();
       for (int i = 0; i < keys_list.length; i++) {
         key = keys_list[i];
-        if (databaseData['operators'][keys_list[i]]['latitude'] != null) {
-          latitudes.add(databaseData['operators'][keys_list[i]]['latitude']);
+        if (databaseData['operators'][keys_list[i]]['location']['latitude'] !=
+            null) {
+          latitudes.add(
+              databaseData['operators'][keys_list[i]]['location']['latitude']);
         }
-        if (databaseData['operators'][keys_list[i]]['longitude'] != null) {
-          longitudes.add(databaseData['operators'][keys_list[i]]['longitude']);
+        if (databaseData['operators'][keys_list[i]]['location']['longitude'] !=
+            null) {
+          longitudes.add(
+              databaseData['operators'][keys_list[i]]['location']['longitude']);
+          print(longitudes);
         }
         if (databaseData['operators'][keys_list[i]]['gender'] != null) {
           genders.add(databaseData['operators'][keys_list[i]]['gender']);
