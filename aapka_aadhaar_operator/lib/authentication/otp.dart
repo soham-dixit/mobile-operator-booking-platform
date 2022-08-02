@@ -35,12 +35,28 @@ class _OtpState extends State<Otp> {
     //       );
     //     });
     final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+
     //push data to database
-    databaseReference.child("operators").push().set({
+    // databaseReference.child("operators").push().set({
+    //   "fullname": fullname,
+    //   "email": email,
+    //   "phoneNumber": phoneNumber,
+    //   "gender" : gender
+    // }).whenComplete(() {
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(
+    //       builder: (context) => HomePage(),
+    //     ),
+    //   );
+    // });
+
+    databaseReference.child("operators").child(uid).set({
       "fullname": fullname,
       "email": email,
-      "phoneNumber": phoneNumber,
-      "gender" : gender
+      "phoneNumber": phoneNumber
     }).whenComplete(() {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -48,6 +64,7 @@ class _OtpState extends State<Otp> {
         ),
       );
     });
+
 
     // print('Contains --- ${databaseData['users']['keys_list[0]']}');
 
