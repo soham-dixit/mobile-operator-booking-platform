@@ -1,5 +1,6 @@
 import 'package:aapka_aadhaar_operator/authentication/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -14,6 +15,31 @@ class NavigationDrawer extends StatefulWidget {
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  static String operatorName = '', operatorEmail = '', operatorPhone = '';
+
+  @override
+  void initState() {
+    super.initState();
+    if (auth.currentUser != null) {
+      print("logged in");
+      fetchDetails();
+    } else {
+      print("Not logged in");
+    }
+  }
+
+  void fetchDetails() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    if (databaseData['operators'] != null) {
+      operatorName = databaseData['operators'][uid]['fullname'];
+      operatorPhone = databaseData['operators'][uid]['phoneNumber'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,16 +64,26 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                       height: 10,
                     ),
                     Text(
-                      'Operator Name',
+                      operatorName,
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 24,
+                        fontSize: 18,
                       ),
                     ),
-                    Text('Enrollment ID'),
+                    Text(
+                      '+91' + ' ' + operatorPhone,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 18,
+                      ),
+                    ),
                   ],
                 ),
               ),
+            ),
+            Divider(
+              color: Colors.grey,
+              thickness: 1,
             ),
             SizedBox(
               height: 22,
