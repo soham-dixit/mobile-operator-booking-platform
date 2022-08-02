@@ -1,11 +1,10 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
+import 'package:aapka_aadhaar/pages/press-releases.dart';
 import 'package:aapka_aadhaar/pages/contact_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class NavigationDrawer extends StatefulWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -39,7 +38,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData();
   }
@@ -119,7 +117,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             buildMenuItem(
               text: 'Recent Blogs',
               icon: Icons.chat,
-              onTap: () {},
+              onTap: () {
+                redirectToPressReleases();
+              },
             ),
             SizedBox(
               height: 11,
@@ -196,6 +196,14 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         style: TextStyle(color: color, fontFamily: 'Poppins', fontSize: 16),
       ),
       onTap: onTap,
+    );
+  }
+
+  void redirectToPressReleases() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PressReleases(),
+      ),
     );
   }
 
