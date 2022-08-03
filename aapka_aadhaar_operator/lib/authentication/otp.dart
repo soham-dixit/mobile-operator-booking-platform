@@ -58,6 +58,88 @@ class _OtpState extends State<Otp> {
       "email": email,
       "phoneNumber": phoneNumber,
       "gender": gender
+    });
+
+    addSlots();
+
+    // print('Contains --- ${databaseData['users']['keys_list[0]']}');
+
+    //push data to database
+  }
+
+  void addSlots() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    // print(uid);
+    databaseReference.child("operators").child(uid).child("slots").update({
+      "firstDay": "",
+    });
+    databaseReference.child("operators").child(uid).child("slots").update({
+      "secondDay": "",
+    });
+    databaseReference.child("operators").child(uid).child("slots").update({
+      "thirdDay": "",
+    });
+    databaseReference.child("operators").child(uid).child("slots").update({
+      "fourthDay": "",
+    });
+    databaseReference
+        .child("operators")
+        .child(uid)
+        .child("slots")
+        .child("firstDay")
+        .update({
+      "10_11": false,
+      "11_12": false,
+      "12_1": false,
+      "2_3": false,
+      "3_4": false,
+      "4_5": false,
+      "5_6": false,
+    });
+    databaseReference
+        .child("operators")
+        .child(uid)
+        .child("slots")
+        .child("secondDay")
+        .update({
+      "10_11": false,
+      "11_12": false,
+      "12_1": false,
+      "2_3": false,
+      "3_4": false,
+      "4_5": false,
+      "5_6": false,
+    });
+    databaseReference
+        .child("operators")
+        .child(uid)
+        .child("slots")
+        .child("thirdDay")
+        .update({
+      "10_11": false,
+      "11_12": false,
+      "12_1": false,
+      "2_3": false,
+      "3_4": false,
+      "4_5": false,
+      "5_6": false,
+    });
+    databaseReference
+        .child("operators")
+        .child(uid)
+        .child("slots")
+        .child("fourthDay")
+        .update({
+      "10_11": false,
+      "11_12": false,
+      "12_1": false,
+      "2_3": false,
+      "3_4": false,
+      "4_5": false,
+      "5_6": false,
     }).whenComplete(() {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -65,10 +147,6 @@ class _OtpState extends State<Otp> {
         ),
       );
     });
-
-    // print('Contains --- ${databaseData['users']['keys_list[0]']}');
-
-    //push data to database
   }
 
   verifyOtp(String verificationCode1, String smsCode) async {
