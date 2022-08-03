@@ -15,31 +15,30 @@ class NavigationDrawer extends StatefulWidget {
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  String userName = '', userEmail = '';
+  static String userName = '', userEmail = '', userPhone = '';
 
-  getData() async {
+  void getData() async {
     final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
-    User user = await auth.currentUser!;
-    String phone = user.phoneNumber!.substring(3);
-    String key = '';
     if (databaseData['users'] != null) {
-      dynamic keys_list = databaseData['users'].keys.toList();
-      for (int i = 0; i < keys_list.length; i++) {
-        if (databaseData['users'][keys_list[i]].containsValue(phone)) {
-          key = keys_list[i];
-          userName = databaseData['users'][key]['fullname'];
-          userEmail = databaseData['users'][key]['email'];
-        }
-      }
+      userName = databaseData['users'][uid]['fullname'];
+      userPhone = databaseData['users'][uid]['phoneNumber'];
     }
   }
 
   @override
   void initState() {
     super.initState();
-    getData();
+    if (auth.currentUser != null) {
+      print("logged in");
+      getData();
+    } else {
+      print("Not logged in");
+    }
   }
 
   @override
@@ -64,27 +63,27 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     SizedBox(
                       height: 10,
                     ),
-                    userName == ''
-                        ? Center(child: CupertinoActivityIndicator())
-                        : Text(
-                            userName,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 18,
-                            ),
-                          ),
-                    userEmail == ''
-                        ? Center(child: CupertinoActivityIndicator())
-                        : Text(
-                            userEmail,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 18,
-                            ),
-                          ),
+                    Text(
+                      userName,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      '+91' + ' ' + userPhone,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 18,
+                      ),
+                    ),
                   ],
                 ),
               ),
+            ),
+            Divider(
+              color: Colors.grey,
+              thickness: 1,
             ),
             SizedBox(
               height: 22,
