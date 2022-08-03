@@ -34,21 +34,24 @@ class _OtpState extends State<Otp> {
     //         message: "Processing, please wait...",
     //       );
     //     });
+
     final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+
     //push data to database
-    databaseReference.child("users").push().set({
+    databaseReference.child("users").child(uid).set({
       "fullname": fullname,
       "email": email,
       "phoneNumber": phoneNumber
-    }).whenComplete(
-      () {
-        Navigator.of(context).pushReplacement(
+    }).whenComplete(() {
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => HomePage(),
         ),
       );
-      } 
-    );
+    });
 
     // print('Contains --- ${databaseData['users']['keys_list[0]']}');
 
