@@ -109,6 +109,72 @@ class _BookSlotsState extends State<BookSlots> {
               ),
             ),
           ),
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  Card(
+                    child: ListTile(
+                      title: Text('10AM to 11AM'),
+                      trailing: ElevatedButton(
+                        child: Text('Book'),
+                        onPressed: () {
+                          
+                        },
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Colors.white),
+                          backgroundColor:
+                              MaterialStateProperty.all(Color(0xFFF23F44)),
+                          shape: MaterialStateProperty.all<
+                              RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      tileColor: Color(0xffffffff),
+                      leading: Icon(
+                        Icons.circle,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      title: Text('11AM to 12AM'),
+                      trailing: ElevatedButton(
+                        child: Text('Book'),
+                        onPressed: () {
+                          
+                        },
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Colors.black),
+                          backgroundColor:
+                              MaterialStateProperty.all(Color(0xffffffff)),
+                          shape: MaterialStateProperty.all<
+                              RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      tileColor: Color(0xffffffff),
+                      leading: Icon(
+                        Icons.circle,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
 
           // TableCalendar(
           //   firstDay: DateTime.parse(dates[0]),
