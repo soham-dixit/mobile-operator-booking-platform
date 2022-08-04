@@ -78,7 +78,7 @@ class _OtpState extends State<Otp> {
         'Incorrect OTP',
         style: TextStyle(
           fontFamily: 'Poppins',
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: FontWeight.bold,
         ),
       ),

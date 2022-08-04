@@ -1,9 +1,9 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
+import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/press-releases.dart';
 import 'package:aapka_aadhaar/pages/contact_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NavigationDrawer extends StatefulWidget {
@@ -120,6 +120,22 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 redirectToPressReleases();
               },
             ),
+            // SizedBox(
+            //   height: 11,
+            // ),
+            // buildMenuItem(
+            //   text: 'Book Slots (test)',
+            //   icon: Icons.book_online,
+            //   onTap: () {
+            //     //call book slots
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => BookSlots(),
+            //       ),
+            //     );
+            //   },
+            // ),
             SizedBox(
               height: 11,
             ),

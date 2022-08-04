@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -178,6 +179,12 @@ class _HomePageState extends State<HomePage> {
                 child: ElevatedButton(
                   onPressed: () {
                     print("clicked on book");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BookSlots(),
+                      ),
+                    );
                   },
                   child: Text('BOOK',
                       style: TextStyle(fontSize: 16, fontFamily: 'Poppins')),
