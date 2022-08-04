@@ -1,8 +1,9 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:aapka_aadhaar/pages/book_slots.dart';
+import 'package:aapka_aadhaar/pages/press-releases.dart';
+import 'package:aapka_aadhaar/pages/contact_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NavigationDrawer extends StatefulWidget {
@@ -14,32 +15,30 @@ class NavigationDrawer extends StatefulWidget {
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  String userName = '', userEmail = '';
+  static String userName = '', userEmail = '', userPhone = '';
 
-  getData() async {
+  void getData() async {
     final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
-    User user = await auth.currentUser!;
-    String phone = user.phoneNumber!.substring(3);
-    String key = '';
     if (databaseData['users'] != null) {
-      dynamic keys_list = databaseData['users'].keys.toList();
-      for (int i = 0; i < keys_list.length; i++) {
-        if (databaseData['users'][keys_list[i]].containsValue(phone)) {
-          key = keys_list[i];
-          userName = databaseData['users'][key]['fullname'];
-          userEmail = databaseData['users'][key]['email'];
-        }
-      }
+      userName = databaseData['users'][uid]['fullname'];
+      userPhone = databaseData['users'][uid]['phoneNumber'];
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getData();
+    if (auth.currentUser != null) {
+      print("logged in");
+      getData();
+    } else {
+      print("Not logged in");
+    }
   }
 
   @override
@@ -64,27 +63,27 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     SizedBox(
                       height: 10,
                     ),
-                    userName == ''
-                        ? Center(child: CupertinoActivityIndicator())
-                        : Text(
-                            userName,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 18,
-                            ),
-                          ),
-                    userEmail == ''
-                        ? Center(child: CupertinoActivityIndicator())
-                        : Text(
-                            userEmail,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 18,
-                            ),
-                          ),
+                    Text(
+                      userName,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      '+91' + ' ' + userPhone,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 18,
+                      ),
+                    ),
                   ],
                 ),
               ),
+            ),
+            Divider(
+              color: Colors.grey,
+              thickness: 1,
             ),
             SizedBox(
               height: 22,
@@ -98,10 +97,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               height: 11,
             ),
             buildMenuItem(
-              text: 'Contact Us',
-              icon: Icons.call,
-              onTap: () {},
-            ),
+                text: 'Contact Us',
+                icon: Icons.call,
+                onTap: () {
+                  redirectToContactUs();
+                }),
             SizedBox(
               height: 11,
             ),
@@ -116,24 +116,26 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             buildMenuItem(
               text: 'Recent Blogs',
               icon: Icons.chat,
-              onTap: () {},
-            ),
-            SizedBox(
-              height: 11,
-            ),
-            buildMenuItem(
-              text: 'Book Slots (test)',
-              icon: Icons.book_online,
               onTap: () {
-                //call book slots
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BookSlots(),
-                  ),
-                );
+                redirectToPressReleases();
               },
             ),
+            // SizedBox(
+            //   height: 11,
+            // ),
+            // buildMenuItem(
+            //   text: 'Book Slots (test)',
+            //   icon: Icons.book_online,
+            //   onTap: () {
+            //     //call book slots
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => BookSlots(),
+            //       ),
+            //     );
+            //   },
+            // ),
             SizedBox(
               height: 11,
             ),
@@ -209,6 +211,23 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         style: TextStyle(color: color, fontFamily: 'Poppins', fontSize: 16),
       ),
       onTap: onTap,
+    );
+  }
+
+  void redirectToPressReleases() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PressReleases(),
+      ),
+    );
+  }
+
+  void redirectToContactUs() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ContactPage(),
+      ),
     );
   }
 }

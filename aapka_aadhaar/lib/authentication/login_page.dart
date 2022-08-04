@@ -48,7 +48,6 @@ class _LoginPageState extends State<LoginPage> {
         style: TextStyle(
           fontFamily: 'Poppins',
           fontSize: 16,
-          fontWeight: FontWeight.bold,
         ),
       ),
     );

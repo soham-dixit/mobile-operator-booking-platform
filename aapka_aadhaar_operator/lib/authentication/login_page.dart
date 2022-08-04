@@ -1,6 +1,9 @@
+import 'package:aapka_aadhaar_operator/authentication/otp.dart';
+import 'package:aapka_aadhaar_operator/authentication/register_page.dart';
 import 'package:aapka_aadhaar_operator/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:aapka_aadhaar_operator/services/otp_verification.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,88 +17,56 @@ class OperatorLogin extends StatefulWidget {
 }
 
 class _OperatorLoginState extends State<OperatorLogin> {
-  final formKey = GlobalKey<FormState>();
-  bool showPass = false;
-  TextEditingController email = TextEditingController();
-  TextEditingController pass = TextEditingController();
-  var key = '';
-  String encrypted = '', decrypted = '';
-  var password = '';
-  bool showSnack_account = false, showSnack_pass = false;
-  bool isEmailVerified = false;
-
-  // PlatformStringCryptor cryptor = PlatformStringCryptor();
-
-  showSnackPass() {
-    showSnack_pass = false;
-    final snackBar = SnackBar(
-      content: Text(
-        'Incorrect password!',
-        style: TextStyle(
-          fontFamily: 'Poppins',
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
+  void navigateToRegister() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OperatorRegister(),
       ),
     );
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  showSnackAcc() {
-    showSnack_account = false;
-    final snackBar = SnackBar(
-      content: Text(
-        'Account not registered.',
-        style: TextStyle(
-          fontFamily: 'Poppins',
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
+  OTPVerification otpVerification = OTPVerification();
+  TextEditingController phone = TextEditingController();
+  bool phone_exists = false;
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-  // encrypt() async {
-  //   final salt = await cryptor.generateSalt();
-  //   password = pass.text;
-  //   key = await cryptor.generateKeyFromPassword(password, salt);
-  //   encrypted = await cryptor.encrypt(password, key);
-  //   print(encrypted);
-  // }
-
-  // decrypt() async {
-  //   try {
-  //     decrypted = await cryptor.decrypt(encrypted, key);
-  //     print(decrypted);
-  //   } on MacMismatchException {}
-  // }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
-    if (!isEmailVerified) {
-      sendEmailVerificationLink();
+  check_phone_exists(phoneNumber) async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    if (databaseData['operators'] != null) {
+      dynamic keys_list = databaseData['operators'].keys.toList();
+      
+      for (int i = 0; i < keys_list.length; i++) {
+        if (databaseData['operators'][keys_list[i]].containsValue(phoneNumber)) {
+          phone_exists = true;
+        }
+      }
     }
   }
 
-  Future sendEmailVerificationLink() async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      await user?.sendEmailVerification();
-    } catch (e) {
-      print(e);
-    }
+  showSnackBar() {
+    const snackBar = SnackBar(
+      content: Text(
+        'Account not registered!',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+        ),
+      ),
+    );
+
+    // Find the ScaffoldMessenger in the widget tree
+    // and use it to show a SnackBar.
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: const Color(0xFFFBF9F6),
+      backgroundColor: Color(0xFFFBF9F6),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -131,7 +102,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                   height: 10,
                 ),
                 const Text(
-                  "Enter your Email ID and Password",
+                  "Enter your phone number, we will send you OTP to verify",
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 14,
@@ -154,45 +125,43 @@ class _OperatorLoginState extends State<OperatorLogin> {
                     child: Column(
                       children: [
                         TextFormField(
-                          controller: email,
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                          maxLength: 10,
                           style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                           cursorColor: Colors.black,
+                          controller: phone,
                           decoration: InputDecoration(
-                            label: const Text('Email ID'),
+                            label: Text('Mobile'),
                             labelStyle: TextStyle(
                               color: Colors.grey.shade700,
                             ),
                             errorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.red),
+                                borderSide: BorderSide(color: Colors.red),
                                 borderRadius: BorderRadius.circular(10)),
                             focusedErrorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.red),
+                                borderSide: BorderSide(color: Colors.red),
                                 borderRadius: BorderRadius.circular(10)),
                             enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.black12),
+                                borderSide: BorderSide(color: Colors.black12),
                                 borderRadius: BorderRadius.circular(10)),
                             focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.black12),
+                                borderSide: BorderSide(color: Colors.black12),
                                 borderRadius: BorderRadius.circular(10)),
-                            // prefix: Padding(
-                            //   padding: EdgeInsets.symmetric(horizontal: 8),
-                            //   child: Text(
-                            //     '(+91)',
-                            //     style: TextStyle(
-                            //       fontFamily: 'Poppins',
-                            //       fontSize: 18,
-                            //       fontWeight: FontWeight.bold,
-                            //     ),
-                            //   ),
-                            // ),
+                            prefix: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
+                                '(+91)',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                             // suffixIcon: Icon(
                             //   Icons.check_circle,
                             //   color: Colors.green,
@@ -202,78 +171,8 @@ class _OperatorLoginState extends State<OperatorLogin> {
                           validator: (value) {
                             try {
                               if (value!.isEmpty ||
-                                  !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                      .hasMatch(value)) {
-                                return 'Please enter a valid Email Address';
-                              } else {
-                                return null;
-                              }
-                            } catch (e) {}
-                          },
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        TextFormField(
-                          controller: pass,
-                          obscureText: !showPass,
-                          keyboardType: TextInputType.visiblePassword,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          cursorColor: Colors.black,
-                          decoration: InputDecoration(
-                            label: const Text('Password'),
-                            labelStyle: TextStyle(
-                              color: Colors.grey.shade700,
-                            ),
-                            errorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            // prefix: Padding(
-                            //   padding: EdgeInsets.symmetric(horizontal: 8),
-                            //   child: Text(
-                            //     '(+91)',
-                            //     style: TextStyle(
-                            //       fontFamily: 'Poppins',
-                            //       fontSize: 18,
-                            //       fontWeight: FontWeight.bold,
-                            //     ),
-                            //   ),
-                            // ),
-                            suffixIcon: IconButton(
-                              icon: showPass
-                                  ? const Icon(Icons.visibility_off)
-                                  : const Icon(Icons.visibility),
-                              color: Colors.grey.shade700,
-                              onPressed: () {
-                                setState(() {
-                                  if (showPass) {
-                                    showPass = false;
-                                  } else {
-                                    showPass = true;
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            try {
-                              if (value!.isEmpty) {
-                                return 'Please enter your password';
+                                  !RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
+                                return 'Please Enter a valid 10 digit Mobile Number';
                               } else {
                                 return null;
                               }
@@ -287,13 +186,36 @@ class _OperatorLoginState extends State<OperatorLogin> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              if (formKey.currentState!.validate()) {}
+                              if (formKey.currentState!.validate()) {
+                                check_phone_exists(phone.text).whenComplete(() {
+                                  phone_exists
+                                      ? otpVerification
+                                          .verifyPhone(phone.text)
+                                          .whenComplete(() {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) => Otp(),
+                                              settings:
+                                                  RouteSettings(arguments: []),
+                                            ),
+                                          );
+                                        })
+                                      : showSnackBar();
+                                });
+                              }
+                              // showDialog(
+                              //     context: context,
+                              //     barrierDismissible: false,
+                              //     builder: (BuildContext c) {
+                              //       return ProgressDialog(
+                              //           message: 'Processing',);
+                              //     });
                             },
                             style: ButtonStyle(
                               foregroundColor: MaterialStateProperty.all<Color>(
                                   Colors.white),
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color(0xFFF23F44)),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Color(0xFFF23F44)),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -304,7 +226,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                             child: const Padding(
                               padding: EdgeInsets.all(14.0),
                               child: Text(
-                                'Login',
+                                'Send',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Poppins',
@@ -312,6 +234,37 @@ class _OperatorLoginState extends State<OperatorLogin> {
                               ),
                             ),
                           ),
+                        ),
+                        const SizedBox(
+                          height: 18,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'New operator? ',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF000000),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            GestureDetector(
+                              onTap: navigateToRegister,
+                              child: const Text(
+                                'Register now',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFFF23F44),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
                         ),
                         // GestureDetector(
                         //   onTap: () {
@@ -329,37 +282,6 @@ class _OperatorLoginState extends State<OperatorLogin> {
                         //     ),
                         //     textAlign: TextAlign.center,
                         //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 18,
-                        // ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     Text(
-                        //       'New user? ',
-                        //       style: TextStyle(
-                        //         fontFamily: 'Poppins',
-                        //         fontSize: 18,
-                        //         fontWeight: FontWeight.bold,
-                        //         color: Color(0xFF000000),
-                        //       ),
-                        //       textAlign: TextAlign.center,
-                        //     ),
-                        //     GestureDetector(
-                        //       onTap: () {},
-                        //       child: Text(
-                        //         'Register now',
-                        //         style: TextStyle(
-                        //           fontFamily: 'Poppins',
-                        //           fontSize: 18,
-                        //           fontWeight: FontWeight.bold,
-                        //           color: Color(0xFFF23F44),
-                        //         ),
-                        //         textAlign: TextAlign.center,
-                        //       ),
-                        //     ),
-                        //   ],
                         // ),
                       ],
                     ),

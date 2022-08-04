@@ -1,6 +1,6 @@
-import 'package:aapka_aadhaar/authentication/register_page.dart';
-import 'package:aapka_aadhaar/pages/home_page.dart';
-import 'package:aapka_aadhaar/services/otp_verification.dart';
+import 'package:aapka_aadhaar_operator/authentication/register_page.dart';
+import 'package:aapka_aadhaar_operator/pages/home_page.dart';
+import 'package:aapka_aadhaar_operator/services/otp_verification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class _OtpState extends State<Otp> {
     String fullname = args[0];
     String email = args[1];
     String phoneNumber = args[2];
-
+    String gender = args[3];
     // showDialog(
     //     context: context,
     //     barrierDismissible: false,
@@ -34,17 +34,112 @@ class _OtpState extends State<Otp> {
     //         message: "Processing, please wait...",
     //       );
     //     });
-
     final databaseReference = FirebaseDatabase.instance.ref();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
     final uid = user.uid;
 
     //push data to database
-    databaseReference.child("users").child(uid).set({
+    // databaseReference.child("operators").push().set({
+    //   "fullname": fullname,
+    //   "email": email,
+    //   "phoneNumber": phoneNumber,
+    //   "gender" : gender
+    // }).whenComplete(() {
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(
+    //       builder: (context) => HomePage(),
+    //     ),
+    //   );
+    // });
+
+    databaseReference.child("operators").child(uid).set({
       "fullname": fullname,
       "email": email,
-      "phoneNumber": phoneNumber
+      "phoneNumber": phoneNumber,
+      "gender": gender
+    });
+
+    addSlots();
+
+    // print('Contains --- ${databaseData['users']['keys_list[0]']}');
+
+    //push data to database
+  }
+
+  void addSlots() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    // print(uid);
+    databaseReference.child("operators").child(uid).child("slots").update({
+      "firstDay": "",
+    });
+    databaseReference.child("operators").child(uid).child("slots").update({
+      "secondDay": "",
+    });
+    databaseReference.child("operators").child(uid).child("slots").update({
+      "thirdDay": "",
+    });
+    databaseReference.child("operators").child(uid).child("slots").update({
+      "fourthDay": "",
+    });
+    databaseReference
+        .child("operators")
+        .child(uid)
+        .child("slots")
+        .child("firstDay")
+        .update({
+      "10_11": false,
+      "11_12": false,
+      "12_1": false,
+      "2_3": false,
+      "3_4": false,
+      "4_5": false,
+      "5_6": false,
+    });
+    databaseReference
+        .child("operators")
+        .child(uid)
+        .child("slots")
+        .child("secondDay")
+        .update({
+      "10_11": false,
+      "11_12": false,
+      "12_1": false,
+      "2_3": false,
+      "3_4": false,
+      "4_5": false,
+      "5_6": false,
+    });
+    databaseReference
+        .child("operators")
+        .child(uid)
+        .child("slots")
+        .child("thirdDay")
+        .update({
+      "10_11": false,
+      "11_12": false,
+      "12_1": false,
+      "2_3": false,
+      "3_4": false,
+      "4_5": false,
+      "5_6": false,
+    });
+    databaseReference
+        .child("operators")
+        .child(uid)
+        .child("slots")
+        .child("fourthDay")
+        .update({
+      "10_11": false,
+      "11_12": false,
+      "12_1": false,
+      "2_3": false,
+      "3_4": false,
+      "4_5": false,
+      "5_6": false,
     }).whenComplete(() {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -52,10 +147,6 @@ class _OtpState extends State<Otp> {
         ),
       );
     });
-
-    // print('Contains --- ${databaseData['users']['keys_list[0]']}');
-
-    //push data to database
   }
 
   verifyOtp(String verificationCode1, String smsCode) async {
@@ -73,12 +164,12 @@ class _OtpState extends State<Otp> {
   show_incorrect_otp() {
     incorrect_otp = false;
 
-    final snackBar = SnackBar(
-      content: const Text(
+    final snackBar = const SnackBar(
+      content: Text(
         'Incorrect OTP',
         style: TextStyle(
           fontFamily: 'Poppins',
-          fontSize: 16,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -90,7 +181,7 @@ class _OtpState extends State<Otp> {
   }
 
   login_or_register(args) {
-    args.length == 3
+    args.length == 4
         ? saveUserInfo(args)
         : Navigator.of(context).push(
             MaterialPageRoute(
@@ -116,14 +207,14 @@ class _OtpState extends State<Otp> {
                   alignment: Alignment.topLeft,
                   child: GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child: Icon(
+                    child: const Icon(
                       Icons.arrow_back,
                       size: 32,
                       color: Colors.black54,
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 18,
                 ),
                 Container(
@@ -134,13 +225,13 @@ class _OtpState extends State<Otp> {
                     shape: BoxShape.circle,
                   ),
                   child: Image.asset(
-                    'assets/user_app_logo.png',
+                    'assets/operator_app_logo.png',
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 24,
                 ),
-                Text(
+                const Text(
                   'Verification',
                   style: TextStyle(
                     fontFamily: 'Poppins',
@@ -151,7 +242,7 @@ class _OtpState extends State<Otp> {
                 SizedBox(
                   height: 10,
                 ),
-                Text(
+                const Text(
                   "Enter your OTP to verify",
                   style: TextStyle(
                     fontFamily: 'Poppins',
@@ -211,7 +302,7 @@ class _OtpState extends State<Otp> {
                             ),
                           ),
                         ),
-                        child: Padding(
+                        child: const Padding(
                           padding: EdgeInsets.all(14.0),
                           child: Text(
                             'Verify',
@@ -225,10 +316,10 @@ class _OtpState extends State<Otp> {
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 18,
                 ),
-                Text(
+                const Text(
                   "Didn't you receive any code?",
                   style: TextStyle(
                     fontFamily: 'Poppins',
@@ -244,8 +335,8 @@ class _OtpState extends State<Otp> {
                 InkWell(
                   onTap: () {
                     otpVerification.verifyPhone(args[2]).whenComplete(() {
-                      final snackBar = SnackBar(
-                        content: const Text(
+                      const snackBar = SnackBar(
+                        content: Text(
                           'Code has been sent',
                           style: TextStyle(
                             fontFamily: 'Poppins',
@@ -256,7 +347,7 @@ class _OtpState extends State<Otp> {
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     });
                   },
-                  child: Text(
+                  child: const Text(
                     "Resend new code",
                     style: TextStyle(
                       fontFamily: 'Poppins',

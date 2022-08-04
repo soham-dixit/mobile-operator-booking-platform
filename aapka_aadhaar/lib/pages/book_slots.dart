@@ -1,6 +1,5 @@
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
 class BookSlots extends StatefulWidget {
@@ -62,10 +61,7 @@ class _BookSlotsState extends State<BookSlots> {
                       padding: EdgeInsets.all(10),
                       child: Text(
                         dates[0],
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 14
-                        ),
+                        style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
                       ),
                     ),
                   ),
@@ -74,10 +70,7 @@ class _BookSlotsState extends State<BookSlots> {
                       padding: EdgeInsets.all(10),
                       child: Text(
                         dates[1],
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 14
-                        ),
+                        style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
                       ),
                     ),
                   ),
@@ -86,10 +79,7 @@ class _BookSlotsState extends State<BookSlots> {
                       padding: EdgeInsets.all(10),
                       child: Text(
                         dates[2],
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 14
-                        ),
+                        style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
                       ),
                     ),
                   ),
@@ -98,10 +88,7 @@ class _BookSlotsState extends State<BookSlots> {
                       padding: EdgeInsets.all(10),
                       child: Text(
                         dates[3],
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 14
-                        ),
+                        style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
                       ),
                     ),
                   ),
@@ -120,16 +107,14 @@ class _BookSlotsState extends State<BookSlots> {
                       title: Text('10AM to 11AM'),
                       trailing: ElevatedButton(
                         child: Text('Book'),
-                        onPressed: () {
-                          
-                        },
+                        onPressed: () {},
                         style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                              Colors.white),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
                           backgroundColor:
                               MaterialStateProperty.all(Color(0xFFF23F44)),
-                          shape: MaterialStateProperty.all<
-                              RoundedRectangleBorder>(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24.0),
                             ),
@@ -148,16 +133,14 @@ class _BookSlotsState extends State<BookSlots> {
                       title: Text('11AM to 12AM'),
                       trailing: ElevatedButton(
                         child: Text('Book'),
-                        onPressed: () {
-                          
-                        },
+                        onPressed: () {},
                         style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                              Colors.black),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.black),
                           backgroundColor:
                               MaterialStateProperty.all(Color(0xffffffff)),
-                          shape: MaterialStateProperty.all<
-                              RoundedRectangleBorder>(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24.0),
                             ),
