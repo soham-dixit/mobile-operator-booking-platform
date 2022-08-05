@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -59,9 +60,10 @@ class _HomePageState extends State<HomePage> {
             markerId: MarkerId(operatorNames[i]),
             position: LatLng(latitudes[i], longitudes[i]),
             icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
-            onTap: () {
+            onTap: () async{
+              final pref = await SharedPreferences.getInstance();
+              pref.setString('operator-key' , key.toString());
               print("ontap");
-              getSlotData(key);
               openDialog();
             },
           ),
@@ -70,13 +72,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  getSlotData(String? key) async {
-    final databaseReference = FirebaseDatabase.instance.ref();
-    DatabaseEvent event = await databaseReference.once();
-    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
-    Map<dynamic, dynamic> operatorData = databaseData['operators'][key];
-    print('DATA ----------- ${operatorData['slots']}');
-  }
+  
 
   void getLocation() async {
     var location = await currentLocation.getLocation();
