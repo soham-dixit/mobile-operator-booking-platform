@@ -17,7 +17,6 @@ class BookSlots extends StatefulWidget {
 class _BookSlotsState extends State<BookSlots> {
   final _currentDate = DateTime.now();
   final _dayFormatter = DateFormat('dd-MM-yyyy');
-  final _monthFormatter = DateFormat('MMM');
   Location currentLocation = Location();
   List dates = [];
   String dayG = 'firstDay';
