@@ -2,9 +2,12 @@ import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,6 +27,25 @@ class _HomePageState extends State<HomePage> {
   List genders = [];
   List operatorNames = [];
   String? key;
+  List dates = [];
+  List days = [];
+  final _currentDate = DateTime.now();
+  final dayFormatter = DateFormat.yMMMd();
+  bool firstDay = false, secondDay = false, thirdDay = false, fourthDay = false;
+  String? name;
+
+  addDates() {
+    dates.clear();
+    for (int i = 0; i < 4; i++) {
+      final date = _currentDate.add(Duration(days: i));
+      dates.add(
+        dayFormatter.format(date),
+        // _monthFormatter.format(date),
+      );
+      days.add(DateFormat("EEEE").format(date));
+      print('DATES ------ $days');
+    }
+  }
 
   getOperatorLocation() async {
     final databaseReference = FirebaseDatabase.instance.ref();
@@ -59,23 +81,16 @@ class _HomePageState extends State<HomePage> {
             markerId: MarkerId(operatorNames[i]),
             position: LatLng(latitudes[i], longitudes[i]),
             icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
-            onTap: () {
+            onTap: () async {
+              final pref = await SharedPreferences.getInstance();
+              pref.setString('operator-key', key.toString());
               print("ontap");
-              getSlotData(key);
               openDialog();
             },
           ),
         );
       }
     }
-  }
-
-  getSlotData(String? key) async {
-    final databaseReference = FirebaseDatabase.instance.ref();
-    DatabaseEvent event = await databaseReference.once();
-    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
-    Map<dynamic, dynamic> operatorData = databaseData['operators'][key];
-    print('DATA ----------- ${operatorData['slots']}');
   }
 
   void getLocation() async {
@@ -109,10 +124,36 @@ class _HomePageState extends State<HomePage> {
         ImageConfiguration(), 'assets/Male-Operator.png');
   }
 
+  getAvailablity() async {
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    if (databaseData['operators'] != null) {
+      Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
+      name = databaseData['operators'][key]['fullname'];
+      if (slotData['firstDay'].containsValue(false)) {
+        firstDay = true;
+      }
+      if (slotData['secondDay'].containsValue(false)) {
+        secondDay = true;
+      }
+      if (slotData['thirdDay'].containsValue(false)) {
+        thirdDay = true;
+      }
+      if (slotData['fourthDay'].containsValue(false)) {
+        fourthDay = true;
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getOperatorLocation();
+    addDates();
+    getAvailablity();
     setState(() {
       getLocation();
       setCustomMarker();
@@ -195,19 +236,22 @@ class _HomePageState extends State<HomePage> {
             ],
             title: Container(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: Text(
-                      "Name",
-                      style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    child: name == ''
+                        ? Center(child: CupertinoActivityIndicator())
+                        : Text(
+                            name.toString(),
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
                   ),
-                  SizedBox(
-                    width: 100.0,
-                  ),
+                  // SizedBox(
+                  //   width: 80.0,
+                  // ),
                   Expanded(
                     child: CircleAvatar(
                       backgroundColor: Color(0xFFF23F44),
@@ -230,17 +274,24 @@ class _HomePageState extends State<HomePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Text("28th Jun, 22",
+                              Text(dates[0],
                                   style: TextStyle(
                                       fontFamily: 'Poppins', fontSize: 12)),
-                              Text("Thursday",
+                              Text(days[0],
                                   style: TextStyle(
                                       fontFamily: 'Poppins', fontSize: 12)),
                               Icon(Icons.circle,
-                                  size: 20, color: Color(0xFF7FD958)),
-                              Text("Available",
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
+                                  size: 20,
+                                  color: firstDay
+                                      ? Color(0xFF7FD958)
+                                      : Color(0xFFF23F44)),
+                              firstDay
+                                  ? Text("Available",
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins', fontSize: 12))
+                                  : Text("Unvailable",
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins', fontSize: 12)),
                             ],
                           ),
                         ),
@@ -256,17 +307,24 @@ class _HomePageState extends State<HomePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Text("29th Jun, 22",
+                              Text(dates[1],
                                   style: TextStyle(
                                       fontFamily: 'Poppins', fontSize: 12)),
-                              Text("Friday",
+                              Text(days[1],
                                   style: TextStyle(
                                       fontFamily: 'Poppins', fontSize: 12)),
                               Icon(Icons.circle,
-                                  size: 20, color: Color(0xFFF23F44)),
-                              Text("Unavailable",
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
+                                  size: 20,
+                                  color: secondDay
+                                      ? Color(0xFF7FD958)
+                                      : Color(0xFFF23F44)),
+                              secondDay
+                                  ? Text("Available",
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins', fontSize: 12))
+                                  : Text("Unvailable",
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins', fontSize: 12)),
                             ],
                           ),
                         ),
@@ -282,17 +340,24 @@ class _HomePageState extends State<HomePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Text("30th Jun, 22",
+                              Text(dates[2],
                                   style: TextStyle(
                                       fontFamily: 'Poppins', fontSize: 12)),
-                              Text("Saturday",
+                              Text(days[2],
                                   style: TextStyle(
                                       fontFamily: 'Poppins', fontSize: 12)),
                               Icon(Icons.circle,
-                                  size: 20, color: Color(0xFF7FD958)),
-                              Text("Available",
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
+                                  size: 20,
+                                  color: thirdDay
+                                      ? Color(0xFF7FD958)
+                                      : Color(0xFFF23F44)),
+                              thirdDay
+                                  ? Text("Available",
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins', fontSize: 12))
+                                  : Text("Unvailable",
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins', fontSize: 12)),
                             ],
                           ),
                         ),
@@ -308,17 +373,24 @@ class _HomePageState extends State<HomePage> {
                         Expanded(
                           child: Column(
                             children: [
-                              Text("31st Jun, 22",
+                              Text(dates[3],
                                   style: TextStyle(
                                       fontFamily: 'Poppins', fontSize: 12)),
-                              Text("Sunday",
+                              Text(days[3],
                                   style: TextStyle(
                                       fontFamily: 'Poppins', fontSize: 12)),
                               Icon(Icons.circle,
-                                  size: 20, color: Color(0xFF7FD958)),
-                              Text("Available",
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
+                                  size: 20,
+                                  color: fourthDay
+                                      ? Color(0xFF7FD958)
+                                      : Color(0xFFF23F44)),
+                              fourthDay
+                                  ? Text("Available",
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins', fontSize: 12))
+                                  : Text("Unvailable",
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins', fontSize: 12)),
                             ],
                           ),
                         ),
