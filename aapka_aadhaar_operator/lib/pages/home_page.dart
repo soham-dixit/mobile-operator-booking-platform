@@ -82,6 +82,41 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      bottomNavigationBar: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.circle,
+              color: Colors.red,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Booked',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.circle,
+              color: Colors.green,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Vacant',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                )),
+          )
+        ],
+      ),
       body: Column(
         children: [
           SingleChildScrollView(
