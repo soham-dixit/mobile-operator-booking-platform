@@ -152,24 +152,30 @@ class _BookSlotsState extends State<BookSlots> {
       bottomNavigationBar: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.circle,
-            color: Colors.red,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.circle,
+              color: Colors.red,
+            ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 12 , right : 12),
+            padding: const EdgeInsets.all(8.0),
             child: Text('Booked',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 14,
                 )),
           ),
-          Icon(
-            Icons.circle,
-            color: Colors.green,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.circle,
+              color: Colors.green,
+            ),
           ),
           Padding(
-            padding: EdgeInsets.only(left : 12 , right : 12),
+            padding: const EdgeInsets.all(8.0),
             child: Text('Available',
                 style: TextStyle(
                   fontFamily: 'Poppins',
@@ -193,17 +199,19 @@ class _BookSlotsState extends State<BookSlots> {
                         activeColor = [true, false, false, false];
                       });
                     },
-                    child: Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          dates[0],
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14,
-                              color: activeColor[0]
-                                  ? Color(0xFFF23F44)
-                                  : Colors.black),
+                    child: Container(
+                      child: Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            dates[0],
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 14,
+                                color: activeColor[0]
+                                    ? Color(0xFFF23F44)
+                                    : Colors.black),
+                          ),
                         ),
                       ),
                     ),
@@ -301,7 +309,7 @@ class _BookSlotsState extends State<BookSlots> {
                               itemCount: status.length,
                               itemBuilder: (context, i) {
                                 return Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(5.0),
                                   child: Column(
                                     children: [
                                       timings[i] == '1PM - 2PM'
