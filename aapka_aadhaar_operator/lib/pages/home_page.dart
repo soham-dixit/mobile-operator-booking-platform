@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    updateSlots();
     setState(() {
       if (FirebaseAuth.instance.currentUser != null) {
         print("logged in");
@@ -50,17 +51,62 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    dates.clear();
-    for (int i = 0; i < 4; i++) {
+  updateSlots() async {
+    var _currentDate = DateTime.now();
+    final _dayFormatter = DateFormat('dd-MM-yyyy');
+    List dates = [];
+    for (int i = 0; i < 5; i++) {
       final date = _currentDate.add(Duration(days: i));
       dates.add(
         _dayFormatter.format(date),
         // _monthFormatter.format(date),
       );
     }
-    print('DATES ------- $dates');
+
+    if (_currentDate == dates[1]) {
+      final databaseReference = FirebaseDatabase.instance.ref();
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final User user = await auth.currentUser!;
+      final uid = user.uid;
+      databaseReference
+          .child("operators")
+          .child(uid)
+          .child("slots")
+          .child(dates[0])
+          .remove();
+
+      databaseReference.child("operators").child(uid).child("slots").update({
+        dates[4]: "",
+      });
+
+      databaseReference
+          .child("operators")
+          .child(uid)
+          .child("slots")
+          .child(dates[4])
+          .update({
+        "10_11": false,
+        "11_12": false,
+        "12_1": false,
+        "2_3": false,
+        "3_4": false,
+        "4_5": false,
+        "5_6": false,
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List dates = [];
+    for (int i = 0; i < 5; i++) {
+      final date = _currentDate.add(Duration(days: i));
+      dates.add(
+        _dayFormatter.format(date),
+        // _monthFormatter.format(date),
+      );
+    }
+
     return Scaffold(
       drawer: NavigationDrawer(),
       appBar: AppBar(

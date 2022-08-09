@@ -19,7 +19,7 @@ class _BookSlotsState extends State<BookSlots> {
   final _dayFormatter = DateFormat('dd-MM-yyyy');
   Location currentLocation = Location();
   List dates = [];
-  String dayG = 'firstDay';
+  String? dayG;
   List status = [];
   List timings = [
     '10AM - 11AM',
@@ -49,19 +49,18 @@ class _BookSlotsState extends State<BookSlots> {
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
-      //Change this , get from local storage
-      print(dayG);
       Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
+      dynamic keys_list = slotData.keys.toList();
       status.clear();
       status.addAll([
-        slotData[dayG]['10_11'],
-        slotData[dayG]['11_12'],
-        slotData[dayG]['12_1'],
+        slotData[day]['10_11'],
+        slotData[day]['11_12'],
+        slotData[day]['12_1'],
         false,
-        slotData[dayG]['2_3'],
-        slotData[dayG]['3_4'],
-        slotData[dayG]['4_5'],
-        slotData[dayG]['5_6']
+        slotData[day]['2_3'],
+        slotData[day]['3_4'],
+        slotData[day]['4_5'],
+        slotData[day]['5_6']
       ]);
 
       return status;
@@ -81,7 +80,7 @@ class _BookSlotsState extends State<BookSlots> {
           .child('operators')
           .child(key.toString())
           .child('slots')
-          .child(dayG)
+          .child(dayG.toString())
           .child(
             slot[i],
           )
@@ -118,7 +117,9 @@ class _BookSlotsState extends State<BookSlots> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     dates.clear();
     for (int i = 0; i < 4; i++) {
       final date = _currentDate.add(Duration(days: i));
@@ -127,6 +128,12 @@ class _BookSlotsState extends State<BookSlots> {
         // _monthFormatter.format(date),
       );
     }
+    dayG = dates[0];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    
 
     return Scaffold(
       drawer: NavigationDrawer(),
@@ -195,7 +202,7 @@ class _BookSlotsState extends State<BookSlots> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        dayG = 'firstDay';
+                        dayG = dates[0];
                         activeColor = [true, false, false, false];
                       });
                     },
@@ -219,7 +226,7 @@ class _BookSlotsState extends State<BookSlots> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        dayG = 'secondDay';
+                        dayG = dates[1];
                         activeColor = [false, true, false, false];
                       });
                     },
@@ -241,7 +248,7 @@ class _BookSlotsState extends State<BookSlots> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        dayG = 'thirdDay';
+                        dayG = dates[2];
                         activeColor = [false, false, true, false];
                       });
                     },
@@ -263,7 +270,7 @@ class _BookSlotsState extends State<BookSlots> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        dayG = 'fourthDay';
+                        dayG = dates[3];
                         activeColor = [false, false, false, true];
                       });
                     },
@@ -291,7 +298,7 @@ class _BookSlotsState extends State<BookSlots> {
             child: Column(
               children: [
                 FutureBuilder(
-                    future: getData(dayG),
+                    future: getData(dayG.toString()),
                     builder: (context, AsyncSnapshot snapshot) {
                       switch (snapshot.connectionState) {
                         case ConnectionState.waiting:
