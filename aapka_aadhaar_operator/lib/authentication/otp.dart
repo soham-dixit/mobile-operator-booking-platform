@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class Otp extends StatefulWidget {
   const Otp({Key? key}) : super(key: key);
@@ -72,24 +73,34 @@ class _OtpState extends State<Otp> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
     final uid = user.uid;
+    final _currentDate = DateTime.now();
+    final _dayFormatter = DateFormat('dd-MM-yyyy');
+    List dates = [];
+    for (int i = 0; i < 4; i++) {
+      final date = _currentDate.add(Duration(days: i));
+      dates.add(
+        _dayFormatter.format(date),
+        // _monthFormatter.format(date),
+      );
+    }
     // print(uid);
     databaseReference.child("operators").child(uid).child("slots").update({
-      "firstDay": "",
+      dates[0]: "",
     });
     databaseReference.child("operators").child(uid).child("slots").update({
-      "secondDay": "",
+      dates[1]: "",
     });
     databaseReference.child("operators").child(uid).child("slots").update({
-      "thirdDay": "",
+      dates[2]: "",
     });
     databaseReference.child("operators").child(uid).child("slots").update({
-      "fourthDay": "",
+      dates[3]: "",
     });
     databaseReference
         .child("operators")
         .child(uid)
         .child("slots")
-        .child("firstDay")
+        .child(dates[0])
         .update({
       "10_11": false,
       "11_12": false,
@@ -103,7 +114,7 @@ class _OtpState extends State<Otp> {
         .child("operators")
         .child(uid)
         .child("slots")
-        .child("secondDay")
+        .child(dates[1])
         .update({
       "10_11": false,
       "11_12": false,
@@ -117,7 +128,7 @@ class _OtpState extends State<Otp> {
         .child("operators")
         .child(uid)
         .child("slots")
-        .child("thirdDay")
+        .child(dates[2])
         .update({
       "10_11": false,
       "11_12": false,
@@ -131,7 +142,7 @@ class _OtpState extends State<Otp> {
         .child("operators")
         .child(uid)
         .child("slots")
-        .child("fourthDay")
+        .child(dates[3])
         .update({
       "10_11": false,
       "11_12": false,

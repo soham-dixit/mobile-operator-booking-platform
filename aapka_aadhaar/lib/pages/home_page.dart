@@ -132,17 +132,18 @@ class _HomePageState extends State<HomePage> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
       Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
+      dynamic keys_list = slotData.keys.toList();
       name = databaseData['operators'][key]['fullname'];
-      if (slotData['firstDay'].containsValue(false)) {
+      if (slotData[keys_list[0]].containsValue(false)) {
         firstDay = true;
       }
-      if (slotData['secondDay'].containsValue(false)) {
+      if (slotData[keys_list[1]].containsValue(false)) {
         secondDay = true;
       }
-      if (slotData['thirdDay'].containsValue(false)) {
+      if (slotData[keys_list[2]].containsValue(false)) {
         thirdDay = true;
       }
-      if (slotData['fourthDay'].containsValue(false)) {
+      if (slotData[keys_list[3]].containsValue(false)) {
         fourthDay = true;
       }
     }
