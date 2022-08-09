@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
   final dayFormatter = DateFormat.yMMMd();
   bool firstDay = false, secondDay = false, thirdDay = false, fourthDay = false;
   String? name;
+  Set<Circle> _circles = {};
 
   addDates() {
     dates.clear();
@@ -99,7 +100,7 @@ class _HomePageState extends State<HomePage> {
       _controller
           ?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
         target: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
-        zoom: 16.0,
+        zoom: 12,
       )));
       print(loc.latitude);
       print(loc.longitude);
@@ -111,6 +112,16 @@ class _HomePageState extends State<HomePage> {
               position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
               icon: mapMarker),
         ]);
+        _circles.add(
+          Circle(
+            circleId: CircleId("user circle"),
+            center: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
+            radius: 3000,
+            fillColor: Colors.blue.shade100.withOpacity(0.5),
+            strokeColor: Colors.blue.withAlpha(70),
+            strokeWidth: 2,
+          ),
+        );
       });
     });
   }
@@ -193,7 +204,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           GoogleMap(
             mapType: MapType.normal,
-            myLocationEnabled: true,
+            myLocationEnabled: false,
             zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
               target: LatLng(19.0760, 72.8777),
@@ -203,6 +214,7 @@ class _HomePageState extends State<HomePage> {
               _controller = controller;
             },
             markers: _markers,
+            circles: _circles,
           ),
         ],
       ),
