@@ -52,47 +52,51 @@ class _HomePageState extends State<HomePage> {
   }
 
   updateSlots() async {
-    var _currentDate = DateTime.now();
-    final _dayFormatter = DateFormat('dd-MM-yyyy');
-    List dates = [];
-    for (int i = 0; i < 5; i++) {
-      final date = _currentDate.add(Duration(days: i));
-      dates.add(
-        _dayFormatter.format(date),
-        // _monthFormatter.format(date),
-      );
-    }
-
-    if (_currentDate == dates[1]) {
-      final databaseReference = FirebaseDatabase.instance.ref();
-      final FirebaseAuth auth = FirebaseAuth.instance;
-      final User user = await auth.currentUser!;
-      final uid = user.uid;
-      databaseReference
-          .child("operators")
-          .child(uid)
-          .child("slots")
-          .child(dates[0])
-          .remove();
-
-      databaseReference.child("operators").child(uid).child("slots").update({
-        dates[4]: "",
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    if (databaseData['operators'] != null) {
+      Map<dynamic, dynamic> slotData = databaseData['operators'][uid]['slots'];
+      List keys_list = slotData.keys.toList();
+      keys_list.sort((a, b) {
+        return a.compareTo(b);
       });
+      print(keys_list);
+      var _currentDate = DateTime.now();
+      final _dayFormatter = DateFormat('dd-MM-yyyy');
 
-      databaseReference
-          .child("operators")
-          .child(uid)
-          .child("slots")
-          .child(dates[4])
-          .update({
-        "10_11": false,
-        "11_12": false,
-        "12_1": false,
-        "2_3": false,
-        "3_4": false,
-        "4_5": false,
-        "5_6": false,
-      });
+      if (_dayFormatter.format(_currentDate) == keys_list[1]) {
+        databaseReference
+            .child("operators")
+            .child(uid)
+            .child("slots")
+            .child(keys_list[0])
+            .remove();
+        String day = _dayFormatter
+            .format(_currentDate.add(Duration(days: 4)))
+            .toString();
+        databaseReference.child("operators").child(uid).child("slots").update({
+          day: "",
+        });
+
+        databaseReference
+            .child("operators")
+            .child(uid)
+            .child("slots")
+            .child(day)
+            .update({
+          "10_11": false,
+          "11_12": false,
+          "12_1": false,
+          "2_3": false,
+          "3_4": false,
+          "4_5": false,
+          "5_6": false,
+        });
+      } else {}
     }
   }
 

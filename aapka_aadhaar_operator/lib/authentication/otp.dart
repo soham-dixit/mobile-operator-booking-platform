@@ -129,7 +129,7 @@ class _OtpState extends State<Otp> {
         .child(uid)
         .child("slots")
         .child(dates[2])
-        .update({
+        .update({ 
       "10_11": false,
       "11_12": false,
       "12_1": false,
