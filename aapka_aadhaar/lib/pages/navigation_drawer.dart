@@ -5,6 +5,7 @@ import 'package:aapka_aadhaar/pages/contact_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NavigationDrawer extends StatefulWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -150,8 +151,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     },
                   );
                   Widget logoutButton = ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       FirebaseAuth.instance.signOut();
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      prefs.remove('uid-user');
                       print("logged out");
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) => LoginPage()));

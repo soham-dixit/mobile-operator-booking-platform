@@ -1,5 +1,7 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
+import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -14,9 +16,26 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    navigateToLogin();
+    checkUid();
   }
 
+  checkUid() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var uid = prefs.getString('uid-user');
+    if (uid != null) {
+      print(uid);
+      await Future.delayed(Duration(milliseconds: 2800), () {});
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
+      );
+    } else {
+      navigateToLogin();
+    }
+  }
+  
   navigateToLogin() async {
     await Future.delayed(Duration(milliseconds: 2800), () {});
     Navigator.pushReplacement(

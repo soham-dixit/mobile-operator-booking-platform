@@ -177,6 +177,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    saveUid();
     getOperatorLocation();
     addDates();
 
@@ -189,6 +190,15 @@ class _HomePageState extends State<HomePage> {
         print("not logged in");
       }
     });
+  }
+
+  
+  saveUid() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('uid-user', uid);
   }
 
   @override
