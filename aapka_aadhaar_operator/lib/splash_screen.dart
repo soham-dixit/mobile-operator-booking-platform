@@ -34,6 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
     var uid = prefs.getString('uid');
     if (uid != null) {
       print(uid);
+      await Future.delayed(Duration(milliseconds: 2800), () {});
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
