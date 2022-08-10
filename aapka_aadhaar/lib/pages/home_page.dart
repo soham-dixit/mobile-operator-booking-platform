@@ -52,8 +52,8 @@ class _HomePageState extends State<HomePage> {
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    dynamic keys_list = databaseData['operators'].keys.toList();
     if (databaseData['operators'] != null) {
-      dynamic keys_list = databaseData['operators'].keys.toList();
       for (int i = 0; i < keys_list.length; i++) {
         key = keys_list[i];
         if (databaseData['operators'][keys_list[i]]['location']['latitude'] !=
@@ -84,7 +84,8 @@ class _HomePageState extends State<HomePage> {
             icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
             onTap: () async {
               final pref = await SharedPreferences.getInstance();
-              pref.setString('operator-key', key.toString());
+              print('key --- ${keys_list[i]}');
+              pref.setString('operator-key', keys_list[i].toString());
               print("ontap");
               openDialog();
             },
@@ -138,26 +139,39 @@ class _HomePageState extends State<HomePage> {
   getAvailablity() async {
     final pref = await SharedPreferences.getInstance();
     final key = pref.getString('operator-key');
+    print(' key 3 -----$key');
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
       Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
       dynamic keys_list = slotData.keys.toList();
+      final _currentDate = DateTime.now();
+      final _dayFormatter = DateFormat('dd-MM-yyyy');
+      List datesL = [];
+      for (int i = 0; i < 4; i++) {
+        final date = _currentDate.add(Duration(days: i));
+        datesL.add(
+          _dayFormatter.format(date),
+          // _monthFormatter.format(date),
+        );
+      }
       name = databaseData['operators'][key]['fullname'];
-      if (slotData[keys_list[0]].containsValue(false)) {
+      if (slotData[datesL[0]].containsValue(false)) {
         firstDay = true;
       }
-      if (slotData[keys_list[1]].containsValue(false)) {
+      if (slotData[datesL[1]].containsValue(false)) {
         secondDay = true;
       }
-      if (slotData[keys_list[2]].containsValue(false)) {
+      if (slotData[datesL[2]].containsValue(false)) {
         thirdDay = true;
       }
-      if (slotData[keys_list[3]].containsValue(false)) {
+      if (slotData[datesL[3]].containsValue(false)) {
         fourthDay = true;
       }
     }
+
+    return name;
   }
 
   @override
@@ -165,7 +179,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     getOperatorLocation();
     addDates();
-    getAvailablity();
+
     setState(() {
       getLocation();
       setCustomMarker();
@@ -224,198 +238,245 @@ class _HomePageState extends State<HomePage> {
 
   Future openDialog() => showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-            insetPadding: EdgeInsets.all(20),
-            contentPadding: EdgeInsets.all(10),
-            actions: [
-              Align(
-                alignment: Alignment.center,
-                child: ElevatedButton(
-                  onPressed: () {
-                    print("clicked on book");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BookSlots(),
+      builder: (context) {
+        getAvailablity();
+        return FutureBuilder(
+          future: getAvailablity(),
+          builder: (context, AsyncSnapshot snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                return Text('none');
+              case ConnectionState.active:
+                return Text('active');
+              case ConnectionState.waiting:
+                return Center(child: CupertinoActivityIndicator());
+              case ConnectionState.done:
+                return AlertDialog(
+                  insetPadding: EdgeInsets.all(20),
+                  contentPadding: EdgeInsets.all(10),
+                  actions: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          print("clicked on book");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookSlots(),
+                            ),
+                          );
+                        },
+                        child: Text('BOOK',
+                            style:
+                                TextStyle(fontSize: 16, fontFamily: 'Poppins')),
+                        style: ElevatedButton.styleFrom(
+                            shape: StadiumBorder(), primary: Color(0xFFF23F44)),
                       ),
-                    );
-                  },
-                  child: Text('BOOK',
-                      style: TextStyle(fontSize: 16, fontFamily: 'Poppins')),
-                  style: ElevatedButton.styleFrom(
-                      shape: StadiumBorder(), primary: Color(0xFFF23F44)),
-                ),
-              ),
-            ],
-            title: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: name == ''
-                        ? Center(child: CupertinoActivityIndicator())
-                        : Text(
-                            name.toString(),
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                  title: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FutureBuilder(
+                            future: getAvailablity(),
+                            builder: (context, AsyncSnapshot snapshot) {
+                              print('Snap ${snapshot.data}');
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.none:
+                                  return Text('none');
+                                case ConnectionState.active:
+                                  return Text('active');
+                                case ConnectionState.waiting:
+                                  return Center(
+                                      child: CupertinoActivityIndicator());
+                                case ConnectionState.done:
+                                  return Expanded(
+                                    child: Text(
+                                      name.toString(),
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  );
+                              }
+                            }),
+                        // SizedBox(
+                        //   width: 80.0,
+                        // ),
+                        Expanded(
+                          child: CircleAvatar(
+                            backgroundColor: Color(0xFFF23F44),
                           ),
-                  ),
-                  // SizedBox(
-                  //   width: 80.0,
-                  // ),
-                  Expanded(
-                    child: CircleAvatar(
-                      backgroundColor: Color(0xFFF23F44),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Divider(
-                  color: Color(0xFF808080),
-                  thickness: 1,
-                ),
-                Container(
-                  child: Column(
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(dates[0],
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
-                              Text(days[0],
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
-                              Icon(Icons.circle,
-                                  size: 20,
-                                  color: firstDay
-                                      ? Color(0xFF7FD958)
-                                      : Color(0xFFF23F44)),
-                              firstDay
-                                  ? Text("Available",
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins', fontSize: 12))
-                                  : Text("Unvailable",
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins', fontSize: 12)),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 14.0,
-                          height: 80.0,
-                          child: VerticalDivider(
-                            thickness: 1,
-                            width: 20,
-                            color: Color(0xFF808080),
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(dates[1],
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
-                              Text(days[1],
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
-                              Icon(Icons.circle,
-                                  size: 20,
-                                  color: secondDay
-                                      ? Color(0xFF7FD958)
-                                      : Color(0xFFF23F44)),
-                              secondDay
-                                  ? Text("Available",
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins', fontSize: 12))
-                                  : Text("Unvailable",
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins', fontSize: 12)),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 14.0,
-                          height: 80.0,
-                          child: VerticalDivider(
-                            thickness: 1,
-                            width: 20,
-                            color: Color(0xFF808080),
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(dates[2],
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
-                              Text(days[2],
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
-                              Icon(Icons.circle,
-                                  size: 20,
-                                  color: thirdDay
-                                      ? Color(0xFF7FD958)
-                                      : Color(0xFFF23F44)),
-                              thirdDay
-                                  ? Text("Available",
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins', fontSize: 12))
-                                  : Text("Unvailable",
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins', fontSize: 12)),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 14.0,
-                          height: 80.0,
-                          child: VerticalDivider(
-                            thickness: 1,
-                            width: 20,
-                            color: Color(0xFF808080),
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(dates[3],
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
-                              Text(days[3],
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins', fontSize: 12)),
-                              Icon(Icons.circle,
-                                  size: 20,
-                                  color: fourthDay
-                                      ? Color(0xFF7FD958)
-                                      : Color(0xFFF23F44)),
-                              fourthDay
-                                  ? Text("Available",
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins', fontSize: 12))
-                                  : Text("Unvailable",
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins', fontSize: 12)),
-                            ],
-                          ),
-                        ),
-                      ]),
                       Divider(
                         color: Color(0xFF808080),
                         thickness: 1,
                       ),
+                      Container(
+                        child: Column(
+                          children: [
+                            Row(children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(dates[0],
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12)),
+                                    Text(days[0],
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12)),
+                                    Icon(Icons.circle,
+                                        size: 20,
+                                        color: firstDay
+                                            ? Color(0xFF7FD958)
+                                            : Color(0xFFF23F44)),
+                                    firstDay
+                                        ? Text("Available",
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12))
+                                        : Text("Unvailable",
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12)),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 14.0,
+                                height: 80.0,
+                                child: VerticalDivider(
+                                  thickness: 1,
+                                  width: 20,
+                                  color: Color(0xFF808080),
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(dates[1],
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12)),
+                                    Text(days[1],
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12)),
+                                    Icon(Icons.circle,
+                                        size: 20,
+                                        color: secondDay
+                                            ? Color(0xFF7FD958)
+                                            : Color(0xFFF23F44)),
+                                    secondDay
+                                        ? Text("Available",
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12))
+                                        : Text("Unvailable",
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12)),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 14.0,
+                                height: 80.0,
+                                child: VerticalDivider(
+                                  thickness: 1,
+                                  width: 20,
+                                  color: Color(0xFF808080),
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(dates[2],
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12)),
+                                    Text(days[2],
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12)),
+                                    Icon(Icons.circle,
+                                        size: 20,
+                                        color: thirdDay
+                                            ? Color(0xFF7FD958)
+                                            : Color(0xFFF23F44)),
+                                    thirdDay
+                                        ? Text("Available",
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12))
+                                        : Text("Unvailable",
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12)),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 14.0,
+                                height: 80.0,
+                                child: VerticalDivider(
+                                  thickness: 1,
+                                  width: 20,
+                                  color: Color(0xFF808080),
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(dates[3],
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12)),
+                                    Text(days[3],
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12)),
+                                    Icon(Icons.circle,
+                                        size: 20,
+                                        color: fourthDay
+                                            ? Color(0xFF7FD958)
+                                            : Color(0xFFF23F44)),
+                                    fourthDay
+                                        ? Text("Available",
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12))
+                                        : Text("Unvailable",
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12)),
+                                  ],
+                                ),
+                              ),
+                            ]),
+                            Divider(
+                              color: Color(0xFF808080),
+                              thickness: 1,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ));
+                );
+            }
+          },
+        );
+      });
 }

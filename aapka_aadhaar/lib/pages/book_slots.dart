@@ -45,11 +45,14 @@ class _BookSlotsState extends State<BookSlots> {
   getData(String day) async {
     final pref = await SharedPreferences.getInstance();
     final key = pref.getString('operator-key');
+    print('key 2 ---$key');
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
       Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
+      print('SLOT ==== $slot');
+      print('DAY - $day');
       dynamic keys_list = slotData.keys.toList();
       status.clear();
       status.addAll([
@@ -133,8 +136,6 @@ class _BookSlotsState extends State<BookSlots> {
 
   @override
   Widget build(BuildContext context) {
-    
-
     return Scaffold(
       drawer: NavigationDrawer(),
       appBar: AppBar(
