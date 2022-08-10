@@ -2,6 +2,7 @@ import 'package:aapka_aadhaar_operator/authentication/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NavigationDrawer extends StatefulWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -113,8 +114,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                   );
 
                   Widget logoutButton = ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       FirebaseAuth.instance.signOut();
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      prefs.remove('uid');
                       print('logged out');
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => OperatorLogin()));

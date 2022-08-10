@@ -1,9 +1,11 @@
 import 'package:aapka_aadhaar_operator/pages/navigation_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -22,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    saveUid();
     updateSlots();
     setState(() {
       if (FirebaseAuth.instance.currentUser != null) {
@@ -31,6 +34,14 @@ class _HomePageState extends State<HomePage> {
         print("not logged in");
       }
     });
+  }
+
+  saveUid() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('uid', uid);
   }
 
   void getLocation() async {
