@@ -154,17 +154,14 @@ class _HomePageState extends State<HomePage> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
       Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
-      dynamic keys_list = slotData.keys.toList();
+      List keys_list = slotData.keys.toList();
+      keys_list.sort((a, b) {
+        return a.compareTo(b);
+      });
+      print('key --- $keys_list');
       final _currentDate = DateTime.now();
       final _dayFormatter = DateFormat('dd-MM-yyyy');
-      List datesL = [];
-      for (int i = 0; i < 4; i++) {
-        final date = _currentDate.add(Duration(days: i));
-        datesL.add(
-          _dayFormatter.format(date),
-          // _monthFormatter.format(date),
-        );
-      }
+      
       name = databaseData['operators'][key]['fullname'];
       if (slotData[keys_list[0]].containsValue(false)) {
         firstDay = true;

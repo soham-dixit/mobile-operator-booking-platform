@@ -54,6 +54,7 @@ class _BookSlotsState extends State<BookSlots> {
       print('SLOT ==== $slot');
       print('DAY - $day');
       dynamic keys_list = slotData.keys.toList();
+      
       status.clear();
       status.addAll([
         slotData[day]['10_11'],
@@ -129,12 +130,15 @@ class _BookSlotsState extends State<BookSlots> {
     super.initState();
 
     dates.clear();
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 7; i++) {
       final date = _currentDate.add(Duration(days: i));
-      dates.add(
-        _dayFormatter.format(date),
-        // _monthFormatter.format(date),
-      );
+      if (DateFormat("EEEE").format(date) != 'Saturday' &&
+          DateFormat("EEEE").format(date) != 'Sunday') {
+        dates.add(
+          _dayFormatter.format(date),
+          // _monthFormatter.format(date),
+        );
+      }
     }
     dayG = dates[0];
   }
