@@ -37,13 +37,20 @@ class _HomePageState extends State<HomePage> {
 
   addDates() {
     dates.clear();
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 7; i++) {
       final date = _currentDate.add(Duration(days: i));
       dates.add(
         dayFormatter.format(date),
         // _monthFormatter.format(date),
       );
-      days.add(DateFormat("EEEE").format(date));
+      print('Dates ---$dates');
+
+      if (DateFormat("EEEE").format(date) != 'Saturday' &&
+          DateFormat("EEEE").format(date) != 'Sunday') {
+        days.add(DateFormat("EEEE").format(date));
+      }
+      //days.add(DateFormat("EEEE").format(date));
+
       print('DATES ------ $days');
     }
   }
@@ -155,6 +162,7 @@ class _HomePageState extends State<HomePage> {
           _dayFormatter.format(date),
           // _monthFormatter.format(date),
         );
+        print('date ${datesL[i]}');
       }
       name = databaseData['operators'][key]['fullname'];
       if (slotData[datesL[0]].containsValue(false)) {
@@ -174,13 +182,68 @@ class _HomePageState extends State<HomePage> {
     return name;
   }
 
+  updateSlots() async {
+    print('called');
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    if (databaseData['operators'] != null) {
+      Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
+      List keys_list = slotData.keys.toList();
+      keys_list.sort((a, b) {
+        return a.compareTo(b);
+      });
+      print(keys_list);
+      var _currentDate = DateTime.now();
+      final _dayFormatter = DateFormat('dd-MM-yyyy');
+
+      if (_dayFormatter.format(_currentDate) == keys_list[1]) {
+        databaseReference
+            .child("operators")
+            .child(key.toString())
+            .child("slots")
+            .child(keys_list[0])
+            .remove();
+        String day = _dayFormatter
+            .format(_currentDate.add(Duration(days: 3)))
+            .toString();
+        databaseReference
+            .child("operators")
+            .child(key.toString())
+            .child("slots")
+            .update({
+          day: "",
+        });
+
+        databaseReference
+            .child("operators")
+            .child(key.toString())
+            .child("slots")
+            .child(day)
+            .update({
+          "10_11": false,
+          "11_12": false,
+          "12_1": false,
+          "2_3": false,
+          "3_4": false,
+          "4_5": false,
+          "5_6": false,
+        });
+      } else {}
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     saveUid();
     getOperatorLocation();
     addDates();
-
+    updateSlots();
     setState(() {
       getLocation();
       setCustomMarker();
@@ -192,7 +255,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  
   saveUid() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;

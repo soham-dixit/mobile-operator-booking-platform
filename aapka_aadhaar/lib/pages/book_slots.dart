@@ -78,6 +78,10 @@ class _BookSlotsState extends State<BookSlots> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
     final uid = user.uid;
+    print(
+        'ref --- ${databaseReference.child('operators').child(key.toString()).child('slots').child(dayG.toString()).child(
+              slot[i],
+            )}');
     setState(() {
       databaseReference
           .child('operators')
@@ -106,60 +110,6 @@ class _BookSlotsState extends State<BookSlots> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  updateSlots() async {
-    final databaseReference = FirebaseDatabase.instance.ref();
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User user = await auth.currentUser!;
-    final pref = await SharedPreferences.getInstance();
-    final key = pref.getString('operator-key');
-    DatabaseEvent event = await databaseReference.once();
-    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
-    if (databaseData['operators'] != null) {
-      Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
-      List keys_list = slotData.keys.toList();
-      keys_list.sort((a, b) {
-        return a.compareTo(b);
-      });
-      print(keys_list);
-      var _currentDate = DateTime.now();
-      final _dayFormatter = DateFormat('dd-MM-yyyy');
-
-      if (_dayFormatter.format(_currentDate) == keys_list[1]) {
-        databaseReference
-            .child("operators")
-            .child(key.toString())
-            .child("slots")
-            .child(keys_list[0])
-            .remove();
-        String day = _dayFormatter
-            .format(_currentDate.add(Duration(days: 4)))
-            .toString();
-        databaseReference
-            .child("operators")
-            .child(key.toString())
-            .child("slots")
-            .update({
-          day: "",
-        });
-
-        databaseReference
-            .child("operators")
-            .child(key.toString())
-            .child("slots")
-            .child(day)
-            .update({
-          "10_11": false,
-          "11_12": false,
-          "12_1": false,
-          "2_3": false,
-          "3_4": false,
-          "4_5": false,
-          "5_6": false,
-        });
-      } else {}
-    }
-  }
-
   alreadyBooked() {
     final snackBar = SnackBar(
       content: const Text(
@@ -177,6 +127,7 @@ class _BookSlotsState extends State<BookSlots> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     dates.clear();
     for (int i = 0; i < 4; i++) {
       final date = _currentDate.add(Duration(days: i));
@@ -406,9 +357,14 @@ class _BookSlotsState extends State<BookSlots> {
                                                               fontSize: 14),
                                                         ),
                                                   onPressed: () {
+                                                    print('I---$i');
                                                     snapshot.data[i]
                                                         ? alreadyBooked()
-                                                        : bookAppointment(i);
+                                                        : i > 3
+                                                            ? bookAppointment(
+                                                                i - 1)
+                                                            : bookAppointment(
+                                                                i);
                                                   },
                                                   style: ButtonStyle(
                                                     foregroundColor:
