@@ -114,12 +114,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     List dates = [];
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 7; i++) {
       final date = _currentDate.add(Duration(days: i));
-      dates.add(
-        _dayFormatter.format(date),
-        // _monthFormatter.format(date),
-      );
+      if (DateFormat("EEEE").format(date) != 'Saturday' &&
+          DateFormat("EEEE").format(date) != 'Sunday') {
+        dates.add(
+          _dayFormatter.format(date),
+          // _monthFormatter.format(date),
+        );
+      }
     }
 
     return Scaffold(
