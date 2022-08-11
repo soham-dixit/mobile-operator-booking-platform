@@ -18,12 +18,14 @@ class NavigationDrawer extends StatefulWidget {
 class _NavigationDrawerState extends State<NavigationDrawer> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   List info = [];
+  late Future data;
 
   getData() async {
     final databaseReference = FirebaseDatabase.instance.ref();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
     final uid = user.uid;
+    print('uid -- $uid');
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['users'] != null) {
@@ -43,6 +45,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     } else {
       print("Not logged in");
     }
+    data = getData();
   }
 
   @override
@@ -53,7 +56,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         child: ListView(
           children: [
             FutureBuilder(
-                future: getData(),
+                future: data,
                 builder: (context, AsyncSnapshot snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
