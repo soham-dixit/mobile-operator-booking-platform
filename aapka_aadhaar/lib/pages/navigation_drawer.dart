@@ -60,7 +60,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 builder: (context, AsyncSnapshot snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
-                      return CupertinoActivityIndicator();
+                      return Padding(
+                          padding: EdgeInsets.all(10),
+                          child: CupertinoActivityIndicator());
                     case ConnectionState.none:
                       return Text('none');
                     case ConnectionState.active:
