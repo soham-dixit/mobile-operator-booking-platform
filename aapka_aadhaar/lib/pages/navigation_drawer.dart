@@ -1,5 +1,6 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:aapka_aadhaar/pages/book_slots.dart';
+import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:aapka_aadhaar/pages/press-releases.dart';
 import 'package:aapka_aadhaar/pages/contact_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -133,6 +134,20 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             Divider(
               color: Colors.grey,
               thickness: 1,
+            ),
+            SizedBox(
+              height: 22,
+            ),
+            buildMenuItem(
+              text: 'Home',
+              icon: Icons.home,
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  ),
+                );
+              },
             ),
             SizedBox(
               height: 22,
