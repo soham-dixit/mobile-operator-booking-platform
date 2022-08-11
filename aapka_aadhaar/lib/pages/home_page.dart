@@ -37,13 +37,24 @@ class _HomePageState extends State<HomePage> {
 
   addDates() {
     dates.clear();
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 7; i++) {
       final date = _currentDate.add(Duration(days: i));
-      dates.add(
-        dayFormatter.format(date),
-        // _monthFormatter.format(date),
-      );
-      days.add(DateFormat("EEEE").format(date));
+      if (DateFormat("EEEE").format(date) != 'Saturday' &&
+          DateFormat("EEEE").format(date) != 'Sunday') {
+        dates.add(
+          dayFormatter.format(date),
+          // _monthFormatter.format(date),
+        );
+      }
+
+      print('Dates ---$dates');
+
+      if (DateFormat("EEEE").format(date) != 'Saturday' &&
+          DateFormat("EEEE").format(date) != 'Sunday') {
+        days.add(DateFormat("EEEE").format(date));
+      }
+      //days.add(DateFormat("EEEE").format(date));
+
       print('DATES ------ $days');
     }
   }
@@ -84,9 +95,7 @@ class _HomePageState extends State<HomePage> {
             icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
             onTap: () async {
               final pref = await SharedPreferences.getInstance();
-              print('key --- ${keys_list[i]}');
               pref.setString('operator-key', keys_list[i].toString());
-              print("ontap");
               openDialog();
             },
           ),
@@ -139,34 +148,31 @@ class _HomePageState extends State<HomePage> {
   getAvailablity() async {
     final pref = await SharedPreferences.getInstance();
     final key = pref.getString('operator-key');
-    print(' key 3 -----$key');
+    print('Key $key');
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
       Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
-      dynamic keys_list = slotData.keys.toList();
+      List keys_list = slotData.keys.toList();
+      keys_list.sort((a, b) {
+        return a.compareTo(b);
+      });
+      print('key --- $keys_list');
       final _currentDate = DateTime.now();
       final _dayFormatter = DateFormat('dd-MM-yyyy');
-      List datesL = [];
-      for (int i = 0; i < 4; i++) {
-        final date = _currentDate.add(Duration(days: i));
-        datesL.add(
-          _dayFormatter.format(date),
-          // _monthFormatter.format(date),
-        );
-      }
+      
       name = databaseData['operators'][key]['fullname'];
-      if (slotData[datesL[0]].containsValue(false)) {
+      if (slotData[keys_list[0]].containsValue(false)) {
         firstDay = true;
       }
-      if (slotData[datesL[1]].containsValue(false)) {
+      if (slotData[keys_list[1]].containsValue(false)) {
         secondDay = true;
       }
-      if (slotData[datesL[2]].containsValue(false)) {
+      if (slotData[keys_list[2]].containsValue(false)) {
         thirdDay = true;
       }
-      if (slotData[datesL[3]].containsValue(false)) {
+      if (slotData[keys_list[3]].containsValue(false)) {
         fourthDay = true;
       }
     }
@@ -174,12 +180,68 @@ class _HomePageState extends State<HomePage> {
     return name;
   }
 
+  updateSlots() async {
+    print('called');
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    if (databaseData['operators'] != null) {
+      Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
+      List keys_list = slotData.keys.toList();
+      keys_list.sort((a, b) {
+        return a.compareTo(b);
+      });
+      print(keys_list);
+      var _currentDate = DateTime.now();
+      final _dayFormatter = DateFormat('dd-MM-yyyy');
+
+      if (_dayFormatter.format(_currentDate) == keys_list[1]) {
+        databaseReference
+            .child("operators")
+            .child(key.toString())
+            .child("slots")
+            .child(keys_list[0])
+            .remove();
+        String day = _dayFormatter
+            .format(_currentDate.add(Duration(days: 3)))
+            .toString();
+        databaseReference
+            .child("operators")
+            .child(key.toString())
+            .child("slots")
+            .update({
+          day: "",
+        });
+
+        databaseReference
+            .child("operators")
+            .child(key.toString())
+            .child("slots")
+            .child(day)
+            .update({
+          "10_11": false,
+          "11_12": false,
+          "12_1": false,
+          "2_3": false,
+          "3_4": false,
+          "4_5": false,
+          "5_6": false,
+        });
+      } else {}
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    saveUid();
     getOperatorLocation();
     addDates();
-
+    
     setState(() {
       getLocation();
       setCustomMarker();
@@ -189,6 +251,14 @@ class _HomePageState extends State<HomePage> {
         print("not logged in");
       }
     });
+  }
+
+  saveUid() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('uid-user', uid);
   }
 
   @override
@@ -240,9 +310,19 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         getAvailablity();
+        updateSlots();
         return FutureBuilder(
           future: getAvailablity(),
           builder: (context, AsyncSnapshot snapshot) {
+            String d1 = dates[0].toString();
+            String day1 = d1.substring(0, d1.lastIndexOf('20'));
+            String d2 = dates[1].toString();
+            String day2 = d2.substring(0, d2.lastIndexOf('20'));
+            String d3 = dates[2].toString();
+            String day3 = d3.substring(0, d3.lastIndexOf('20'));
+            String d4 = dates[3].toString();
+            String day4 = d4.substring(0, d4.lastIndexOf('20'));
+            String y = d1.substring(d1.length - 2);
             switch (snapshot.connectionState) {
               case ConnectionState.none:
                 return Text('none');
@@ -328,7 +408,7 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Column(
                                   children: [
-                                    Text(dates[0],
+                                    Text(day1 + y,
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
                                             fontSize: 12)),
@@ -365,7 +445,7 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Column(
                                   children: [
-                                    Text(dates[1],
+                                    Text(day2 + y,
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
                                             fontSize: 12)),
@@ -402,7 +482,7 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Column(
                                   children: [
-                                    Text(dates[2],
+                                    Text(day3 + y,
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
                                             fontSize: 12)),
@@ -439,7 +519,7 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Column(
                                   children: [
-                                    Text(dates[3],
+                                    Text(day4 + y,
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
                                             fontSize: 12)),

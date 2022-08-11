@@ -76,12 +76,15 @@ class _OtpState extends State<Otp> {
     final _currentDate = DateTime.now();
     final _dayFormatter = DateFormat('dd-MM-yyyy');
     List dates = [];
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 7; i++) {
       final date = _currentDate.add(Duration(days: i));
-      dates.add(
-        _dayFormatter.format(date),
-        // _monthFormatter.format(date),
-      );
+      if (DateFormat("EEEE").format(date) != 'Saturday' &&
+          DateFormat("EEEE").format(date) != 'Sunday') {
+        dates.add(
+          _dayFormatter.format(date),
+          // _monthFormatter.format(date),
+        );
+      }
     }
     // print(uid);
     databaseReference.child("operators").child(uid).child("slots").update({

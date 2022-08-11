@@ -54,6 +54,7 @@ class _BookSlotsState extends State<BookSlots> {
       print('SLOT ==== $slot');
       print('DAY - $day');
       dynamic keys_list = slotData.keys.toList();
+      
       status.clear();
       status.addAll([
         slotData[day]['10_11'],
@@ -78,6 +79,10 @@ class _BookSlotsState extends State<BookSlots> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
     final uid = user.uid;
+    print(
+        'ref --- ${databaseReference.child('operators').child(key.toString()).child('slots').child(dayG.toString()).child(
+              slot[i],
+            )}');
     setState(() {
       databaseReference
           .child('operators')
@@ -123,13 +128,17 @@ class _BookSlotsState extends State<BookSlots> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     dates.clear();
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 7; i++) {
       final date = _currentDate.add(Duration(days: i));
-      dates.add(
-        _dayFormatter.format(date),
-        // _monthFormatter.format(date),
-      );
+      if (DateFormat("EEEE").format(date) != 'Saturday' &&
+          DateFormat("EEEE").format(date) != 'Sunday') {
+        dates.add(
+          _dayFormatter.format(date),
+          // _monthFormatter.format(date),
+        );
+      }
     }
     dayG = dates[0];
   }
@@ -352,9 +361,14 @@ class _BookSlotsState extends State<BookSlots> {
                                                               fontSize: 14),
                                                         ),
                                                   onPressed: () {
+                                                    print('I---$i');
                                                     snapshot.data[i]
                                                         ? alreadyBooked()
-                                                        : bookAppointment(i);
+                                                        : i > 3
+                                                            ? bookAppointment(
+                                                                i - 1)
+                                                            : bookAppointment(
+                                                                i);
                                                   },
                                                   style: ButtonStyle(
                                                     foregroundColor:
