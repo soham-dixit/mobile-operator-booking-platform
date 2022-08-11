@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
             .child(keys_list[0])
             .remove();
         String day = _dayFormatter
-            .format(_currentDate.add(Duration(days: 4)))
+            .format(_currentDate.add(Duration(days: 3)))
             .toString();
         databaseReference.child("operators").child(uid).child("slots").update({
           day: "",
