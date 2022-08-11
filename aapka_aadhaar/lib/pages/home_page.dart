@@ -241,7 +241,7 @@ class _HomePageState extends State<HomePage> {
     saveUid();
     getOperatorLocation();
     addDates();
-    updateSlots();
+    
     setState(() {
       getLocation();
       setCustomMarker();
@@ -310,6 +310,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         getAvailablity();
+        updateSlots();
         return FutureBuilder(
           future: getAvailablity(),
           builder: (context, AsyncSnapshot snapshot) {
