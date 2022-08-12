@@ -89,23 +89,20 @@ class _HomePageState extends State<HomePage> {
         String day = _dayFormatter
             .format(_currentDate.add(Duration(days: 3)))
             .toString();
-        databaseReference.child("operators").child(uid).child("slots").update({
-          day: "",
-        });
-
-        databaseReference
+         databaseReference
             .child("operators")
             .child(uid)
             .child("slots")
-            .child(day)
-            .update({
-          "10_11": false,
-          "11_12": false,
-          "12_1": false,
-          "2_3": false,
-          "3_4": false,
-          "4_5": false,
-          "5_6": false,
+            .set({
+          day: {
+            "10_11": false,
+            "11_12": false,
+            "12_1": false,
+            "2_3": false,
+            "3_4": false,
+            "4_5": false,
+            "5_6": false,
+          },
         });
       } else {}
     }
