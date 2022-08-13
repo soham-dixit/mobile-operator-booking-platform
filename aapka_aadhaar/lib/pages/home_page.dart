@@ -161,7 +161,7 @@ class _HomePageState extends State<HomePage> {
       print('key --- $keys_list');
       final _currentDate = DateTime.now();
       final _dayFormatter = DateFormat('dd-MM-yyyy');
-      
+
       name = databaseData['operators'][key]['fullname'];
       if (slotData[keys_list[0]].containsValue(false)) {
         firstDay = true;
@@ -213,23 +213,16 @@ class _HomePageState extends State<HomePage> {
             .child("operators")
             .child(key.toString())
             .child("slots")
-            .update({
-          day: "",
-        });
-
-        databaseReference
-            .child("operators")
-            .child(key.toString())
-            .child("slots")
-            .child(day)
-            .update({
-          "10_11": false,
-          "11_12": false,
-          "12_1": false,
-          "2_3": false,
-          "3_4": false,
-          "4_5": false,
-          "5_6": false,
+            .set({
+          day: {
+            "10_11": false,
+            "11_12": false,
+            "12_1": false,
+            "2_3": false,
+            "3_4": false,
+            "4_5": false,
+            "5_6": false,
+          },
         });
       } else {}
     }
@@ -241,7 +234,7 @@ class _HomePageState extends State<HomePage> {
     saveUid();
     getOperatorLocation();
     addDates();
-    
+
     setState(() {
       getLocation();
       setCustomMarker();
