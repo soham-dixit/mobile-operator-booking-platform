@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:location/location.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserEnrollmentPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class UserEnrollmentPage extends StatefulWidget {
 }
 
 class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
+  late Razorpay razorpay;
   List<bool?> checkedValue = [false, false, false, false, false, false];
   List selectedValues = [];
   Location currentLocation = Location();
@@ -125,6 +127,62 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
         MaterialPageRoute(
           builder: (context) => BookSlots(),
         ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    razorpay = new Razorpay();
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlerPaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlerErrorFailure);
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handlerExternalWallet);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    razorpay.clear();
+  }
+
+  void openCheckout() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    var options = {
+      "key": "rzp_test_TWnK1D5r7DV05M",
+      "amount": 100 * 100,
+      "name": "Aapka Aadhaar",
+      "description": "Door Step Aadhaar Card Service",
+      "timeout": 120,
+      "prefill": {
+        "contact": databaseData['users'][uid]['phoneNumber'],
+        "email": databaseData['users'][uid]['email'],
+      },
+      "external": {
+        "wallets": ["paytm"]
+      }
+    };
+    try {
+      razorpay.open(options);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  handlerPaymentSuccess() {
+    print('Payment Success');
+    return true;
+  }
+
+  handlerErrorFailure() {
+    print('payment error');
+  }
+
+  void handlerExternalWallet() {
+    print('external wallet');
   }
 
   @override
