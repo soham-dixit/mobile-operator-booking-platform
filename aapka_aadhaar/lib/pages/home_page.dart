@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
               .add(databaseData['operators'][keys_list[i]]['fullname']);
         }
       }
-
+      int count = 0;
       for (int i = 0; i < latitudes.length; i++) {
         //computer distance between two markers
         //get current user location
@@ -104,6 +104,7 @@ class _HomePageState extends State<HomePage> {
             position.latitude, position.longitude, latitudes[i], longitudes[i]);
         print('distance in meters $distanceInMeters');
         if (distanceInMeters <= 3000) {
+          count++;
           _markers.add(
             Marker(
               markerId: MarkerId(operatorNames[i]),
@@ -116,7 +117,23 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           );
-        } 
+        }
+      }
+      if (count == 0) {
+        for (int i = 0; i < latitudes.length; i++) {
+          _markers.add(
+            Marker(
+              markerId: MarkerId(operatorNames[i]),
+              position: LatLng(latitudes[i], longitudes[i]),
+              icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
+              onTap: () async {
+                final pref = await SharedPreferences.getInstance();
+                pref.setString('operator-key', keys_list[i].toString());
+                openDialog();
+              },
+            ),
+          );
+        }
       }
     }
   }
