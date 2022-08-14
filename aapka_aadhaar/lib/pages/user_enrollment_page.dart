@@ -22,7 +22,9 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
   TextEditingController name = TextEditingController();
   TextEditingController add = TextEditingController();
   TextEditingController a_num = TextEditingController();
-  bool isLoading = false;
+  TextEditingController _name = TextEditingController();
+  TextEditingController _address = TextEditingController();
+  TextEditingController _phone = TextEditingController();
   List slot = [
     '10_11',
     '11_12',
@@ -33,7 +35,7 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
     '5_6',
   ];
 
-  bookAppointment(int i, String day) async {
+  bookAppointment(int i, String day, String uORe) async {
     var location = await currentLocation.getLocation();
     final pref = await SharedPreferences.getInstance();
     final key = pref.getString('operator-key');
@@ -43,50 +45,45 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
     final uid = user.uid;
 
     setState(() {
-      databaseReference
-          .child('operators')
-          .child(key.toString())
-          .child('slots')
-          .child(day)
-          .child(
-            slot[i - 1],
-          )
-          .set({'name': name.text, 'address': add.text, 'req': selectedValues});
+      uORe == 'update'
+          ? databaseReference
+              .child('operators')
+              .child(key.toString())
+              .child('slots')
+              .child(day)
+              .child(
+                i > 3 ? slot[i - 1] : slot[i],
+              )
+              .set({
+              'name': name.text,
+              'address': add.text,
+              'aadhaar_num': a_num.text,
+              'req': selectedValues,
+              'service': uORe
+            })
+          : databaseReference
+              .child('operators')
+              .child(key.toString())
+              .child('slots')
+              .child(day)
+              .child(
+                i > 3 ? slot[i - 1] : slot[i],
+              )
+              .set({
+              'name': _name.text,
+              'address': _address.text,
+              'phone': _phone.text,
+              'service': uORe
+            });
     });
     databaseReference
         .child('users')
         .child(uid)
         .child('location')
         .set({"latitude": location.latitude, "longitude": location.longitude});
-
-    // final snackBar = SnackBar(
-    //   content: const Text(
-    //     'Appointment has been booked',
-    //     style: TextStyle(
-    //       fontFamily: 'Poppins',
-    //       fontSize: 16,
-    //     ),
-    //   ),
-    // );
-    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   buildShowDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return Center(
-            child: CupertinoActivityIndicator(),
-          );
-        });
-  }
-
-  callMethod() async {
-    buildShowDialog(context);
-  }
-
-  showSnack() async {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -95,7 +92,21 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
             child: CupertinoActivityIndicator(),
           );
         });
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BookSlots(),
+          ));
+    });
+  }
 
+  callMethod(args, upEn) {
+    var method2 = buildShowDialog(context);
+    var method1 = bookAppointment(args[0], args[1], upEn);
+  }
+
+  showSnack() async {
     final snackBar = SnackBar(
       content: const Text(
         'Appointment has been booked',
@@ -106,6 +117,14 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  navigate() {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BookSlots(),
+        ));
   }
 
   @override
@@ -230,22 +249,6 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                               focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black12),
                                   borderRadius: BorderRadius.circular(10)),
-                              // prefix: Padding(
-                              //   padding: EdgeInsets.symmetric(horizontal: 8),
-                              //   child: Text(
-                              //     '(+91)',
-                              //     style: TextStyle(
-                              //       fontFamily: 'Poppins',
-                              //       fontSize: 18,
-                              //       fontWeight: FontWeight.bold,
-                              //     ),
-                              //   ),
-                              // ),
-                              // suffixIcon: Icon(
-                              //   Icons.check_circle,
-                              //   color: Colors.green,
-                              //   size: 32,
-                              // ),
                             ),
                           ),
                           SizedBox(
@@ -420,15 +423,7 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                               fontWeight: FontWeight.bold,
                             ),
                             validator: (value) {
-                              try {
-                                // if (value!.isEmpty ||
-                                //     !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                //         .hasMatch(value)) {
-                                //   return 'Please Enter a valid Email ID';
-                                // } else {
-                                //   return null;
-                                // }
-                              } catch (e) {}
+                              try {} catch (e) {}
                             },
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
@@ -448,22 +443,6 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                               focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black12),
                                   borderRadius: BorderRadius.circular(10)),
-                              // prefix: Padding(
-                              //   padding: EdgeInsets.symmetric(horizontal: 8),
-                              //   child: Text(
-                              //     '(+91)',
-                              //     style: TextStyle(
-                              //       fontFamily: 'Poppins',
-                              //       fontSize: 18,
-                              //       fontWeight: FontWeight.bold,
-                              //     ),
-                              //   ),
-                              // ),
-                              // suffixIcon: Icon(
-                              //   Icons.check_circle,
-                              //   color: Colors.green,
-                              //   size: 32,
-                              // ),
                             ),
                           ),
                           SizedBox(
@@ -475,7 +454,9 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    buildShowDialog(context);
+                                  },
                                   style: ButtonStyle(
                                     foregroundColor:
                                         MaterialStateProperty.all<Color>(
@@ -503,9 +484,11 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    var method1 =
-                                        bookAppointment(args[0], args[1]);
-                                    var method2 = buildShowDialog(context);
+                                    buildShowDialog(context);
+                                    bookAppointment(args[0], args[1], 'update')
+                                        .then((value) {
+                                      showSnack();
+                                    });
                                   },
                                   style: ButtonStyle(
                                     foregroundColor:
@@ -551,44 +534,6 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                   SizedBox(
                     height: 18,
                   ),
-                  // Container(
-                  //   width: 200,
-                  //   height: 200,
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.deepPurple.shade50,
-                  //     shape: BoxShape.circle,
-                  //   ),
-                  //   child: Image.asset(
-                  //     'assets/user_app_logo.png',
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 24,
-                  // ),
-                  // Text(
-                  //   'Register',
-                  //   style: TextStyle(
-                  //     fontFamily: 'Poppins',
-                  //     fontSize: 22,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 10,
-                  // ),
-                  // Text(
-                  //   "Enter your credentials, we will send you OTP to verify",
-                  //   style: TextStyle(
-                  //     fontFamily: 'Poppins',
-                  //     fontSize: 14,
-                  //     fontWeight: FontWeight.bold,
-                  //     color: Colors.black38,
-                  //   ),
-                  //   textAlign: TextAlign.center,
-                  // ),
-                  // SizedBox(
-                  //   height: 28,
-                  // ),
                   Container(
                     padding: EdgeInsets.all(28),
                     decoration: BoxDecoration(
@@ -601,6 +546,7 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                           TextFormField(
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.name,
+                            controller: _name,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 18,
@@ -634,29 +580,14 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                               focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black12),
                                   borderRadius: BorderRadius.circular(10)),
-                              // prefix: Padding(
-                              //   padding: EdgeInsets.symmetric(horizontal: 8),
-                              //   child: Text(
-                              //     '(+91)',
-                              //     style: TextStyle(
-                              //       fontFamily: 'Poppins',
-                              //       fontSize: 18,
-                              //       fontWeight: FontWeight.bold,
-                              //     ),
-                              //   ),
-                              // ),
-                              // suffixIcon: Icon(
-                              //   Icons.check_circle,
-                              //   color: Colors.green,
-                              //   size: 32,
-                              // ),
                             ),
                           ),
                           SizedBox(
                             height: 22,
                           ),
                           TextFormField(
-                            maxLength: 12,
+                            controller: _phone,
+                            maxLength: 10,
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.emailAddress,
                             style: TextStyle(
@@ -665,15 +596,7 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                               fontWeight: FontWeight.bold,
                             ),
                             validator: (value) {
-                              try {
-                                // if (value!.isEmpty ||
-                                //     !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                //         .hasMatch(value)) {
-                                //   return 'Please Enter a valid Email ID';
-                                // } else {
-                                //   return null;
-                                // }
-                              } catch (e) {}
+                              try {} catch (e) {}
                             },
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
@@ -693,22 +616,6 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                               focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black12),
                                   borderRadius: BorderRadius.circular(10)),
-                              // prefix: Padding(
-                              //   padding: EdgeInsets.symmetric(horizontal: 8),
-                              //   child: Text(
-                              //     '(+91)',
-                              //     style: TextStyle(
-                              //       fontFamily: 'Poppins',
-                              //       fontSize: 18,
-                              //       fontWeight: FontWeight.bold,
-                              //     ),
-                              //   ),
-                              // ),
-                              // suffixIcon: Icon(
-                              //   Icons.check_circle,
-                              //   color: Colors.green,
-                              //   size: 32,
-                              // ),
                             ),
                           ),
                           SizedBox(
@@ -717,21 +624,14 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                           TextFormField(
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.emailAddress,
+                            controller: _address,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                             validator: (value) {
-                              try {
-                                // if (value!.isEmpty ||
-                                //     !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                //         .hasMatch(value)) {
-                                //   return 'Please Enter a valid Email ID';
-                                // } else {
-                                //   return null;
-                                // }
-                              } catch (e) {}
+                              try {} catch (e) {}
                             },
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
@@ -751,83 +651,8 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                               focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black12),
                                   borderRadius: BorderRadius.circular(10)),
-                              // prefix: Padding(
-                              //   padding: EdgeInsets.symmetric(horizontal: 8),
-                              //   child: Text(
-                              //     '(+91)',
-                              //     style: TextStyle(
-                              //       fontFamily: 'Poppins',
-                              //       fontSize: 18,
-                              //       fontWeight: FontWeight.bold,
-                              //     ),
-                              //   ),
-                              // ),
-                              // suffixIcon: Icon(
-                              //   Icons.check_circle,
-                              //   color: Colors.green,
-                              //   size: 32,
-                              // ),
                             ),
                           ),
-                          // SizedBox(
-                          //   height: 22,
-                          // ),
-                          // TextFormField(
-                          //   textInputAction: TextInputAction.done,
-                          //   keyboardType: TextInputType.number,
-                          //   maxLength: 10,
-                          //   style: TextStyle(
-                          //     fontFamily: 'Poppins',
-                          //     fontSize: 18,
-                          //     fontWeight: FontWeight.bold,
-                          //   ),
-                          //   validator: (value) {
-                          //     try {
-                          //       if (value!.isEmpty ||
-                          //           !RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
-                          //         return 'Please Enter a valid Mobile Number';
-                          //       } else {
-                          //         return null;
-                          //       }
-                          //     } catch (e) {}
-                          //   },
-                          //   cursorColor: Colors.black,
-                          //   decoration: InputDecoration(
-                          //     errorBorder: OutlineInputBorder(
-                          //         borderSide: BorderSide(color: Colors.red),
-                          //         borderRadius: BorderRadius.circular(10)),
-                          //     focusedErrorBorder: OutlineInputBorder(
-                          //         borderSide: BorderSide(color: Colors.red),
-                          //         borderRadius: BorderRadius.circular(10)),
-                          //     label: Text('Mobile'),
-                          //     labelStyle: TextStyle(
-                          //       color: Colors.grey.shade700,
-                          //     ),
-
-                          //     enabledBorder: OutlineInputBorder(
-                          //         borderSide: BorderSide(color: Colors.black12),
-                          //         borderRadius: BorderRadius.circular(10)),
-                          //     focusedBorder: OutlineInputBorder(
-                          //         borderSide: BorderSide(color: Colors.black12),
-                          //         borderRadius: BorderRadius.circular(10)),
-                          //     prefix: Padding(
-                          //       padding: EdgeInsets.symmetric(horizontal: 8),
-                          //       child: Text(
-                          //         '(+91)',
-                          //         style: TextStyle(
-                          //           fontFamily: 'Poppins',
-                          //           fontSize: 18,
-                          //           fontWeight: FontWeight.bold,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     // suffixIcon: Icon(
-                          //     //   Icons.check_circle,
-                          //     //   color: Colors.green,
-                          //     //   size: 32,
-                          //     // ),
-                          //   ),
-                          // ),
                           SizedBox(
                             height: 22,
                           ),
@@ -837,7 +662,9 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    buildShowDialog(context);
+                                  },
                                   style: ButtonStyle(
                                     foregroundColor:
                                         MaterialStateProperty.all<Color>(
@@ -864,7 +691,14 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    buildShowDialog(context);
+                                    bookAppointment(
+                                            args[0], args[1], 'enrollment')
+                                        .then((value) {
+                                      showSnack();
+                                    });
+                                  },
                                   style: ButtonStyle(
                                     foregroundColor:
                                         MaterialStateProperty.all<Color>(
@@ -893,36 +727,6 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                               ],
                             ),
                           ),
-                          // SizedBox(
-                          //   height: 18,
-                          // ),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          //   children: [
-                          //     Text(
-                          //       'Already a user? ',
-                          //       style: TextStyle(
-                          //         fontFamily: 'Poppins',
-                          //         fontSize: 18,
-                          //         fontWeight: FontWeight.bold,
-                          //         color: Color(0xFF000000),
-                          //       ),
-                          //       textAlign: TextAlign.center,
-                          //     ),
-                          //     GestureDetector(
-                          //       child: Text(
-                          //         'Login now',
-                          //         style: TextStyle(
-                          //           fontFamily: 'Poppins',
-                          //           fontSize: 18,
-                          //           fontWeight: FontWeight.bold,
-                          //           color: Color(0xFFF23F44),
-                          //         ),
-                          //         textAlign: TextAlign.center,
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
                         ],
                       ),
                     ),

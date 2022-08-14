@@ -369,21 +369,22 @@ class _HomePageState extends State<HomePage> {
                                               child: ListTile(
                                                 title: Text(timings[i]),
                                                 trailing: ElevatedButton(
-                                                  child: snapshot.data[i]
-                                                      ? Text(
-                                                          'Details',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Poppins',
-                                                              fontSize: 14),
-                                                        )
-                                                      : Text(
-                                                          'Vacant',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Poppins',
-                                                              fontSize: 14),
-                                                        ),
+                                                  child:
+                                                      snapshot.data[i] == false
+                                                          ? Text(
+                                                              'Vacant',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  fontSize: 14),
+                                                            )
+                                                          : Text(
+                                                              'Details',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  fontSize: 14),
+                                                            ),
                                                   onPressed: () {},
                                                   style: ButtonStyle(
                                                     foregroundColor:
@@ -391,13 +392,14 @@ class _HomePageState extends State<HomePage> {
                                                             .all<Color>(
                                                                 Colors.white),
                                                     backgroundColor: snapshot
-                                                            .data[i]
+                                                                .data[i] ==
+                                                            'false'
                                                         ? MaterialStateProperty
-                                                            .all(Color(
-                                                                0xFFF23F44))
-                                                        : MaterialStateProperty
                                                             .all(Colors
-                                                                .grey.shade300),
+                                                                .grey.shade300)
+                                                        : MaterialStateProperty
+                                                            .all(Color(
+                                                                0xFFF23F44)),
                                                     shape: MaterialStateProperty
                                                         .all<
                                                             RoundedRectangleBorder>(
@@ -413,8 +415,8 @@ class _HomePageState extends State<HomePage> {
                                                 leading: Icon(
                                                   Icons.circle,
                                                   color: snapshot.data[i]
-                                                      ? Colors.red
-                                                      : Colors.green,
+                                                      ? Colors.green
+                                                      : Colors.red,
                                                 ),
                                               ),
                                             ),
