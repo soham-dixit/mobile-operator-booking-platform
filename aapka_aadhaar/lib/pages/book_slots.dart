@@ -161,7 +161,7 @@ class _BookSlotsState extends State<BookSlots> {
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
             child: CircleAvatar(
-              backgroundImage: AssetImage('assets/user_app_logo.png'),
+              backgroundImage: AssetImage('assets/logo/logo.png'),
             ),
           ),
         ],
