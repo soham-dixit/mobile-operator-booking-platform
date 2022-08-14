@@ -47,8 +47,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     databaseReference
         .child("operators")
         .child(uid)
-        .child("location")
-        .update({"latitude": '', "longitude": ''});
+        .update({"loggedin": false});
   }
 
   @override

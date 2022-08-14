@@ -71,11 +71,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   saveUid() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
     final uid = user.uid;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('uid', uid);
+    databaseReference.child("operators").child(uid).update({"loggedin": true});
   }
 
   void getLocation() async {
@@ -185,7 +187,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
             child: CircleAvatar(
-              backgroundImage: AssetImage('assets/operator_app_logo.png'),
+              backgroundImage: AssetImage('assets/logo/logo.png'),
             ),
           ),
         ],

@@ -72,23 +72,26 @@ class _HomePageState extends State<HomePage> {
     if (databaseData['operators'] != null) {
       for (int i = 0; i < keys_list.length; i++) {
         key = keys_list[i];
-        if (databaseData['operators'][keys_list[i]]['location']['latitude'] !=
-            null) {
-          latitudes.add(
-              databaseData['operators'][keys_list[i]]['location']['latitude']);
-        }
-        if (databaseData['operators'][keys_list[i]]['location']['longitude'] !=
-            null) {
-          longitudes.add(
-              databaseData['operators'][keys_list[i]]['location']['longitude']);
-          print(longitudes);
-        }
-        if (databaseData['operators'][keys_list[i]]['gender'] != null) {
-          genders.add(databaseData['operators'][keys_list[i]]['gender']);
-        }
-        if (databaseData['operators'][keys_list[i]]['fullname'] != null) {
-          operatorNames
-              .add(databaseData['operators'][keys_list[i]]['fullname']);
+        if (databaseData['operators'][keys_list[i]]['loggedin'] == true) {
+          if (databaseData['operators'][keys_list[i]]['location']['latitude'] !=
+              null) {
+            latitudes.add(databaseData['operators'][keys_list[i]]['location']
+                ['latitude']);
+          }
+          if (databaseData['operators'][keys_list[i]]['location']
+                  ['longitude'] !=
+              null) {
+            longitudes.add(databaseData['operators'][keys_list[i]]['location']
+                ['longitude']);
+            print(longitudes);
+          }
+          if (databaseData['operators'][keys_list[i]]['gender'] != null) {
+            genders.add(databaseData['operators'][keys_list[i]]['gender']);
+          }
+          if (databaseData['operators'][keys_list[i]]['fullname'] != null) {
+            operatorNames
+                .add(databaseData['operators'][keys_list[i]]['fullname']);
+          }
         }
       }
       int count = 0;
@@ -144,7 +147,7 @@ class _HomePageState extends State<HomePage> {
       _controller
           ?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
         target: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
-        zoom: 12,
+        zoom: 13,
       )));
       print(loc.latitude);
       print(loc.longitude);
@@ -314,7 +317,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
             child: CircleAvatar(
-              backgroundImage: AssetImage('assets/user_app_logo.png'),
+              backgroundImage: AssetImage('assets/logo/logo.png'),
             ),
           ),
         ],
