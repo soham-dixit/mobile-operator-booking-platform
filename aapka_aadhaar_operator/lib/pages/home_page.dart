@@ -237,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       setState(() {
                         dayG = dates[0];
-                        activeColor = [false, false, false, true];
+                        activeColor = [true, false, false, false];
                       });
                     },
                     child: Card(
@@ -245,7 +245,12 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.all(10),
                         child: Text(
                           dates[0],
-                          style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 14,
+                              color: activeColor[0]
+                                  ? Color(0xFFF23F44)
+                                  : Colors.black),
                         ),
                       ),
                     ),
@@ -254,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       setState(() {
                         dayG = dates[1];
-                        activeColor = [false, false, false, true];
+                        activeColor = [false, true, false, false];
                       });
                     },
                     child: Card(
@@ -262,7 +267,12 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.all(10),
                         child: Text(
                           dates[1],
-                          style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 14,
+                              color: activeColor[1]
+                                  ? Color(0xFFF23F44)
+                                  : Colors.black),
                         ),
                       ),
                     ),
@@ -271,7 +281,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       setState(() {
                         dayG = dates[2];
-                        activeColor = [false, false, false, true];
+                        activeColor = [false, false, true, false];
                       });
                     },
                     child: Card(
@@ -279,7 +289,12 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.all(10),
                         child: Text(
                           dates[2],
-                          style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 14,
+                              color: activeColor[2]
+                                  ? Color(0xFFF23F44)
+                                  : Colors.black),
                         ),
                       ),
                     ),
@@ -296,7 +311,12 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.all(10),
                         child: Text(
                           dates[3],
-                          style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 14,
+                              color: activeColor[3]
+                                  ? Color(0xFFF23F44)
+                                  : Colors.black),
                         ),
                       ),
                     ),
