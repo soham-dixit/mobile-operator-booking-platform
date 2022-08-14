@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
-import 'package:aapka_aadhaar/widgets/progress_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -92,20 +91,49 @@ class _HomePageState extends State<HomePage> {
               .add(databaseData['operators'][keys_list[i]]['fullname']);
         }
       }
-
+      int count = 0;
       for (int i = 0; i < latitudes.length; i++) {
-        _markers.add(
-          Marker(
-            markerId: MarkerId(operatorNames[i]),
-            position: LatLng(latitudes[i], longitudes[i]),
-            icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
-            onTap: () async {
-              final pref = await SharedPreferences.getInstance();
-              pref.setString('operator-key', keys_list[i].toString());
-              openDialog();
-            },
-          ),
-        );
+        //computer distance between two markers
+        //get current user location
+        geolocator.Position position =
+            await geolocator.Geolocator.getCurrentPosition(
+                desiredAccuracy: geolocator.LocationAccuracy.high);
+        print("Print position------- $position");
+
+        double distanceInMeters = geolocator.Geolocator.distanceBetween(
+            position.latitude, position.longitude, latitudes[i], longitudes[i]);
+        print('distance in meters $distanceInMeters');
+        if (distanceInMeters <= 3000) {
+          count++;
+          _markers.add(
+            Marker(
+              markerId: MarkerId(operatorNames[i]),
+              position: LatLng(latitudes[i], longitudes[i]),
+              icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
+              onTap: () async {
+                final pref = await SharedPreferences.getInstance();
+                pref.setString('operator-key', keys_list[i].toString());
+                openDialog();
+              },
+            ),
+          );
+        }
+      }
+      if (count == 0) {
+        for (int i = 0; i < latitudes.length; i++) {
+          _markers.add(
+            Marker(
+              markerId: MarkerId(operatorNames[i]),
+              position: LatLng(latitudes[i], longitudes[i]),
+              icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
+              onTap: () async {
+                final pref = await SharedPreferences.getInstance();
+                pref.setString('operator-key', keys_list[i].toString());
+                openDialog();
+              },
+            ),
+          );
+        }
       }
     }
   }
