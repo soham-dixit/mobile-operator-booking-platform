@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
+import 'package:aapka_aadhaar/widgets/progress_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,8 +37,10 @@ class _HomePageState extends State<HomePage> {
   bool firstDay = false, secondDay = false, thirdDay = false, fourthDay = false;
   String? name;
   Set<Circle> _circles = {};
+  Timer? timer;
 
   addDates() {
+    print('addDates');
     dates.clear();
     for (int i = 0; i < 7; i++) {
       final date = _currentDate.add(Duration(days: i));
@@ -60,6 +65,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   getOperatorLocation() async {
+    print('operators location updated');
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
@@ -181,7 +187,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   updateSlots() async {
-    print('called');
     final databaseReference = FirebaseDatabase.instance.ref();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
@@ -228,11 +233,21 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  saveUid() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('uid-user', uid);
+  }
+
   @override
   void initState() {
     super.initState();
     saveUid();
-    getOperatorLocation();
+    timer = Timer.periodic(
+        Duration(seconds: 3), (Timer t) => getOperatorLocation());
+
     addDates();
 
     setState(() {
@@ -246,12 +261,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  saveUid() async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User user = await auth.currentUser!;
-    final uid = user.uid;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('uid-user', uid);
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override

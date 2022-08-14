@@ -39,6 +39,18 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     }
   }
 
+  void removeLocation() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    databaseReference
+        .child("operators")
+        .child(uid)
+        .child("location")
+        .update({"latitude": '', "longitude": ''});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -115,8 +127,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
                   Widget logoutButton = ElevatedButton(
                     onPressed: () async {
+                      removeLocation();
                       FirebaseAuth.instance.signOut();
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
                       prefs.remove('uid');
                       print('logged out');
                       Navigator.of(context).push(MaterialPageRoute(
