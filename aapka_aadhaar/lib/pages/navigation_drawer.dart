@@ -191,16 +191,16 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 redirectToPressReleases();
               },
             ),
-            SizedBox(
-              height: 11,
-            ),
-            buildMenuItem(
-              text: 'Update Page',
-              icon: Icons.chat,
-              onTap: () {
-                redirectToUpdatePage();
-              },
-            ),
+            // SizedBox(
+            //   height: 11,
+            // ),
+            // buildMenuItem(
+            //   text: 'Update Page',
+            //   icon: Icons.chat,
+            //   onTap: () {
+            //     redirectToUpdatePage();
+            //   },
+            // ),
             // SizedBox(
             //   height: 11,
             // ),
