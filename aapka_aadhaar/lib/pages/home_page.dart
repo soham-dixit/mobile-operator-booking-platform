@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
       _controller
           ?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
         target: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
-        zoom: 12,
+        zoom: 13,
       )));
       print(loc.latitude);
       print(loc.longitude);
