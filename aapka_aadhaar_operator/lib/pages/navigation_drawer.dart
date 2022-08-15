@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar_operator/authentication/login_page.dart';
+import 'package:aapka_aadhaar_operator/pages/booking_details.dart';
 import 'package:aapka_aadhaar_operator/pages/contact_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -128,6 +129,17 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               icon: Icons.call,
               onTap: () {
                 contactRedirect(context);
+              },
+            ),
+            SizedBox(
+              height: 11,
+            ),
+            buildMenuItem(
+              text: 'Booking Details',
+              icon: Icons.call,
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BookingDetails()));
               },
             ),
             SizedBox(
