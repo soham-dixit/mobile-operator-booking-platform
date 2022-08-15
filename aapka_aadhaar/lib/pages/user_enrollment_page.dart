@@ -83,6 +83,12 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
         .child(uid)
         .child('location')
         .set({"latitude": location.latitude, "longitude": location.longitude});
+
+    pref.remove('arg0');
+    pref.remove('arg1');
+    pref.remove('arg2');
+
+    showSnack();
   }
 
   buildShowDialog(BuildContext context) {
@@ -101,11 +107,6 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
             builder: (context) => BookSlots(),
           ));
     });
-  }
-
-  callMethod(args, upEn) {
-    var method2 = buildShowDialog(context);
-    var method1 = bookAppointment(args[0], args[1], upEn);
   }
 
   showSnack() async {
@@ -172,16 +173,25 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
     }
   }
 
-  handlerPaymentSuccess() {
+  void handlerPaymentSuccess(PaymentSuccessResponse response) async {
+    final pref = await SharedPreferences.getInstance();
+    String? i = pref.getString('arg0');
+    int i1 = int.parse(i!);
+    String? day = pref.getString('arg1');
+    String? uORe = pref.getString('arg2');
+    bookAppointment(i1, day!, uORe!);
     print('Payment Success');
-    return true;
   }
 
-  handlerErrorFailure() {
+  void handlerErrorFailure(PaymentFailureResponse response) async {
+    final pref = await SharedPreferences.getInstance();
+    pref.remove('arg0');
+    pref.remove('arg1');
+    pref.remove('arg2');
     print('payment error');
   }
 
-  void handlerExternalWallet() {
+  void handlerExternalWallet(ExternalWalletResponse response) {
     print('external wallet');
   }
 
@@ -541,12 +551,18 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    // bookAppointment(args[0], args[1], 'update')
+                                    //     .then((value) {
+                                    //   showSnack();
+                                    // });
+                                    final pref =
+                                        await SharedPreferences.getInstance();
+                                    pref.setString('arg0', args[0].toString());
+                                    pref.setString('arg1', args[1]);
+                                    pref.setString('arg2', 'update');
                                     buildShowDialog(context);
-                                    bookAppointment(args[0], args[1], 'update')
-                                        .then((value) {
-                                      showSnack();
-                                    });
+                                    openCheckout();
                                   },
                                   style: ButtonStyle(
                                     foregroundColor:
@@ -749,13 +765,20 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    // buildShowDialog(context);
+                                    // bookAppointment(
+                                    //         args[0], args[1], 'enrollment')
+                                    //     .then((value) {
+                                    //   showSnack();
+                                    // });
+                                    final pref =
+                                        await SharedPreferences.getInstance();
+                                    pref.setString('arg0', args[0].toString());
+                                    pref.setString('arg1', args[1]);
+                                    pref.setString('arg2', 'enrollment');
                                     buildShowDialog(context);
-                                    bookAppointment(
-                                            args[0], args[1], 'enrollment')
-                                        .then((value) {
-                                      showSnack();
-                                    });
+                                    openCheckout();
                                   },
                                   style: ButtonStyle(
                                     foregroundColor:
