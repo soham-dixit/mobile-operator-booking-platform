@@ -1,5 +1,5 @@
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
-import 'package:aapka_aadhaar/pages/user_enrollment_page.dart';
+import 'package:aapka_aadhaar/pages/service_req.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -332,7 +332,7 @@ class _BookSlotsState extends State<BookSlots> {
                                                             MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
-                                                                        UserEnrollmentPage(),
+                                                                        ServiceRequest(),
                                                                 settings:
                                                                     RouteSettings(
                                                                         arguments: [

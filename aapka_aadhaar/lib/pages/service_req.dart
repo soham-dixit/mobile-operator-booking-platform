@@ -3,20 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:location/location.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserEnrollmentPage extends StatefulWidget {
-  const UserEnrollmentPage({Key? key}) : super(key: key);
+class ServiceRequest extends StatefulWidget {
+  const ServiceRequest({Key? key}) : super(key: key);
 
   @override
-  State<UserEnrollmentPage> createState() => _UserEnrollmentPageState();
+  State<ServiceRequest> createState() => _ServiceRequestState();
 }
 
-class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
+class _ServiceRequestState extends State<ServiceRequest> {
   late Razorpay razorpay;
   List<bool?> checkedValue = [false, false, false, false, false, false];
   List selectedValues = [];
