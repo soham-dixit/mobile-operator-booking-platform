@@ -393,7 +393,7 @@ class _HomePageState extends State<HomePage> {
                                                                 Colors.white),
                                                     backgroundColor: snapshot
                                                                 .data[i] ==
-                                                            'false'
+                                                            false
                                                         ? MaterialStateProperty
                                                             .all(Colors
                                                                 .grey.shade300)
@@ -414,7 +414,7 @@ class _HomePageState extends State<HomePage> {
                                                 tileColor: Color(0xffffffff),
                                                 leading: Icon(
                                                   Icons.circle,
-                                                  color: snapshot.data[i]
+                                                  color: snapshot.data[i] == false
                                                       ? Colors.green
                                                       : Colors.red,
                                                 ),
