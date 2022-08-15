@@ -54,6 +54,8 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/logo/ic_launcher.png"
+  adaptive_icon_background: "#d9d9d9"
+  adaptive_icon_foreground: "assets/logo/logo2.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

@@ -245,7 +245,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                               'New operator? ',
                               style: TextStyle(
                                 fontFamily: 'Poppins',
-                                fontSize: 18,
+                                fontSize: 17.2,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFF000000),
                               ),
@@ -257,7 +257,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                                 'Register now',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
-                                  fontSize: 18,
+                                  fontSize: 17.2,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFFF23F44),
                                 ),

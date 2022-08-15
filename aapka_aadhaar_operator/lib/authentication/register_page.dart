@@ -514,7 +514,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                             'Already operator? ',
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18,
+                              fontSize: 16.7,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF000000),
                             ),
@@ -526,7 +526,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                               'Login now',
                               style: TextStyle(
                                 fontFamily: 'Poppins',
-                                fontSize: 18,
+                                fontSize: 16.7,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFFF23F44),
                               ),
