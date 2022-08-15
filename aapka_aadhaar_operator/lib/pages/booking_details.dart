@@ -47,12 +47,17 @@ class _BookingDetailsState extends State<BookingDetails> {
                         child: Row(
                           children: [
                             Icon(
-                              Icons.calendar_month
+                              Icons.calendar_month,
+                              size: 12,
                             ),
                             SizedBox(
                               width: 10,
                             ),
-                            Text('21st July, Thursday'),
+                            Text('21st July, Thursday',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 12,
+                                )),
                           ],
                         ),
                       ),
@@ -64,13 +69,16 @@ class _BookingDetailsState extends State<BookingDetails> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            Icon(
-                              Icons.access_time
-                            ),
+                            Icon(Icons.access_time, size: 12),
                             SizedBox(
                               width: 10,
                             ),
-                            Text('4PM to 5PM'),
+                            Text('4:00 PM to 5:00 PM',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 12,
+                                )),
                           ],
                         ),
                       ),
@@ -78,7 +86,9 @@ class _BookingDetailsState extends State<BookingDetails> {
                   )
                 ],
               ),
-              SizedBox(height: 11,),
+              SizedBox(
+                height: 11,
+              ),
               Text(
                 'Name',
                 textAlign: TextAlign.left,
@@ -86,7 +96,9 @@ class _BookingDetailsState extends State<BookingDetails> {
               TextFormField(
                 readOnly: true,
               ),
-              SizedBox(height: 11,),
+              SizedBox(
+                height: 11,
+              ),
               Text(
                 'Contact Number',
                 textAlign: TextAlign.left,
@@ -94,7 +106,9 @@ class _BookingDetailsState extends State<BookingDetails> {
               TextFormField(
                 readOnly: true,
               ),
-              SizedBox(height: 11,),
+              SizedBox(
+                height: 11,
+              ),
               Text(
                 'Address',
                 textAlign: TextAlign.left,
@@ -103,7 +117,9 @@ class _BookingDetailsState extends State<BookingDetails> {
                 maxLines: null,
                 readOnly: true,
               ),
-              SizedBox(height: 11,),
+              SizedBox(
+                height: 11,
+              ),
               Text(
                 'Purpose',
                 textAlign: TextAlign.left,
@@ -112,20 +128,25 @@ class _BookingDetailsState extends State<BookingDetails> {
                 maxLines: null,
                 readOnly: true,
               ),
-              SizedBox(height: 70,),
+              SizedBox(
+                height: 70,
+              ),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {}, 
+                  onPressed: () {},
                   style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all<Color>(
-                        Colors.black),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black),
                     backgroundColor:
                         MaterialStateProperty.all(Color(0xFFFFFFFF)),
-                    shape: MaterialStateProperty.all<
-                        RoundedRectangleBorder>(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24.0),
+                        side: BorderSide(
+                          width: 2,
+                          color: Color(0xFFF23F44),
+                        ),
                       ),
                     ),
                   ),
@@ -151,10 +172,15 @@ class _BookingDetailsState extends State<BookingDetails> {
                   style: ButtonStyle(
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.black),
-                    backgroundColor: MaterialStateProperty.all(Color(0xFFFFFFFF)),
+                    backgroundColor:
+                        MaterialStateProperty.all(Color(0xFFFFFFFF)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24.0),
+                        side: BorderSide(
+                          width: 2,
+                          color: Color(0xFFF23F44),
+                        ),
                       ),
                     ),
                   ),
@@ -180,7 +206,8 @@ class _BookingDetailsState extends State<BookingDetails> {
                   style: ButtonStyle(
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
-                    backgroundColor: MaterialStateProperty.all(Color(0xFFF23F44)),
+                    backgroundColor:
+                        MaterialStateProperty.all(Color(0xFFF23F44)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24.0),
