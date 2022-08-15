@@ -41,6 +41,7 @@ dependencies:
   shared_preferences: ^2.0.15
   dropdown_button2: ^1.7.1
   location: ^4.4.0
+  url_launcher: ^6.1.5
 
 dev_dependencies:
   flutter_test:
