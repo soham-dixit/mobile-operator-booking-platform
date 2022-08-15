@@ -34,5 +34,10 @@
             android:value="AIzaSyDkK07H_RBRxPdHLGFf80GzawgrU5fgjBI"/>
     </application>
 
+    <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="tel" />
+    </intent>
+
     <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
