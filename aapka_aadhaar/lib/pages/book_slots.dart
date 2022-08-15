@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
+import 'package:aapka_aadhaar/pages/user_enrollment_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -54,7 +55,7 @@ class _BookSlotsState extends State<BookSlots> {
       print('SLOT ==== $slot');
       print('DAY - $day');
       dynamic keys_list = slotData.keys.toList();
-      
+
       status.clear();
       status.addAll([
         slotData[day]['10_11'],
@@ -69,46 +70,6 @@ class _BookSlotsState extends State<BookSlots> {
 
       return status;
     }
-  }
-
-  bookAppointment(int i) async {
-    var location = await currentLocation.getLocation();
-    final pref = await SharedPreferences.getInstance();
-    final key = pref.getString('operator-key');
-    final databaseReference = FirebaseDatabase.instance.ref();
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User user = await auth.currentUser!;
-    final uid = user.uid;
-    print(
-        'ref --- ${databaseReference.child('operators').child(key.toString()).child('slots').child(dayG.toString()).child(
-              slot[i],
-            )}');
-    setState(() {
-      databaseReference
-          .child('operators')
-          .child(key.toString())
-          .child('slots')
-          .child(dayG.toString())
-          .child(
-            slot[i],
-          )
-          .set(true);
-    });
-    databaseReference
-        .child('users')
-        .child(uid)
-        .child('location')
-        .set({"latitude": location.latitude, "longitude": location.longitude});
-    final snackBar = SnackBar(
-      content: const Text(
-        'Appointment has been booked',
-        style: TextStyle(
-          fontFamily: 'Poppins',
-          fontSize: 16,
-        ),
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   alreadyBooked() {
@@ -345,30 +306,40 @@ class _BookSlotsState extends State<BookSlots> {
                                               child: ListTile(
                                                 title: Text(timings[i]),
                                                 trailing: ElevatedButton(
-                                                  child: snapshot.data[i]
-                                                      ? Text(
-                                                          'Booked',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Poppins',
-                                                              fontSize: 14),
-                                                        )
-                                                      : Text(
-                                                          'Book',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Poppins',
-                                                              fontSize: 14),
-                                                        ),
+                                                  child:
+                                                      snapshot.data[i] == false
+                                                          ? Text(
+                                                              'Book',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  fontSize: 14),
+                                                            )
+                                                          : Text(
+                                                              'Booked',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  fontSize: 14),
+                                                            ),
                                                   onPressed: () {
                                                     print('I---$i');
                                                     snapshot.data[i]
                                                         ? alreadyBooked()
-                                                        : i > 3
-                                                            ? bookAppointment(
-                                                                i - 1)
-                                                            : bookAppointment(
-                                                                i);
+                                                        : Navigator
+                                                            .pushReplacement(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        UserEnrollmentPage(),
+                                                                settings:
+                                                                    RouteSettings(
+                                                                        arguments: [
+                                                                      i,
+                                                                      dayG
+                                                                    ])),
+                                                          );
                                                   },
                                                   style: ButtonStyle(
                                                     foregroundColor:
@@ -376,13 +347,14 @@ class _BookSlotsState extends State<BookSlots> {
                                                             .all<Color>(
                                                                 Colors.white),
                                                     backgroundColor: snapshot
-                                                            .data[i]
+                                                                .data[i] ==
+                                                            false
                                                         ? MaterialStateProperty
-                                                            .all(Colors
-                                                                .grey.shade300)
-                                                        : MaterialStateProperty
                                                             .all(Color(
-                                                                0xFFF23F44)),
+                                                                0xFFF23F44))
+                                                        : MaterialStateProperty
+                                                            .all(Colors
+                                                                .grey.shade300),
                                                     shape: MaterialStateProperty
                                                         .all<
                                                             RoundedRectangleBorder>(
@@ -395,12 +367,11 @@ class _BookSlotsState extends State<BookSlots> {
                                                   ),
                                                 ),
                                                 tileColor: Color(0xffffffff),
-                                                leading: Icon(
-                                                  Icons.circle,
-                                                  color: snapshot.data[i]
-                                                      ? Colors.red
-                                                      : Colors.green,
-                                                ),
+                                                leading: Icon(Icons.circle,
+                                                    color: snapshot.data[i] ==
+                                                            false
+                                                        ? Colors.green
+                                                        : Colors.red),
                                               ),
                                             ),
                                     ],

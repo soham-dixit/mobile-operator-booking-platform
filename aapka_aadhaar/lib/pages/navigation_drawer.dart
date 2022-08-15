@@ -38,6 +38,61 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     return info;
   }
 
+  contactRedirect(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        });
+    Future.delayed(Duration(seconds: 1), () {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ContactPage(),
+          ));
+    });
+  }
+
+  pressReleaseRedirect(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        });
+    Future.delayed(Duration(seconds: 1), () {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PressReleases(),
+          ));
+    });
+  }
+
+  logout(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        });
+    Future.delayed(Duration(seconds: 1), () async {
+      FirebaseAuth.instance.signOut();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove('uid-user');
+      print("logged out");
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginPage()));
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -171,7 +226,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 text: 'Contact Us',
                 icon: Icons.call,
                 onTap: () {
-                  redirectToContactUs();
+                  contactRedirect(context);
                 }),
             SizedBox(
               height: 11,
@@ -188,19 +243,19 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               text: 'Recent Blogs',
               icon: Icons.chat,
               onTap: () {
-                redirectToPressReleases();
+                pressReleaseRedirect(context);
               },
             ),
-            SizedBox(
-              height: 11,
-            ),
-            buildMenuItem(
-              text: 'Update Page',
-              icon: Icons.chat,
-              onTap: () {
-                redirectToUpdatePage();
-              },
-            ),
+            // SizedBox(
+            //   height: 11,
+            // ),
+            // buildMenuItem(
+            //   text: 'Update Page',
+            //   icon: Icons.chat,
+            //   onTap: () {
+            //     redirectToUpdatePage();
+            //   },
+            // ),
             // SizedBox(
             //   height: 11,
             // ),
@@ -231,13 +286,8 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     },
                   );
                   Widget logoutButton = ElevatedButton(
-                    onPressed: () async {
-                      FirebaseAuth.instance.signOut();
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      prefs.remove('uid-user');
-                      print("logged out");
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    onPressed: () {
+                      logout(context);
                     },
                     child: Text('Log out'),
                     style: ElevatedButton.styleFrom(
@@ -294,31 +344,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         style: TextStyle(color: color, fontFamily: 'Poppins', fontSize: 16),
       ),
       onTap: onTap,
-    );
-  }
-
-  void redirectToPressReleases() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PressReleases(),
-      ),
-    );
-  }
-
-  void redirectToUpdatePage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => UserEnrollmentPage(),
-      ),
-    );
-  }
-
-  void redirectToContactUs() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ContactPage(),
-      ),
     );
   }
 }
