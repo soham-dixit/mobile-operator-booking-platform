@@ -3,19 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:location/location.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserEnrollmentPage extends StatefulWidget {
-  const UserEnrollmentPage({Key? key}) : super(key: key);
+class ServiceRequest extends StatefulWidget {
+  const ServiceRequest({Key? key}) : super(key: key);
 
   @override
-  State<UserEnrollmentPage> createState() => _UserEnrollmentPageState();
+  State<ServiceRequest> createState() => _ServiceRequestState();
 }
 
-class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
+class _ServiceRequestState extends State<ServiceRequest> {
+  late Razorpay razorpay;
   List<bool?> checkedValue = [false, false, false, false, false, false];
   List selectedValues = [];
   Location currentLocation = Location();
@@ -81,6 +81,12 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
         .child(uid)
         .child('location')
         .set({"latitude": location.latitude, "longitude": location.longitude});
+
+    pref.remove('arg0');
+    pref.remove('arg1');
+    pref.remove('arg2');
+
+    showSnack();
   }
 
   buildShowDialog(BuildContext context) {
@@ -99,11 +105,6 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
             builder: (context) => BookSlots(),
           ));
     });
-  }
-
-  callMethod(args, upEn) {
-    var method2 = buildShowDialog(context);
-    var method1 = bookAppointment(args[0], args[1], upEn);
   }
 
   showSnack() async {
@@ -125,6 +126,71 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
         MaterialPageRoute(
           builder: (context) => BookSlots(),
         ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    razorpay = new Razorpay();
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlerPaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlerErrorFailure);
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handlerExternalWallet);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    razorpay.clear();
+  }
+
+  void openCheckout() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    var options = {
+      "key": "rzp_test_TWnK1D5r7DV05M",
+      "amount": 100 * 100,
+      "name": "Aapka Aadhaar",
+      "description": "Door Step Aadhaar Card Service",
+      "timeout": 120,
+      "prefill": {
+        "contact": databaseData['users'][uid]['phoneNumber'],
+        "email": databaseData['users'][uid]['email'],
+      },
+      "external": {
+        "wallets": ["paytm"]
+      }
+    };
+    try {
+      razorpay.open(options);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void handlerPaymentSuccess(PaymentSuccessResponse response) async {
+    final pref = await SharedPreferences.getInstance();
+    String? i = pref.getString('arg0');
+    int i1 = int.parse(i!);
+    String? day = pref.getString('arg1');
+    String? uORe = pref.getString('arg2');
+    bookAppointment(i1, day!, uORe!);
+    print('Payment Success');
+  }
+
+  void handlerErrorFailure(PaymentFailureResponse response) async {
+    final pref = await SharedPreferences.getInstance();
+    pref.remove('arg0');
+    pref.remove('arg1');
+    pref.remove('arg2');
+    print('payment error');
+  }
+
+  void handlerExternalWallet(ExternalWalletResponse response) {
+    print('external wallet');
   }
 
   @override
@@ -483,12 +549,18 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    // bookAppointment(args[0], args[1], 'update')
+                                    //     .then((value) {
+                                    //   showSnack();
+                                    // });
+                                    final pref =
+                                        await SharedPreferences.getInstance();
+                                    pref.setString('arg0', args[0].toString());
+                                    pref.setString('arg1', args[1]);
+                                    pref.setString('arg2', 'update');
                                     buildShowDialog(context);
-                                    bookAppointment(args[0], args[1], 'update')
-                                        .then((value) {
-                                      showSnack();
-                                    });
+                                    openCheckout();
                                   },
                                   style: ButtonStyle(
                                     foregroundColor:
@@ -691,13 +763,20 @@ class _UserEnrollmentPageState extends State<UserEnrollmentPage> {
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    // buildShowDialog(context);
+                                    // bookAppointment(
+                                    //         args[0], args[1], 'enrollment')
+                                    //     .then((value) {
+                                    //   showSnack();
+                                    // });
+                                    final pref =
+                                        await SharedPreferences.getInstance();
+                                    pref.setString('arg0', args[0].toString());
+                                    pref.setString('arg1', args[1]);
+                                    pref.setString('arg2', 'enrollment');
                                     buildShowDialog(context);
-                                    bookAppointment(
-                                            args[0], args[1], 'enrollment')
-                                        .then((value) {
-                                      showSnack();
-                                    });
+                                    openCheckout();
                                   },
                                   style: ButtonStyle(
                                     foregroundColor:

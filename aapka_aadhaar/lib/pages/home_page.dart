@@ -328,6 +328,7 @@ class _HomePageState extends State<HomePage> {
             mapType: MapType.normal,
             myLocationEnabled: false,
             zoomControlsEnabled: false,
+            mapToolbarEnabled: false,
             initialCameraPosition: CameraPosition(
               target: LatLng(19.0760, 72.8777),
               zoom: 16.0,
