@@ -1,6 +1,7 @@
 import 'package:aapka_aadhaar_operator/authentication/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,7 +14,8 @@ class NavigationDrawer extends StatefulWidget {
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  static String operatorName = '', operatorEmail = '', operatorPhone = '';
+  List info = [];
+  late Future data;
 
   @override
   void initState() {
@@ -24,9 +26,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     } else {
       print("Not logged in");
     }
+    data = fetchDetails();
   }
 
-  void fetchDetails() async {
+  fetchDetails() async {
     final databaseReference = FirebaseDatabase.instance.ref();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
@@ -34,9 +37,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
-      operatorName = databaseData['operators'][uid]['fullname'];
-      operatorPhone = databaseData['operators'][uid]['phoneNumber'];
+      info.add(databaseData['operators'][uid]['fullname']);
+      info.add(databaseData['operators'][uid]['phoneNumber']);
+      print(info);
     }
+    return info;
   }
 
   void removeLocation() async {
@@ -44,10 +49,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
     final uid = user.uid;
-    databaseReference
-        .child("operators")
-        .child(uid)
-        .update({"loggedin": false});
+    databaseReference.child("operators").child(uid).update({"loggedin": false});
   }
 
   @override
@@ -57,39 +59,54 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         color: Color(0xFFFBF9F6),
         child: ListView(
           children: [
-            GestureDetector(
-              onTap: () {},
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Color(0xFFF23F44),
-                      radius: 45,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      operatorName,
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 18,
-                      ),
-                    ),
-                    Text(
-                      '+91' + ' ' + operatorPhone,
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            FutureBuilder(
+                future: data,
+                builder: (context, AsyncSnapshot snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return Padding(
+                          padding: EdgeInsets.all(10),
+                          child: CupertinoActivityIndicator());
+                    case ConnectionState.none:
+                      return Text('none');
+                    case ConnectionState.active:
+                      return Text('active');
+                    case ConnectionState.done:
+                      return GestureDetector(
+                        onTap: () {},
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: Color(0xFFF23F44),
+                                radius: 45,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                snapshot.data[0],
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Text(
+                                snapshot.data[1],
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                  }
+                }),
             Divider(
               color: Colors.grey,
               thickness: 1,
