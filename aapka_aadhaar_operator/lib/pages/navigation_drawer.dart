@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar_operator/authentication/login_page.dart';
+import 'package:aapka_aadhaar_operator/pages/contact_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -125,7 +126,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             buildMenuItem(
               text: 'Contact Us',
               icon: Icons.call,
-              onTap: () {},
+              onTap: () {
+                contactRedirect(context);
+              },
             ),
             SizedBox(
               height: 11,
@@ -216,4 +219,22 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       onTap: onTap,
     );
   }
+}
+
+contactRedirect(BuildContext context) {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CupertinoActivityIndicator(),
+        );
+      });
+  Future.delayed(Duration(seconds: 1), () {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ContactPage(),
+        ));
+  });
 }
