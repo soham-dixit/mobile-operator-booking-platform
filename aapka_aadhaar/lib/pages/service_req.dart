@@ -59,7 +59,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'address': add.text,
               'aadhaar_num': a_num.text,
               'req': selectedValues,
-              'service': uORe
+              'service': uORe,
+              'user' : uid,
             })
           : databaseReference
               .child('operators')
@@ -73,7 +74,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'name': _name.text,
               'address': _address.text,
               'phone': _phone.text,
-              'service': uORe
+              'service': uORe,
+              'user' : uid,
             });
     });
     databaseReference

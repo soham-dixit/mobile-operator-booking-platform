@@ -1,6 +1,7 @@
 import 'package:aapka_aadhaar_operator/authentication/login_page.dart';
 import 'package:aapka_aadhaar_operator/pages/booking_details.dart';
 import 'package:aapka_aadhaar_operator/pages/contact_page.dart';
+import 'package:aapka_aadhaar_operator/pages/navigate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -144,6 +145,14 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             ),
             SizedBox(
               height: 11,
+            ),
+            buildMenuItem(
+              text: 'Navigate Button',
+              icon: Icons.call,
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => NavigateToUser()));
+              },
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -149,8 +149,7 @@ class _HomePageState extends State<HomePage> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
       Map<dynamic, dynamic> slotData = databaseData['operators'][uid]['slots'];
-      print('SLOT ==== $slot');
-      print('DAY - $day');
+      
       dynamic keys_list = slotData.keys.toList();
 
       status.clear();
