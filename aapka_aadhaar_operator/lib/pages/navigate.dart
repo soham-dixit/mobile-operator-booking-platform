@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar_operator/pages/navigation_drawer.dart';
 import 'package:aapka_aadhaar_operator/services/network_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -129,6 +130,26 @@ class _NavigateToUserState extends State<NavigateToUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavigationDrawer(),
+      appBar: AppBar(
+        backgroundColor: Color(0xFFF23F44),
+        foregroundColor: Color(0xFFFFFFFF),
+        title: Text(
+          'Aapka Aadhaar Operator',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            // fontSize: 16
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/logo/logo.png'),
+            ),
+          ),
+        ],
+      ),
       body: Stack(
         alignment: Alignment.center,
         children: [

@@ -113,6 +113,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             FutureBuilder(
                 future: data,
                 builder: (context, AsyncSnapshot snapshot) {
+                  print('snap ${snapshot.data}');
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
                       return Padding(
