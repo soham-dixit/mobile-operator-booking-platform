@@ -185,8 +185,8 @@ class _NavigateToUserState extends State<NavigateToUser> {
                 )
               }),
           if (duration != null)
-            Positioned(
-              top: 40.0,
+            Positioned(    
+              top: MediaQuery.of(context).size.height * 0.8,   
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   vertical: 6.0,
