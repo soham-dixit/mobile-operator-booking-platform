@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
+import 'package:aapka_aadhaar/pages/booking_details.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:aapka_aadhaar/pages/press-releases.dart';
 import 'package:aapka_aadhaar/pages/contact_page.dart';
@@ -242,6 +243,20 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               icon: Icons.chat,
               onTap: () {
                 pressReleaseRedirect(context);
+              },
+            ),
+            SizedBox(
+              height: 11,
+            ),
+            buildMenuItem(
+              text: 'Booking Details',
+              icon: Icons.chat,
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BookingDetails(),
+                    ));
               },
             ),
             // SizedBox(
