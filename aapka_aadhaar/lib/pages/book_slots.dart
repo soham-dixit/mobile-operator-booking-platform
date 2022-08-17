@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar/pages/booking_details.dart';
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:aapka_aadhaar/pages/service_req.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -306,40 +307,52 @@ class _BookSlotsState extends State<BookSlots> {
                                               child: ListTile(
                                                 title: Text(timings[i]),
                                                 trailing: ElevatedButton(
-                                                  child:
-                                                      snapshot.data[i] == false
-                                                          ? Text(
-                                                              'Book',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Poppins',
-                                                                  fontSize: 14),
-                                                            )
-                                                          : Text(
-                                                              'Booked',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Poppins',
-                                                                  fontSize: 14),
-                                                            ),
+                                                  child: snapshot.data[i] ==
+                                                          false
+                                                      ? Text(
+                                                          'Book',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              fontSize: 14),
+                                                        )
+                                                      : Text(
+                                                          'Details',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 14),
+                                                        ),
                                                   onPressed: () {
                                                     print('I---$i');
-                                                    snapshot.data[i]
-                                                        ? alreadyBooked()
-                                                        : Navigator
-                                                            .pushReplacement(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        ServiceRequest(),
-                                                                settings:
-                                                                    RouteSettings(
-                                                                        arguments: [
-                                                                      i,
-                                                                      dayG
-                                                                    ])),
-                                                          );
+                                                    if (snapshot.data[i] !=
+                                                        false) {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  BookingDetails(),
+                                                              settings:
+                                                                  RouteSettings(
+                                                                      arguments: [
+                                                                    i,
+                                                                    dayG
+                                                                  ])));
+                                                    } else {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ServiceRequest(),
+                                                              settings:
+                                                                  RouteSettings(
+                                                                      arguments: [
+                                                                    i,
+                                                                    dayG
+                                                                  ])));
+                                                    }
                                                   },
                                                   style: ButtonStyle(
                                                     foregroundColor:
