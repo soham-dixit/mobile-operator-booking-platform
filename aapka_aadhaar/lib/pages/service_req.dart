@@ -21,6 +21,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
   Location currentLocation = Location();
   TextEditingController name = TextEditingController();
   TextEditingController add = TextEditingController();
+  TextEditingController phone = TextEditingController();
   TextEditingController a_num = TextEditingController();
   TextEditingController _name = TextEditingController();
   TextEditingController _address = TextEditingController();
@@ -58,6 +59,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'name': name.text,
               'address': add.text,
               'aadhaar_num': a_num.text,
+              'phone': phone.text,
               'req': selectedValues,
               'service': uORe
             })
@@ -300,6 +302,42 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
                               label: Text('Aadhaar Number'),
+                              labelStyle: TextStyle(
+                                color: Colors.grey.shade700,
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(10)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 22,
+                          ),
+                          TextFormField(
+                            controller: phone,
+                            maxLength: 10,
+                            textInputAction: TextInputAction.next,
+                            keyboardType: TextInputType.phone,
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            validator: (value) {
+                              try {} catch (e) {}
+                            },
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              label: Text('Mobile Number'),
                               labelStyle: TextStyle(
                                 color: Colors.grey.shade700,
                               ),

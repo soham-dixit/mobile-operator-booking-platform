@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar_operator/pages/booking_details.dart';
 import 'package:aapka_aadhaar_operator/pages/navigation_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -385,7 +386,22 @@ class _HomePageState extends State<HomePage> {
                                                                       'Poppins',
                                                                   fontSize: 14),
                                                             ),
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    if (snapshot.data[i] !=
+                                                        false) {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  BookingDetails(),
+                                                              settings:
+                                                                  RouteSettings(
+                                                                      arguments: [
+                                                                    i,
+                                                                    dayG
+                                                                  ])));
+                                                    }
+                                                  },
                                                   style: ButtonStyle(
                                                     foregroundColor:
                                                         MaterialStateProperty
@@ -414,9 +430,10 @@ class _HomePageState extends State<HomePage> {
                                                 tileColor: Color(0xffffffff),
                                                 leading: Icon(
                                                   Icons.circle,
-                                                  color: snapshot.data[i] == false
-                                                      ? Colors.green
-                                                      : Colors.red,
+                                                  color:
+                                                      snapshot.data[i] == false
+                                                          ? Colors.green
+                                                          : Colors.red,
                                                 ),
                                               ),
                                             ),
