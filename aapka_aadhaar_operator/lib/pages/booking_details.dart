@@ -140,78 +140,126 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ],
                         ),
                         SizedBox(
-                          height: 18,
+                          height: 22,
                         ),
-                        Text(
-                          'Name',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        // Text(
+                        //   'Name',
+                        //   textAlign: TextAlign.left,
+                        //   style: TextStyle(
+                        //       fontFamily: 'Poppins',
+                        //       fontSize: 16,
+                        //       fontWeight: FontWeight.bold),
+                        // ),
                         TextFormField(
                           initialValue: snapshot.data[0],
                           readOnly: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            labelText: 'Name',
+                            labelStyle: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            isDense: true,
+                          ),
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 16,
                           ),
                         ),
                         SizedBox(
-                          height: 11,
+                          height: 22,
                         ),
-                        Text(
-                          'Contact Number',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        // Text(
+                        //   'Contact Number',
+                        //   textAlign: TextAlign.left,
+                        //   style: TextStyle(
+                        //       fontFamily: 'Poppins',
+                        //       fontSize: 16,
+                        //       fontWeight: FontWeight.bold),
+                        // ),
                         TextFormField(
                           initialValue: snapshot.data[1],
                           readOnly: true,
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 16,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            labelText: 'Contact Number',
+                            labelStyle: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            isDense: true,
                           ),
                         ),
                         SizedBox(
-                          height: 11,
+                          height: 22,
                         ),
-                        Text(
-                          'Address',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        // Text(
+                        //   'Address',
+                        //   textAlign: TextAlign.left,
+                        //   style: TextStyle(
+                        //       fontFamily: 'Poppins',
+                        //       fontSize: 16,
+                        //       fontWeight: FontWeight.bold),
+                        // ),
                         TextFormField(
                           initialValue: snapshot.data[2],
                           maxLines: null,
                           readOnly: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            labelText: 'Address',
+                            labelStyle: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            isDense: true,
+                          ),
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 16,
                           ),
                         ),
                         SizedBox(
-                          height: 11,
+                          height: 22,
                         ),
-                        Text(
-                          'Purpose',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        // Text(
+                        //   'Purpose',
+                        //   textAlign: TextAlign.left,
+                        //   style: TextStyle(
+                        //       fontFamily: 'Poppins',
+                        //       fontSize: 16,
+                        //       fontWeight: FontWeight.bold),
+                        // ),
                         TextFormField(
                           initialValue: snapshot.data[3],
                           maxLines: null,
                           readOnly: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            labelText: 'Purpose',
+                            labelStyle: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            isDense: true,
+                          ),
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 16,
