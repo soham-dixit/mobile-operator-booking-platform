@@ -242,7 +242,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             keyboardType: TextInputType.name,
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                             validator: (value) {
@@ -285,7 +285,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             keyboardType: TextInputType.emailAddress,
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                             validator: (value) {
@@ -329,7 +329,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             keyboardType: TextInputType.phone,
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                             validator: (value) {
@@ -519,11 +519,12 @@ class _ServiceRequestState extends State<ServiceRequest> {
                           ),
                           TextFormField(
                             controller: add,
+                            maxLength: null,
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.emailAddress,
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                             validator: (value) {
@@ -659,7 +660,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             controller: _name,
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                             validator: (value) {
@@ -702,7 +703,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             keyboardType: TextInputType.emailAddress,
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                             validator: (value) {
@@ -737,7 +738,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             controller: _address,
                             style: TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                             validator: (value) {
