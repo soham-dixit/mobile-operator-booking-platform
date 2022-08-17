@@ -400,6 +400,22 @@ class _HomePageState extends State<HomePage> {
                                                                     i,
                                                                     dayG
                                                                   ])));
+                                                    } else {
+                                                      //show snackbar
+                                                      final snackBar = SnackBar(
+                                                        content: Text(
+                                                          'Vacant slot',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                      );
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              snackBar);
                                                     }
                                                   },
                                                   style: ButtonStyle(
