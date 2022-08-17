@@ -24,21 +24,38 @@ class _BookingDetailsState extends State<BookingDetails> {
     '5_6',
   ];
 
+  List timings = [
+    '10:00 AM to 11:00 AM',
+    '11:00 AM to 12:00 PM',
+    '12:00 PM to 1:00 PM',
+    '2:00 PM to 3:00 PM',
+    '3:00 PM to 4:00 PM',
+    '4:00 PM to 5:00 PM',
+    '5:00 PM to 6:00 PM'
+  ];
+
   getData(int i, String date) async {
+    list.clear();
     final databaseReference = FirebaseDatabase.instance.ref();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
     final uid = user.uid;
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
-    final address =
-        databaseData['operators'][uid]['slots'][date][slot[i]]['address'];
-    final name = databaseData['operators'][uid]['slots'][date][slot[i]]['name'];
-    final phone =
-        databaseData['operators'][uid]['slots'][date][slot[i]]['phone'];
-    final service =
-        databaseData['operators'][uid]['slots'][date][slot[i]]['service'];
-    list.addAll([name, phone, address, service]);
+
+    final address = i > 3
+        ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['address']
+        : databaseData['operators'][uid]['slots'][date][slot[i]]['address'];
+    final name = i > 3
+        ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['name']
+        : databaseData['operators'][uid]['slots'][date][slot[i]]['name'];
+    final phone = i > 3
+        ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['phone']
+        : databaseData['operators'][uid]['slots'][date][slot[i]]['phone'];
+    final service = i > 3
+        ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['service']
+        : databaseData['operators'][uid]['slots'][date][slot[i]]['service'];
+    list.addAll([name, phone, address, service, i, date]);
     print(list);
     return list;
   }
@@ -79,6 +96,11 @@ class _BookingDetailsState extends State<BookingDetails> {
               case ConnectionState.active:
                 return Text('active');
               case ConnectionState.done:
+                int index = snapshot.data[4];
+
+                // var date = DateFormat('EEEE, d MMM, yyyy')
+                //     .format(DateTime.parse(snapshot.data[5]));
+                // print('null ${DateTime.parse(snapshot.data[5] + ' 00:00:00.000')}');
                 return SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
@@ -106,7 +128,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                       SizedBox(
                                         width: 10,
                                       ),
-                                      Text('21st July, Thursday',
+                                      Text(snapshot.data[5],
                                           style: TextStyle(
                                             fontFamily: 'Poppins',
                                             fontSize: 12,
@@ -126,12 +148,19 @@ class _BookingDetailsState extends State<BookingDetails> {
                                       SizedBox(
                                         width: 10,
                                       ),
-                                      Text('4:00 PM to 5:00 PM',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontSize: 12,
-                                          )),
+                                      index > 3
+                                          ? Text(timings[index - 1],
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12,
+                                              ))
+                                          : Text(timings[index],
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12,
+                                              )),
                                     ],
                                   ),
                                 ),
