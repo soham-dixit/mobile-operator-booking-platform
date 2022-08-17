@@ -134,6 +134,17 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             SizedBox(
               height: 11,
             ),
+            buildMenuItem(
+              text: 'Booking Details',
+              icon: Icons.call,
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BookingDetails()));
+              },
+            ),
+            SizedBox(
+              height: 11,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton.icon(
