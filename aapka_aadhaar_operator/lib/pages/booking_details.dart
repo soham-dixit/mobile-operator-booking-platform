@@ -14,7 +14,6 @@ class BookingDetails extends StatefulWidget {
 
 class _BookingDetailsState extends State<BookingDetails> {
   final list = [];
-  // late Future data;
   List slot = [
     '10_11',
     '11_12',
