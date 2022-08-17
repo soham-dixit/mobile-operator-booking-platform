@@ -23,14 +23,14 @@ class _BookSlotsState extends State<BookSlots> {
   String? dayG;
   List status = [];
   List timings = [
-    '10AM - 11AM',
-    '11AM - 12PM',
-    '12PM - 1PM ',
-    '1PM - 2PM',
-    '2PM - 3PM',
-    '3PM - 4PM',
-    '4PM - 5PM',
-    '5PM - 6PM'
+    '10:00 AM to 11:00 AM',
+    '11:00 AM to 12:00 PM',
+    '12:00 PM to 1:00 PM',
+    '1:00 PM to 2:00 PM',
+    '2:00 PM to 3:00 PM',
+    '3:00 PM to 4:00 PM',
+    '4:00 PM to 5:00 PM',
+    '5:00 PM to 6:00 PM'
   ];
   List slot = [
     '10_11',
@@ -290,7 +290,7 @@ class _BookSlotsState extends State<BookSlots> {
                                   padding: const EdgeInsets.all(5.0),
                                   child: Column(
                                     children: [
-                                      timings[i] == '1PM - 2PM'
+                                      timings[i] == '1:00 PM to 2:00 PM'
                                           ? Card(
                                               child: ListTile(
                                                   title: Center(

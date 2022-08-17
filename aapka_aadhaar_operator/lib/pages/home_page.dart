@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar_operator/pages/booking_details.dart';
 import 'package:aapka_aadhaar_operator/pages/navigation_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -24,14 +25,14 @@ class _HomePageState extends State<HomePage> {
   String? dayG;
   List status = [];
   List timings = [
-    '10AM - 11AM',
-    '11AM - 12PM',
-    '12PM - 1PM ',
-    '1PM - 2PM',
-    '2PM - 3PM',
-    '3PM - 4PM',
-    '4PM - 5PM',
-    '5PM - 6PM'
+    '10:00 AM to 11:00 AM',
+    '11:00 AM to 12:00 PM',
+    '12:00 PM to 1:00 PM',
+    '1:00 PM to 2:00 PM',
+    '2:00 PM to 3:00 PM',
+    '3:00 PM to 4:00 PM',
+    '4:00 PM to 5:00 PM',
+    '5:00 PM to 6:00 PM'
   ];
   List slot = [
     '10_11',
@@ -353,7 +354,7 @@ class _HomePageState extends State<HomePage> {
                                   padding: const EdgeInsets.all(5.0),
                                   child: Column(
                                     children: [
-                                      timings[i] == '1PM - 2PM'
+                                      timings[i] == '1:00 PM to 2:00 PM'
                                           ? Card(
                                               child: ListTile(
                                                   title: Center(
@@ -385,7 +386,38 @@ class _HomePageState extends State<HomePage> {
                                                                       'Poppins',
                                                                   fontSize: 14),
                                                             ),
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    if (snapshot.data[i] !=
+                                                        false) {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  BookingDetails(),
+                                                              settings:
+                                                                  RouteSettings(
+                                                                      arguments: [
+                                                                    i,
+                                                                    dayG
+                                                                  ])));
+                                                    } else {
+                                                      //show snackbar
+                                                      final snackBar = SnackBar(
+                                                        content: Text(
+                                                          'Vacant slot',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                      );
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              snackBar);
+                                                    }
+                                                  },
                                                   style: ButtonStyle(
                                                     foregroundColor:
                                                         MaterialStateProperty
@@ -414,9 +446,10 @@ class _HomePageState extends State<HomePage> {
                                                 tileColor: Color(0xffffffff),
                                                 leading: Icon(
                                                   Icons.circle,
-                                                  color: snapshot.data[i] == false
-                                                      ? Colors.green
-                                                      : Colors.red,
+                                                  color:
+                                                      snapshot.data[i] == false
+                                                          ? Colors.green
+                                                          : Colors.red,
                                                 ),
                                               ),
                                             ),
