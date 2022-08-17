@@ -248,46 +248,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             SizedBox(
               height: 11,
             ),
-            buildMenuItem(
-              text: 'Booking Details',
-              icon: Icons.chat,
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BookingDetails(),
-                    ));
-              },
-            ),
-            // SizedBox(
-            //   height: 11,
-            // ),
-            // buildMenuItem(
-            //   text: 'Update Page',
-            //   icon: Icons.chat,
-            //   onTap: () {
-            //     redirectToUpdatePage();
-            //   },
-            // ),
-            // SizedBox(
-            //   height: 11,
-            // ),
-            // buildMenuItem(
-            //   text: 'Book Slots (test)',
-            //   icon: Icons.book_online,
-            //   onTap: () {
-            //     //call book slots
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => BookSlots(),
-            //       ),
-            //     );
-            //   },
-            // ),
-            SizedBox(
-              height: 11,
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton.icon(
