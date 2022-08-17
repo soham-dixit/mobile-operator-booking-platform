@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
+import 'package:aapka_aadhaar/pages/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -302,6 +303,15 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // getLocation();
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Profile()));
+        },
+        child: Text('Profile'),
+        foregroundColor: Colors.white,
+        backgroundColor: Color(0xFFF23F44),
+      ),
       drawer: NavigationDrawer(),
       appBar: AppBar(
         backgroundColor: Color(0xFFF23F44),
