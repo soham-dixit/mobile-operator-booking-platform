@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart';
 
@@ -17,13 +18,14 @@ class NavigateToUser extends StatefulWidget {
 }
 
 class _NavigateToUserState extends State<NavigateToUser> {
-  late GoogleMapController mapController;
+  final Completer<GoogleMapController> mapController = Completer();
   List<LatLng> polyPoints = [];
   final Set<Polyline> polyLines = {};
   final Set<Marker> markers = {};
   var data;
   var duration, distance;
-  Timer? timer;
+  Location currentLocation = Location();
+  var location;
 
   double op_lat = 0.0;
   double op_lng = 0.0;
@@ -63,6 +65,25 @@ class _NavigateToUserState extends State<NavigateToUser> {
     }
   }
 
+  getCurrentLocation() async {
+    location = await currentLocation.getLocation();
+
+    GoogleMapController gmc = await mapController.future;
+
+    currentLocation.onLocationChanged.listen((newLoc) {
+      location = newLoc;
+      gmc.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            zoom: 13.5,
+            target: LatLng(location.latitude, location.longitude),
+          ),
+        ),
+      );
+      setState(() {});
+    });
+  }
+
   addMarker() {
     print('called');
     setState(() {
@@ -81,7 +102,17 @@ class _NavigateToUserState extends State<NavigateToUser> {
           position: LatLng(u_lat, u_lng),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           onTap: () async {},
-        )
+        ),
+        Marker(
+          infoWindow: InfoWindow(title: 'Live Location'),
+          markerId: MarkerId('live'),
+          position: LatLng(
+            location.latitude,
+            location.longitude,
+          ),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          onTap: () async {},
+        ),
       ]);
     });
   }
@@ -129,11 +160,10 @@ class _NavigateToUserState extends State<NavigateToUser> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getData().whenComplete(() {
-      timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
-        getData().whenComplete(() {
-          addMarker();
-        });
+      getCurrentLocation().whenComplete(() {
+        addMarker();
       });
 
       getJsonData();
@@ -175,7 +205,7 @@ class _NavigateToUserState extends State<NavigateToUser> {
               zoom: 11.5,
             ),
             onMapCreated: (GoogleMapController controller) {
-              mapController = controller;
+              mapController.complete(controller);
             },
             polylines: polyLines,
             markers: markers,
