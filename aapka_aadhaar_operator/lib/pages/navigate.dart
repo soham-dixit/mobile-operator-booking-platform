@@ -49,7 +49,7 @@ class _NavigateToUserState extends State<NavigateToUser> {
           databaseData['operators'][uid]['location'];
       op_lat = locData['latitude'];
       op_lng = locData['longitude'];
-      user_id = databaseData['operators'][uid]['slots']['18-08-2022']['10_11']
+      user_id = databaseData['operators'][uid]['slots']['19-08-2022']['10_11']
           ['user'];
       print('called $op_lat');
       print('called $op_lng');
@@ -80,7 +80,21 @@ class _NavigateToUserState extends State<NavigateToUser> {
           ),
         ),
       );
-      setState(() {});
+      setState(() {
+        markers.add(
+          Marker(
+            infoWindow: InfoWindow(title: 'Live Location'),
+            markerId: MarkerId('live'),
+            position: LatLng(
+              location.latitude,
+              location.longitude,
+            ),
+            icon:
+                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+            onTap: () async {},
+          ),
+        );
+      });
     });
   }
 
