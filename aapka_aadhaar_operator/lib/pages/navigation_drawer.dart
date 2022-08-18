@@ -3,6 +3,7 @@ import 'package:aapka_aadhaar_operator/pages/booking_details.dart';
 import 'package:aapka_aadhaar_operator/pages/contact_page.dart';
 import 'package:aapka_aadhaar_operator/pages/home_page.dart';
 import 'package:aapka_aadhaar_operator/pages/navigate.dart';
+import 'package:aapka_aadhaar_operator/pages/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,7 +43,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
       info.add(databaseData['operators'][uid]['fullname']);
-      info.add(databaseData['operators'][uid]['phoneNumber']);
       print(info);
     }
     return info;
@@ -77,7 +77,12 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                       return Text('active');
                     case ConnectionState.done:
                       return GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Profile()));
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Column(
@@ -93,13 +98,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                               ),
                               Text(
                                 snapshot.data[0],
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18,
-                                ),
-                              ),
-                              Text(
-                                snapshot.data[1],
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 18,
