@@ -41,7 +41,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
       info.add(databaseData['operators'][uid]['fullname']);
-      info.add(databaseData['operators'][uid]['phoneNumber']);
       print(info);
     }
     return info;
@@ -97,13 +96,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                               ),
                               Text(
                                 snapshot.data[0],
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18,
-                                ),
-                              ),
-                              Text(
-                                snapshot.data[1],
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 18,

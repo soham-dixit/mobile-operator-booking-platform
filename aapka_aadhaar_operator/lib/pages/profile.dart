@@ -26,6 +26,14 @@ class _ProfileState extends State<Profile> {
               // fontSize: 16
             ),
           ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/logo/logo.png'),
+              ),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -46,7 +54,11 @@ class _ProfileState extends State<Profile> {
                 ),
                 Text(
                   'NAME',
-                  style: TextStyle(color: Colors.grey, letterSpacing: 2),
+                  style: TextStyle(
+                      color: Colors.black,
+                      letterSpacing: 2,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 10,
@@ -62,7 +74,11 @@ class _ProfileState extends State<Profile> {
                 ),
                 Text(
                   'EMAIL ID',
-                  style: TextStyle(color: Colors.grey, letterSpacing: 2),
+                  style: TextStyle(
+                      color: Colors.black,
+                      letterSpacing: 2,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 10,
@@ -78,8 +94,11 @@ class _ProfileState extends State<Profile> {
                 ),
                 Text(
                   'MOBILE NUMBER',
-                  style:
-                      TextStyle(color: Colors.grey, letterSpacing: 2),
+                  style: TextStyle(
+                      color: Colors.black,
+                      letterSpacing: 2,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 10,
@@ -87,9 +106,7 @@ class _ProfileState extends State<Profile> {
                 AutoSizeText(
                   '9892598604',
                   style: TextStyle(
-                      color: Color(0xFFF23F44),
-                      letterSpacing: 2,
-                      fontSize: 18),
+                      color: Color(0xFFF23F44), letterSpacing: 2, fontSize: 18),
                   maxLines: 1,
                 ),
                 Divider(
