@@ -303,15 +303,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // getLocation();
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Profile()));
-        },
-        child: Text('Profile'),
-        foregroundColor: Colors.white,
-        backgroundColor: Color(0xFFF23F44),
-      ),
       drawer: NavigationDrawer(),
       appBar: AppBar(
         backgroundColor: Color(0xFFF23F44),

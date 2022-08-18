@@ -3,6 +3,7 @@ import 'package:aapka_aadhaar/pages/booking_details.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:aapka_aadhaar/pages/press-releases.dart';
 import 'package:aapka_aadhaar/pages/contact_page.dart';
+import 'package:aapka_aadhaar/pages/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -125,7 +126,12 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                       return Text('active');
                     case ConnectionState.done:
                       return GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Profile()));
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Column(

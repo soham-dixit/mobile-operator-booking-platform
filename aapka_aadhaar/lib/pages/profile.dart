@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -14,6 +15,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavigationDrawer(),
       appBar: AppBar(
         backgroundColor: Color(0xFFF23F44),
         foregroundColor: Color(0xFFFFFFFF),
@@ -68,21 +70,39 @@ class _ProfileState extends State<Profile> {
                 SizedBox(
                   height: 30,
                 ),
-                Text(
-                  'EMAIL ID',
-                  style: TextStyle(color: Colors.black, letterSpacing: 2, fontFamily: 'Poppins'),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                AutoSizeText(
-                  'agarwalkushajay@gmail.com',
-                  style: TextStyle(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'EMAIL ID',
+                          style: TextStyle(
+                              color: Colors.black,
+                              letterSpacing: 2,
+                              fontFamily: 'Poppins'),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        AutoSizeText(
+                          'agarwalkushajay@gmail.com',
+                          style: TextStyle(
+                              color: Color(0xFFF23F44),
+                              // letterSpacing: 2,
+                              fontSize: 18,
+                              fontFamily: 'Poppins'),
+                          maxLines: 1,
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.edit),
                       color: Color(0xFFF23F44),
-                      letterSpacing: 2,
-                      fontSize: 28,
-                      fontFamily: 'Poppins'),
-                  maxLines: 1,
+                    )
+                  ],
                 ),
                 SizedBox(
                   height: 30,
