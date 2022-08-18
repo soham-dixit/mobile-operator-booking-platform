@@ -77,7 +77,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     case ConnectionState.done:
                       return GestureDetector(
                         onTap: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Profile()));

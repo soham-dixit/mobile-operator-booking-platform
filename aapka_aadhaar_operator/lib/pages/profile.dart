@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar_operator/pages/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -14,6 +15,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: NavigationDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xFFF23F44),
           foregroundColor: Color(0xFFFFFFFF),
@@ -52,7 +54,7 @@ class _ProfileState extends State<Profile> {
                 AutoSizeText(
                   'Kush Agarwal',
                   style: TextStyle(
-                      color: Color(0xFFF23F44), letterSpacing: 2, fontSize: 28),
+                      color: Color(0xFFF23F44), letterSpacing: 2, fontSize: 18),
                   maxLines: 1,
                 ),
                 SizedBox(
@@ -68,42 +70,27 @@ class _ProfileState extends State<Profile> {
                 AutoSizeText(
                   'agarwalkushajay@gmail.com',
                   style: TextStyle(
-                      color: Color(0xFFF23F44), letterSpacing: 2, fontSize: 28),
+                      color: Color(0xFFF23F44), letterSpacing: 2, fontSize: 18),
                   maxLines: 1,
                 ),
                 SizedBox(
                   height: 30,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'MOBILE NUMBER',
-                          style:
-                              TextStyle(color: Colors.grey, letterSpacing: 2),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        AutoSizeText(
-                          '9892598604',
-                          style: TextStyle(
-                              color: Color(0xFFF23F44),
-                              letterSpacing: 2,
-                              fontSize: 28),
-                          maxLines: 1,
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.edit),
+                Text(
+                  'MOBILE NUMBER',
+                  style:
+                      TextStyle(color: Colors.grey, letterSpacing: 2),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                AutoSizeText(
+                  '9892598604',
+                  style: TextStyle(
                       color: Color(0xFFF23F44),
-                    )
-                  ],
+                      letterSpacing: 2,
+                      fontSize: 18),
+                  maxLines: 1,
                 ),
                 Divider(
                   height: 40,
