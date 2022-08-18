@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'navigate.dart';
 
 class BookingDetails extends StatefulWidget {
   const BookingDetails({Key? key}) : super(key: key);
@@ -57,6 +60,11 @@ class _BookingDetailsState extends State<BookingDetails> {
         ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['service']
         : databaseData['operators'][uid]['slots'][date][slot[i]]['service'];
     list.addAll([name, phone, address, service, i, date]);
+    final pref = await SharedPreferences.getInstance();
+    pref.setString('date', date);
+    i > 3
+        ? pref.setString('time', slot[i - 1])
+        : pref.setString('time', slot[i]);
     print(list);
     return list;
   }
@@ -301,7 +309,14 @@ class _BookingDetailsState extends State<BookingDetails> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NavigateToUser(),
+                                ),
+                              );
+                            },
                             style: ButtonStyle(
                               foregroundColor: MaterialStateProperty.all<Color>(
                                   Colors.black),

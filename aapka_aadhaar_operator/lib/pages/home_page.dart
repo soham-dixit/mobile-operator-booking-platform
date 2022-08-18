@@ -100,6 +100,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   updateSlots() async {
+    print('called update ---');
     final databaseReference = FirebaseDatabase.instance.ref();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
