@@ -123,11 +123,31 @@ class _HomePageState extends State<HomePage> {
             .child("slots")
             .child(keys_list[0])
             .remove();
-        String day = _dayFormatter
-            .format(_currentDate.add(Duration(days: 3)))
+
+        String? day;
+
+        day = _currentDate.add(Duration(days: 3)).toString();
+
+        if (DateTime.parse(day).day == 'Sunday') {
+          day = _currentDate.add(Duration(days: 4)).toString();
+        } else if (DateTime.parse(day).day == 'Saturday') {
+          day = _currentDate.add(Duration(days: 5)).toString();
+        }
+        String? final_day = _dayFormatter
+            .format(DateTime.parse(day).add(Duration(days: 3)))
             .toString();
-        databaseReference.child("operators").child(uid).child("slots").set({
-          day: {
+        
+
+        databaseReference
+            .child("operators")
+            .child(uid)
+            .child("slots")
+            .update({final_day: ''});
+
+        print('called');
+
+        databaseReference.child("operators").child(uid).child("slots").update({
+          final_day: {
             "10_11": false,
             "11_12": false,
             "12_1": false,
