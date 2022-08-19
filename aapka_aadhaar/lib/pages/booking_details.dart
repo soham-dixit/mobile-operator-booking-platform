@@ -86,6 +86,14 @@ class _BookingDetailsState extends State<BookingDetails> {
             // fontSize: 16
           ),
         ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/logo/logo.png'),
+            ),
+          ),
+        ],
       ),
       body: FutureBuilder(
           future: getData(args[0], args[1]),

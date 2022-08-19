@@ -20,6 +20,14 @@ class _AboutUsState extends State<AboutUs> {
         title: Text('About Us'),
         backgroundColor: Color(0xFFF23F44),
         foregroundColor: Colors.white,
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/logo/logo.png'),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(

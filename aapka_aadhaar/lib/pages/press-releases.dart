@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -12,9 +13,18 @@ class _PressReleasesState extends State<PressReleases> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavigationDrawer(),
       appBar: AppBar(
         title: Text("Press Releases"),
         backgroundColor: Color(0xFFF23F44),
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/logo/logo.png'),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
