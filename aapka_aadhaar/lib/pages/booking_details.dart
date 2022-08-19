@@ -16,6 +16,8 @@ class BookingDetails extends StatefulWidget {
 }
 
 class _BookingDetailsState extends State<BookingDetails> {
+  String cancelBookingDate = '';
+  late int cancelBookingSlot;
   final list = [];
   String opName = '';
   String opPhone = '';
@@ -54,6 +56,9 @@ class _BookingDetailsState extends State<BookingDetails> {
     opName = databaseData['operators'][key]['fullname'];
     opPhone = databaseData['operators'][key]['phoneNumber'];
 
+    cancelBookingDate = date;
+    cancelBookingSlot = i;
+
     final address = i > 3
         ? databaseData['operators'][key]['slots'][date][slot[i - 1]]['address']
         : databaseData['operators'][key]['slots'][date][slot[i]]['address'];
@@ -69,6 +74,17 @@ class _BookingDetailsState extends State<BookingDetails> {
     list.addAll([name, phone, address, service, i, date]);
     print(list);
     return list;
+  }
+
+  void cancelBooking(BuildContext context) async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    if(cancelBookingSlot>3){
+      databaseReference.child('operators').child(key!).child('slots').child(cancelBookingDate).child(slot[cancelBookingSlot-1]).remove();
+    }
   }
 
   @override
@@ -344,7 +360,39 @@ class _BookingDetailsState extends State<BookingDetails> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Widget noButton = FlatButton(
+                                child: Text("No"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                              Widget yesButton = ElevatedButton(
+                                onPressed: () {
+                                  cancelBooking(context);
+                                },
+                                child: Text('Yes'),
+                                style: ElevatedButton.styleFrom(
+                                    shape: StadiumBorder(),
+                                    primary: Color(0xFFF23F44)),
+                              );
+                              AlertDialog alert = AlertDialog(
+                                title: const Text(
+                                    "Are you sure you want cancel the booking?",
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins', fontSize: 18)),
+                                actions: [
+                                  noButton,
+                                  yesButton,
+                                ],
+                              );
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return alert;
+                                },
+                              );
+                            },
                             style: ButtonStyle(
                               foregroundColor: MaterialStateProperty.all<Color>(
                                   Colors.white),
