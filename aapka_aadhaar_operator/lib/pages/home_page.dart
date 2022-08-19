@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
       var _currentDate = DateTime.now();
       final _dayFormatter = DateFormat('dd-MM-yyyy');
 
-      if (_dayFormatter.format(_currentDate) == keys_list[1]) {
+      if (_dayFormatter.format(_currentDate.add(Duration(days:3))) == keys_list[1]) {
         databaseReference
             .child("operators")
             .child(uid)
@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
 
         String? day;
 
-        day = DateTime.parse(keys_list[0]).add(Duration(days: 1)).toString();
+        day = DateFormat("dd-MM-yyyy").parse(keys_list[3]).add(Duration(days: 1)).toString();
         print('Day 1 day- $day');
 
         if (DateTime.parse(day).day == 'Sunday') {
