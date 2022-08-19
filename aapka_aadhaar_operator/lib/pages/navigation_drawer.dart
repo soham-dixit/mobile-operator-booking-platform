@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aapka_aadhaar_operator/authentication/login_page.dart';
 import 'package:aapka_aadhaar_operator/pages/booking_details.dart';
 import 'package:aapka_aadhaar_operator/pages/contact_page.dart';
@@ -21,6 +23,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   List info = [];
   late Future data;
+  String? path;
 
   @override
   void initState() {
@@ -32,6 +35,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       print("Not logged in");
     }
     data = fetchDetails();
+    checkPreviousPhoto();
   }
 
   fetchDetails() async {
@@ -54,6 +58,12 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     final User user = await auth.currentUser!;
     final uid = user.uid;
     databaseReference.child("operators").child(uid).update({"loggedin": false});
+  }
+
+   checkPreviousPhoto() async {
+    final pref = await SharedPreferences.getInstance();
+    path = pref.getString('profile-img');
+    print('profile ${path}');
   }
 
   @override
@@ -90,6 +100,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CircleAvatar(
+                                backgroundImage: path == null
+                                    ? AssetImage('assets/profile.png')
+                                        as ImageProvider
+                                    : FileImage(File(path.toString())),
                                 backgroundColor: Color(0xFFF23F44),
                                 radius: 45,
                               ),
