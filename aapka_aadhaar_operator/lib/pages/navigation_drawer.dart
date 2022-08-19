@@ -5,6 +5,7 @@ import 'package:aapka_aadhaar_operator/pages/booking_details.dart';
 import 'package:aapka_aadhaar_operator/pages/contact_page.dart';
 import 'package:aapka_aadhaar_operator/pages/home_page.dart';
 import 'package:aapka_aadhaar_operator/pages/navigate.dart';
+import 'package:aapka_aadhaar_operator/pages/previous_bookings.dart';
 import 'package:aapka_aadhaar_operator/pages/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -60,7 +61,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     databaseReference.child("operators").child(uid).update({"loggedin": false});
   }
 
-   checkPreviousPhoto() async {
+  checkPreviousPhoto() async {
     final pref = await SharedPreferences.getInstance();
     path = pref.getString('profile-img');
     print('profile ${path}');
@@ -147,7 +148,12 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             buildMenuItem(
               text: 'Previous Bookings',
               icon: Icons.history,
-              onTap: () {},
+              onTap: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PreviousBookings()));
+              },
             ),
             SizedBox(
               height: 11,
