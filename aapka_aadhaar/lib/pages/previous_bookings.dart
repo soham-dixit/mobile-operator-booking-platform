@@ -2,6 +2,7 @@ import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class PreviousBookings extends StatefulWidget {
   const PreviousBookings({Key? key}) : super(key: key);
@@ -39,15 +40,22 @@ class _PreviousBookingsState extends State<PreviousBookings> {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
-              Center(
-                child: Text(
-                  'Previous Bookings',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.history,
+                    size: 30,
                   ),
-                ),
+                  SizedBox(width: 10,),
+                  Text(
+                    'Previous Bookings',
+                    style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25),
+                  ),
+                ],
               ),
               SizedBox(height: 22,),
               Card(
@@ -124,7 +132,7 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                                 text: 'Operator Name: ',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                             TextSpan(
-                              text: 'Customer Name',
+                              text: 'Operator Name',
                             ),
                           ],
                         ),
@@ -179,25 +187,42 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                       SizedBox(
                         height: 10,
                       ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Rating: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          RichText(
+                            softWrap: true,
+                            textAlign: TextAlign.justify,
+                            text: TextSpan(
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16,
+                                  color: Colors.black),
+                              children: [
+                                TextSpan(
+                                    text: 'Rating: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                          ),
+                          RatingBarIndicator(
+                            rating: 3,
+                            itemBuilder: (context, index) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            itemCount: 5,
+                            itemSize: 20.0,
+                            direction: Axis.horizontal,
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ),
+              SizedBox(height: 15,),
               Card(
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
@@ -274,7 +299,7 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                                 text: 'Operator Name: ',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                             TextSpan(
-                              text: 'Customer Name',
+                              text: 'Operator Name',
                             ),
                           ],
                         ),
@@ -330,478 +355,41 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                       SizedBox(
                         height: 10,
                       ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Rating: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          RichText(
+                            softWrap: true,
+                            textAlign: TextAlign.justify,
+                            text: TextSpan(
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16,
+                                  color: Colors.black),
+                              children: [
+                                TextSpan(
+                                    text: 'Rating: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                          ),
+                          RatingBarIndicator(
+                            rating: 3,
+                            itemBuilder: (context, index) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            itemCount: 5,
+                            itemSize: 20.0,
+                            direction: Axis.horizontal,
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(12)),
-                ),
-                elevation: 4,
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: RichText(
-                              softWrap: true,
-                              textAlign: TextAlign.justify,
-                              text: TextSpan(
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    color: Colors.black),
-                                children: [
-                                  TextSpan(
-                                      text: 'Date: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                    text: '15/08/2022',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: RichText(
-                              softWrap: true,
-                              textAlign: TextAlign.justify,
-                              text: TextSpan(
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    color: Colors.black),
-                                children: [
-                                  TextSpan(
-                                      text: 'Time: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                    text: '15:00 PM',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Operator Name: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(
-                              text: 'Customer Name',
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Purpose: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(
-                              text: 'Updation/Enrollment',
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Status: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(
-                                text: 'Completed',
-                                style: TextStyle(color: Colors.green)),
-                            TextSpan(
-                                text: '/',
-                                style: TextStyle(color: Colors.black)),
-                            TextSpan(
-                                text: 'Cancelled',
-                                style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Rating: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(12)),
-                ),
-                elevation: 4,
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: RichText(
-                              softWrap: true,
-                              textAlign: TextAlign.justify,
-                              text: TextSpan(
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    color: Colors.black),
-                                children: [
-                                  TextSpan(
-                                      text: 'Date: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                    text: '15/08/2022',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: RichText(
-                              softWrap: true,
-                              textAlign: TextAlign.justify,
-                              text: TextSpan(
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    color: Colors.black),
-                                children: [
-                                  TextSpan(
-                                      text: 'Time: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                    text: '15:00 PM',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Operator Name: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(
-                              text: 'Customer Name',
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Purpose: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(
-                              text: 'Updation/Enrollment',
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Status: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(
-                                text: 'Completed',
-                                style: TextStyle(color: Colors.green)),
-                            TextSpan(
-                                text: '/',
-                                style: TextStyle(color: Colors.black)),
-                            TextSpan(
-                                text: 'Cancelled',
-                                style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Rating: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(12)),
-                ),
-                elevation: 4,
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: RichText(
-                              softWrap: true,
-                              textAlign: TextAlign.justify,
-                              text: TextSpan(
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    color: Colors.black),
-                                children: [
-                                  TextSpan(
-                                      text: 'Date: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                    text: '15/08/2022',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: RichText(
-                              softWrap: true,
-                              textAlign: TextAlign.justify,
-                              text: TextSpan(
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    color: Colors.black),
-                                children: [
-                                  TextSpan(
-                                      text: 'Time: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                    text: '15:00 PM',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Operator Name: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(
-                              text: 'Customer Name',
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Purpose: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(
-                              text: 'Updation/Enrollment',
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Status: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(
-                                text: 'Completed',
-                                style: TextStyle(color: Colors.green)),
-                            TextSpan(
-                                text: '/',
-                                style: TextStyle(color: Colors.black)),
-                            TextSpan(
-                                text: 'Cancelled',
-                                style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        softWrap: true,
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: 'Rating: ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
             ],
           ),
         ),
