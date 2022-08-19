@@ -49,7 +49,7 @@ class _NavigateToUserState extends State<NavigateToUser> {
           databaseData['operators'][uid]['location'];
       op_lat = locData['latitude'];
       op_lng = locData['longitude'];
-      user_id = databaseData['operators'][uid]['slots']['19-08-2022']['10_11']
+      user_id = databaseData['operators'][uid]['slots'][date][slot]
           ['user'];
       print('called $op_lat');
       print('called $op_lng');
