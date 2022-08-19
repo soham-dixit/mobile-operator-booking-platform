@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:io';
 import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
+import 'package:aapka_aadhaar/pages/operator_verification.dart';
 import 'package:aapka_aadhaar/pages/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -340,6 +342,81 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // getLocation();
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: ((context) => OperatorVerification())));
+          Widget cancelButton = TextButton(
+            child: Text("Cancel"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+          Widget logoutButton = ElevatedButton(
+            onPressed: () {
+            
+            },
+            child: Text('Verify'),
+            style: ElevatedButton.styleFrom(
+                shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+          );
+
+          AlertDialog alert = AlertDialog(
+            title:Column(
+              children: [
+                Text(
+                  'Operator Verification',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Please ask the operator for verification PIN, and allow them in your premise only if they authenticate",
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black38,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            content: OtpTextField(
+              autoFocus: true,
+              numberOfFields: 4,
+              focusedBorderColor: Color(0xFFF23F44),
+              //set to true to show as box or false to show as dash
+              showFieldAsBox: true,
+              //runs when a code is typed in
+              onCodeChanged: (String code) {
+                //handle validation or checks here
+              },
+              //runs when every textfield is filled
+            ),
+            actions: [
+              cancelButton,
+              logoutButton,
+            ],
+          );
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
+        },
+        child: Icon(
+          Icons.history,
+        ),
+      ),
       drawer: NavigationDrawer(),
       appBar: AppBar(
         backgroundColor: Color(0xFFF23F44),
@@ -468,7 +545,8 @@ class _HomePageState extends State<HomePage> {
                             //     ? AssetImage('assets/logo/profile.png')
                             //         as ImageProvider
                             //     : FileImage(File(path.toString())),
-                            backgroundImage : AssetImage('assets/logo/profile.png'),
+                            backgroundImage:
+                                AssetImage('assets/logo/profile.png'),
                           ),
                         ),
                         // Expanded(
