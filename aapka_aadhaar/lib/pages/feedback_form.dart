@@ -13,7 +13,6 @@ class FeedbackForm extends StatefulWidget {
 }
 
 class _FeedbackFormState extends State<FeedbackForm> {
-  int _value = 1;
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -29,6 +28,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
     databaseReference.child('feedbacks').child(uid).set({"name": name , "email":email, "phoneNumber": phone , "description" : description});
   }
 
+  String? _value = 'Complaint';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,10 +147,15 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           children: [
                             Row(
                               children: [
-                                Radio(
-                                  value: 1,
+                                Radio<String>(
+                                  activeColor: Color(0xFFF23F44),
+                                  value: 'Complaint',
                                   groupValue: _value,
-                                  onChanged: (value) {},
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      _value = value;
+                                    });
+                                  },
                                 ),
                                 SizedBox(
                                   width: 5,
@@ -160,10 +165,15 @@ class _FeedbackFormState extends State<FeedbackForm> {
                             ),
                             Row(
                               children: [
-                                Radio(
-                                  value: 1,
+                                Radio<String>(
+                                  activeColor: Color(0xFFF23F44),
+                                  value: 'Feedback',
                                   groupValue: _value,
-                                  onChanged: (value) {},
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      _value = value;
+                                    });
+                                  },
                                 ),
                                 SizedBox(
                                   width: 5,
@@ -173,10 +183,15 @@ class _FeedbackFormState extends State<FeedbackForm> {
                             ),
                             Row(
                               children: [
-                                Radio(
-                                  value: 1,
+                                Radio<String>(
+                                  activeColor: Color(0xFFF23F44),
+                                  value: 'Suggestion',
                                   groupValue: _value,
-                                  onChanged: (value) {},
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      _value = value;
+                                    });
+                                  },
                                 ),
                                 SizedBox(
                                   width: 5,
