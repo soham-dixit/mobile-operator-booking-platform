@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:aapka_aadhaar/pages/profile.dart';
@@ -38,6 +39,7 @@ class _HomePageState extends State<HomePage> {
   String? name;
   Set<Circle> _circles = {};
   Timer? timer;
+  String? path;
 
   addDates() {
     print('addDates');
@@ -274,7 +276,11 @@ class _HomePageState extends State<HomePage> {
 
         print('called');
 
-        databaseReference.child("operators").child(key.toString()).child("slots").update({
+        databaseReference
+            .child("operators")
+            .child(key.toString())
+            .child("slots")
+            .update({
           final_day: {
             "10_11": false,
             "11_12": false,
@@ -315,6 +321,13 @@ class _HomePageState extends State<HomePage> {
         print("not logged in");
       }
     });
+    checkOperatorPhoto();
+  }
+
+  checkOperatorPhoto() async {
+    final pref = await SharedPreferences.getInstance();
+    path = pref.getString('profile-img');
+    print('profile ${path}');
   }
 
   @override
@@ -449,11 +462,16 @@ class _HomePageState extends State<HomePage> {
                         // SizedBox(
                         //   width: 80.0,
                         // ),
-                        Expanded(
-                          child: CircleAvatar(
-                            backgroundColor: Color(0xFFF23F44),
-                          ),
-                        ),
+                        // Expanded(
+                        //   child: CircleAvatar(
+                        //     // backgroundImage: path == null
+                        //     //     ? AssetImage('assets/logo/profile.png')
+                        //     //         as ImageProvider
+                        //     //     : FileImage(File(path.toString())),
+                        //     backgroundImage:
+                        //         AssetImage('assets/logo/profile.png'),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

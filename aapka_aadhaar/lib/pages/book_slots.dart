@@ -23,6 +23,7 @@ class _BookSlotsState extends State<BookSlots> {
   List dates = [];
   String? dayG;
   List status = [];
+  var uid;
   List timings = [
     '10:00 AM to 11:00 AM',
     '11:00 AM to 12:00 PM',
@@ -45,6 +46,9 @@ class _BookSlotsState extends State<BookSlots> {
   List activeColor = [true, false, false, false];
 
   getData(String day) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    uid = user.uid;
     final pref = await SharedPreferences.getInstance();
     final key = pref.getString('operator-key');
     print('key 2 ---$key');
@@ -287,6 +291,7 @@ class _BookSlotsState extends State<BookSlots> {
                               scrollDirection: Axis.vertical,
                               itemCount: status.length,
                               itemBuilder: (context, i) {
+                                // print('snapshot ${snapshot.data[i]['user']}');
                                 return Padding(
                                   padding: const EdgeInsets.all(5.0),
                                   child: Column(
@@ -316,30 +321,50 @@ class _BookSlotsState extends State<BookSlots> {
                                                                   'Poppins',
                                                               fontSize: 14),
                                                         )
-                                                      : Text(
-                                                          'Details',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Poppins',
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 14),
-                                                        ),
+                                                      :snapshot.data[i]
+                                                              ['user'] ==
+                                                          uid
+                                                          ? Text(
+                                                              'Details',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 14),
+                                                            )
+                                                          : Text(
+                                                              'Booked',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 14),
+                                                            ),
                                                   onPressed: () {
-                                                    print('I---$i');
                                                     if (snapshot.data[i] !=
                                                         false) {
-                                                      Navigator.push(
+                                                      if (snapshot.data[i]
+                                                              ['user'] ==
+                                                          uid) {
+                                                        Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  BookingDetails(),
-                                                              settings:
-                                                                  RouteSettings(
-                                                                      arguments: [
-                                                                    i,
-                                                                    dayG
-                                                                  ])));
+                                                            builder: (context) =>
+                                                                BookingDetails(),
+                                                            settings:
+                                                                RouteSettings(
+                                                              arguments: [
+                                                                i,
+                                                                dayG
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        alreadyBooked();
+                                                      }
                                                     } else {
                                                       Navigator.push(
                                                           context,
