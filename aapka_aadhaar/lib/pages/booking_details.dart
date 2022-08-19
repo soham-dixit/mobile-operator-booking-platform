@@ -406,7 +406,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              Widget noButton = FlatButton(
+                              Widget noButton = TextButton(
                                 child: Text("No"),
                                 onPressed: () {
                                   Navigator.pop(context);

@@ -94,7 +94,10 @@ class _ProfileState extends State<Profile> {
           child: operatorName == ''
               ? Container(
                   padding: EdgeInsets.only(top: 300),
-                  child: Center(child: CupertinoActivityIndicator()))
+                  child: Center(
+                    child: CupertinoActivityIndicator(),
+                  ),
+                )
               : Padding(
                   padding: const EdgeInsets.fromLTRB(30, 40, 30, 50),
                   child: Column(
