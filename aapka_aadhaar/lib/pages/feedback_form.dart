@@ -11,11 +11,11 @@ class FeedbackForm extends StatefulWidget {
 }
 
 class _FeedbackFormState extends State<FeedbackForm> {
-  int _value = 1;
+  String? _value = 'Complaint';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationDrawer(),
+        drawer: NavigationDrawer(),
         backgroundColor: Color(0xFFFBF9F6),
         appBar: AppBar(
           title: Text(
@@ -127,43 +127,63 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           children: [
                             Row(
                               children: [
-                                Radio(
-                                  value: 1,
+                                Radio<String>(
+                                  activeColor: Color(0xFFF23F44),
+                                  value: 'Complaint',
                                   groupValue: _value,
-                                  onChanged: (value) {
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      _value = value;
+                                    });
                                   },
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 Text('Complaint'),
                               ],
                             ),
                             Row(
                               children: [
-                                Radio(
-                                  value: 1,
+                                Radio<String>(
+                                  activeColor: Color(0xFFF23F44),
+                                  value: 'Feedback',
                                   groupValue: _value,
-                                  onChanged: (value) {
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      _value = value;
+                                    });
                                   },
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 Text('Feedback'),
                               ],
                             ),
                             Row(
                               children: [
-                                Radio(
-                                  value: 1,
+                                Radio<String>(
+                                  activeColor: Color(0xFFF23F44),
+                                  value: 'Suggestion',
                                   groupValue: _value,
-                                  onChanged: (value) {
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      _value = value;
+                                    });
                                   },
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 Text('Suggestion'),
                               ],
                             ),
                           ],
                         ),
-                        SizedBox(height: 22,),
+                        SizedBox(
+                          height: 22,
+                        ),
                         TextFormField(
                           maxLines: null,
                           minLines: 2,
@@ -184,7 +204,9 @@ class _FeedbackFormState extends State<FeedbackForm> {
                             fontSize: 16,
                           ),
                         ),
-                        SizedBox(height: 22,),
+                        SizedBox(
+                          height: 22,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -243,12 +265,8 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           ],
                         ),
                       ],
-                    )
-                  )
-                )
-            ]
-          ),
-        )
-      );
-    }
+                    )))
+          ]),
+        ));
+  }
 }
