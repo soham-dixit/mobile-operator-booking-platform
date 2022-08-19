@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
       var _currentDate = DateTime.now();
       final _dayFormatter = DateFormat('dd-MM-yyyy');
 
-      if (_dayFormatter.format(_currentDate.add(Duration(days:3))) == keys_list[1]) {
+      if (_dayFormatter.format(_currentDate) == keys_list[1]) {
         databaseReference
             .child("operators")
             .child(uid)
