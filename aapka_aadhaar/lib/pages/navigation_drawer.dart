@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
+import 'package:aapka_aadhaar/pages/about_us.dart';
 import 'package:aapka_aadhaar/pages/booking_details.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:aapka_aadhaar/pages/press-releases.dart';
@@ -231,7 +232,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             buildMenuItem(
               text: 'About Us',
               icon: Icons.person,
-              onTap: () {},
+              onTap: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => AboutUs()));
+              },
             ),
             SizedBox(
               height: 11,
