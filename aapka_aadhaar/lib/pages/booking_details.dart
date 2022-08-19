@@ -1,4 +1,6 @@
+import 'dart:math';
 import 'package:aapka_aadhaar/pages/book_slots.dart';
+import 'package:aapka_aadhaar/pages/feedback_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +25,8 @@ class _BookingDetailsState extends State<BookingDetails> {
   final list = [];
   String opName = '';
   String opPhone = '';
+  late int serviceOtp;
+  int count = 1;
   // late Future data;
   List slot = [
     '10_11',
@@ -117,6 +122,137 @@ class _BookingDetailsState extends State<BookingDetails> {
           builder: (context) => BookSlots(),
         ));
     showSnack();
+  }
+
+  verifyServiceOtp() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    if (count <= 3) {
+      if (cancelBookingSlot > 3) {
+        final otp = databaseData['operators'][key]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot - 1]]['otp'];
+        if (serviceOtp == otp) {
+          Navigator.pop(context);
+          final snackBar = SnackBar(
+            content: const Text(
+              'Operator has been successfully verified',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+              ),
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } else {
+          Navigator.pop(context);
+          final snackBar = SnackBar(
+            content: const Text(
+              'Invalid OTP, please try again',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+              ),
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          count++;
+        }
+      }
+      if (cancelBookingSlot < 3) {
+        final otp = databaseData['operators'][key]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot]]['otp'];
+        if (serviceOtp == otp) {
+          Navigator.pop(context);
+          final snackBar = SnackBar(
+            content: const Text(
+              'Operator has been successfully verified',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+              ),
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } else {
+          Navigator.pop(context);
+          final snackBar = SnackBar(
+            content: const Text(
+              'Invalid OTP, please try again',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+              ),
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          count++;
+        }
+      }
+    } else {
+      Navigator.pop(context);
+      Future.delayed(Duration(seconds: 1), () {
+        Widget reportButton = ElevatedButton(
+          child: Text("Report"),
+          style: ElevatedButton.styleFrom(
+              shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+          onPressed: () {
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return Center(
+                    child: CupertinoActivityIndicator(),
+                  );
+                });
+            Future.delayed(Duration(seconds: 1), () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FeedbackForm(),
+                  ));
+            });
+          },
+        );
+        Widget okButton = ElevatedButton(
+          child: Text('Okay'),
+          style: ElevatedButton.styleFrom(
+              shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        );
+
+        AlertDialog alert = AlertDialog(
+          title: const Text("Verification Pin did not match!",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 18,
+                  color: Color(0xFFF23F44),
+                  fontWeight: FontWeight.bold)),
+          content: const Text(
+              "(NOTE: Please report if you doubt the authenticity of operator and your booking with this operator will be cancelled.)",
+              textAlign: TextAlign.justify,
+              style: TextStyle(fontSize: 12, fontFamily: 'Poppins')),
+          actions: [
+            reportButton,
+            okButton,
+          ],
+        );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      });
+    }
   }
 
   showSnack() async {
@@ -370,7 +506,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 5,
                         ),
                         Padding(
                           padding: const EdgeInsets.all(5.0),
@@ -385,7 +521,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                         ),
                         SizedBox(
-                          height: 15,
+                          height: 0,
                         ),
                         Padding(
                           padding: const EdgeInsets.all(5.0),
@@ -400,14 +536,12 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                         ),
                         SizedBox(
-                          height: 90,
+                          height: 10,
                         ),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {
-                              
-                            },
+                            onPressed: () {},
                             style: ButtonStyle(
                               foregroundColor: MaterialStateProperty.all<Color>(
                                   Colors.black),
@@ -432,12 +566,82 @@ class _BookingDetailsState extends State<BookingDetails> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 22,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              
+                              Widget cancelButton = TextButton(
+                                child: Text("Cancel"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                              Widget verifyButton = ElevatedButton(
+                                onPressed: () {
+                                  verifyServiceOtp();
+                                },
+                                child: Text('Verify'),
+                                style: ElevatedButton.styleFrom(
+                                    shape: StadiumBorder(),
+                                    primary: Color(0xFFF23F44)),
+                              );
+
+                              AlertDialog alert = AlertDialog(
+                                title: Column(
+                                  children: [
+                                    Text(
+                                      'Operator Verification',
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "Please ask the operator for verification PIN, and allow them in your premise only if they're authenticate",
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black38,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                                content: OtpTextField(
+                                  autoFocus: true,
+                                  numberOfFields: 4,
+                                  focusedBorderColor: Color(0xFFF23F44),
+                                  //set to true to show as box or false to show as dash
+                                  showFieldAsBox: true,
+                                  //runs when a code is typed in
+                                  onCodeChanged: (String code) {
+                                    //handle validation or checks here
+                                  },
+                                  onSubmit: (String code) {
+                                    serviceOtp = int.parse(code);
+                                    print("printed service otp: $serviceOtp");
+                                  },
+                                  //runs when every textfield is filled
+                                ),
+                                actions: [
+                                  cancelButton,
+                                  verifyButton,
+                                ],
+                              );
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return alert;
+                                },
+                              );
                             },
                             style: ButtonStyle(
                               foregroundColor: MaterialStateProperty.all<Color>(
@@ -463,7 +667,9 @@ class _BookingDetailsState extends State<BookingDetails> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 22,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(

@@ -19,6 +19,7 @@ class BookingDetails extends StatefulWidget {
 class _BookingDetailsState extends State<BookingDetails> {
   String cancelBookingDate = '';
   late int cancelBookingSlot;
+  late int serviceOtp;
   final list = [];
   // late Future data;
   List slot = [
@@ -65,7 +66,10 @@ class _BookingDetailsState extends State<BookingDetails> {
     final service = i > 3
         ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['service']
         : databaseData['operators'][uid]['slots'][date][slot[i]]['service'];
-    list.addAll([name, phone, address, service, i, date]);
+    final serviceOtp = i > 3
+        ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['otp']
+        : databaseData['operators'][uid]['slots'][date][slot[i]]['otp'];
+    list.addAll([name, phone, address, service, i, date, serviceOtp]);
     final pref = await SharedPreferences.getInstance();
     pref.setString('date', date);
     i > 3
@@ -366,7 +370,34 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                         ),
                         SizedBox(
-                          height: 70,
+                          height: 0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Verification Pin: ',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                snapshot.data[6].toString(),
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFFF23F44)),
+                              ),
+                              SizedBox(
+                                height: 70,
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(
                           width: double.infinity,

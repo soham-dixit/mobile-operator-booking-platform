@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
