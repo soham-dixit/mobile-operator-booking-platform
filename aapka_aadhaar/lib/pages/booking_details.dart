@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:aapka_aadhaar/pages/book_slots.dart';
+import 'package:aapka_aadhaar/pages/feedback_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,6 +26,7 @@ class _BookingDetailsState extends State<BookingDetails> {
   String opName = '';
   String opPhone = '';
   late int serviceOtp;
+  int count = 1;
   // late Future data;
   List slot = [
     '10_11',
@@ -131,63 +133,125 @@ class _BookingDetailsState extends State<BookingDetails> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     final pref = await SharedPreferences.getInstance();
     final key = pref.getString('operator-key');
-    if (cancelBookingSlot > 3) {
-      final otp = databaseData['operators'][key]['slots'][cancelBookingDate]
-          [slot[cancelBookingSlot - 1]]['otp'];
-      if (serviceOtp == otp) {
-        Navigator.pop(context);
-        final snackBar = SnackBar(
-          content: const Text(
-            'Operator has been successfully verified',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 16,
+    if (count <= 3) {
+      if (cancelBookingSlot > 3) {
+        final otp = databaseData['operators'][key]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot - 1]]['otp'];
+        if (serviceOtp == otp) {
+          Navigator.pop(context);
+          final snackBar = SnackBar(
+            content: const Text(
+              'Operator has been successfully verified',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+              ),
             ),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } else {
-        Navigator.pop(context);
-        final snackBar = SnackBar(
-          content: const Text(
-            'Invalid OTP, please try again',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 16,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } else {
+          Navigator.pop(context);
+          final snackBar = SnackBar(
+            content: const Text(
+              'Invalid OTP, please try again',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+              ),
             ),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          count++;
+        }
       }
-    }
-    if (cancelBookingSlot < 3) {
-      final otp = databaseData['operators'][key]['slots'][cancelBookingDate]
-          [slot[cancelBookingSlot]]['otp'];
-      if (serviceOtp == otp) {
-        Navigator.pop(context);
-        final snackBar = SnackBar(
-          content: const Text(
-            'Operator has been successfully verified',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 16,
+      if (cancelBookingSlot < 3) {
+        final otp = databaseData['operators'][key]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot]]['otp'];
+        if (serviceOtp == otp) {
+          Navigator.pop(context);
+          final snackBar = SnackBar(
+            content: const Text(
+              'Operator has been successfully verified',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+              ),
             ),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } else {
-        Navigator.pop(context);
-        final snackBar = SnackBar(
-          content: const Text(
-            'Invalid OTP, please try again',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 16,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } else {
+          Navigator.pop(context);
+          final snackBar = SnackBar(
+            content: const Text(
+              'Invalid OTP, please try again',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+              ),
             ),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          count++;
+        }
       }
+    } else {
+      Navigator.pop(context);
+      Future.delayed(Duration(seconds: 1), () {
+        Widget reportButton = ElevatedButton(
+          child: Text("Report"),
+          style: ElevatedButton.styleFrom(
+              shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+          onPressed: () {
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return Center(
+                    child: CupertinoActivityIndicator(),
+                  );
+                });
+            Future.delayed(Duration(seconds: 1), () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FeedbackForm(),
+                  ));
+            });
+          },
+        );
+        Widget okButton = ElevatedButton(
+          child: Text('Okay'),
+          style: ElevatedButton.styleFrom(
+              shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        );
+
+        AlertDialog alert = AlertDialog(
+          title: const Text("Verification Pin did not match!",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 18,
+                  color: Color(0xFFF23F44),
+                  fontWeight: FontWeight.bold)),
+          content: const Text(
+              "(NOTE: Please report if you doubt the authenticity of operator and your booking with this operator will be cancelled.)",
+              textAlign: TextAlign.justify,
+              style: TextStyle(fontSize: 12, fontFamily: 'Poppins')),
+          actions: [
+            reportButton,
+            okButton,
+          ],
+        );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      });
     }
   }
 
