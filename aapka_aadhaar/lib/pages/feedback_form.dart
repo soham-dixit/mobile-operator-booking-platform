@@ -1,4 +1,6 @@
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -11,6 +13,28 @@ class FeedbackForm extends StatefulWidget {
 }
 
 class _FeedbackFormState extends State<FeedbackForm> {
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController description = TextEditingController();
+
+  submitForm() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+
+    var data = {
+      "name": name.text,
+      "email": email.text,
+      "phoneNumber": phone.text,
+      "intention": _value,
+      "description": description.text
+    };
+
+    databaseReference.child('feedbacks').child(uid).push().set(data);
+  }
+
   String? _value = 'Complaint';
   @override
   Widget build(BuildContext context) {
@@ -50,6 +74,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
+                          controller: name,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -71,6 +96,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           height: 22,
                         ),
                         TextFormField(
+                          controller: email,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -92,6 +118,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           height: 22,
                         ),
                         TextFormField(
+                          controller: phone,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -187,6 +214,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                         TextFormField(
                           maxLines: null,
                           minLines: 2,
+                          controller: description,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -237,7 +265,9 @@ class _FeedbackFormState extends State<FeedbackForm> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                submitForm();
+                              },
                               style: ButtonStyle(
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
