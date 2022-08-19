@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar/pages/book_slots.dart';
+import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -204,7 +205,16 @@ class _ServiceRequestState extends State<ServiceRequest> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        drawer: NavigationDrawer(),
         appBar: AppBar(
+          actions: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/logo/logo.png'),
+              ),
+            ),
+          ],
           title: Text(
             "Book Appointment",
             style: TextStyle(fontFamily: 'Poppins'),

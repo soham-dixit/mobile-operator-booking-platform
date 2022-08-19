@@ -20,6 +20,14 @@ class _ContactPageState extends State<ContactPage> {
         title: Text('Contact Us'),
         backgroundColor: Color(0xFFF23F44),
         foregroundColor: Colors.white,
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/logo/logo.png'),
+            ),
+          ),
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
