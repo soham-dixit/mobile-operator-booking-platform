@@ -218,6 +218,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   updateSlots() async {
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    print('OP KEY $key');
     final databaseReference = FirebaseDatabase.instance.ref();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
@@ -225,7 +228,7 @@ class _HomePageState extends State<HomePage> {
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
-      Map<dynamic, dynamic> slotData = databaseData['operators'][uid]['slots'];
+      Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
       List keys_list = slotData.keys.toList();
       keys_list.sort((a, b) {
         return a.compareTo(b);
@@ -237,7 +240,7 @@ class _HomePageState extends State<HomePage> {
       if (_dayFormatter.format(_currentDate) == keys_list[1]) {
         databaseReference
             .child("operators")
-            .child(uid)
+            .child(key.toString())
             .child("slots")
             .child(keys_list[0])
             .remove();
@@ -264,13 +267,13 @@ class _HomePageState extends State<HomePage> {
 
         databaseReference
             .child("operators")
-            .child(uid)
+            .child(key.toString())
             .child("slots")
             .update({final_day: ''});
 
         print('called');
 
-        databaseReference.child("operators").child(uid).child("slots").update({
+        databaseReference.child("operators").child(key.toString()).child("slots").update({
           final_day: {
             "10_11": false,
             "11_12": false,
