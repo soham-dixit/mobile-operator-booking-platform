@@ -127,17 +127,20 @@ class _HomePageState extends State<HomePage> {
 
         String? day;
 
-        day = _currentDate.add(Duration(days: 3)).toString();
+        day = DateFormat("dd-MM-yyyy").parse(keys_list[3]).add(Duration(days: 1)).toString();
+        print('Day 1 day- $day');
 
         if (DateTime.parse(day).day == 'Sunday') {
-          day = _currentDate.add(Duration(days: 4)).toString();
+          print('sunday');
+          day = _currentDate.add(Duration(days: 1)).toString();
         } else if (DateTime.parse(day).day == 'Saturday') {
-          day = _currentDate.add(Duration(days: 5)).toString();
+          print('sat');
+          day = _currentDate.add(Duration(days: 2)).toString();
         }
-        String? final_day = _dayFormatter
-            .format(DateTime.parse(day).add(Duration(days: 3)))
-            .toString();
-        
+        String? final_day =
+            _dayFormatter.format(DateTime.parse(day)).toString();
+
+        print('Day 1 final $final_day');
 
         databaseReference
             .child("operators")
