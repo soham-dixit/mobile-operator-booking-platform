@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -82,9 +83,53 @@ class _BookingDetailsState extends State<BookingDetails> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     final pref = await SharedPreferences.getInstance();
     final key = pref.getString('operator-key');
-    if(cancelBookingSlot>3){
-      databaseReference.child('operators').child(key!).child('slots').child(cancelBookingDate).child(slot[cancelBookingSlot-1]).remove();
+    if (cancelBookingSlot > 3) {
+      databaseReference
+          .child('operators')
+          .child(key!)
+          .child('slots')
+          .child(cancelBookingDate)
+          .update({slot[cancelBookingSlot - 1]: false});
+      redirectBookSlots(context);
+    } else {
+      databaseReference
+          .child('operators')
+          .child(key!)
+          .child('slots')
+          .child(cancelBookingDate)
+          .update({slot[cancelBookingSlot]: false});
+      redirectBookSlots(context);
     }
+  }
+
+  redirectBookSlots(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        });
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BookSlots(),
+        ));
+    showSnack();
+  }
+
+  showSnack() async {
+    final snackBar = SnackBar(
+      content: const Text(
+        'Appointment has been cancelled',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
