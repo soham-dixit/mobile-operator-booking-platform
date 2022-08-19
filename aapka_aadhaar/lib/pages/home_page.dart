@@ -471,6 +471,16 @@ class _HomePageState extends State<HomePage> {
                             backgroundImage : AssetImage('assets/logo/profile.png'),
                           ),
                         ),
+                        // Expanded(
+                        //   child: CircleAvatar(
+                        //     // backgroundImage: path == null
+                        //     //     ? AssetImage('assets/logo/profile.png')
+                        //     //         as ImageProvider
+                        //     //     : FileImage(File(path.toString())),
+                        //     backgroundImage:
+                        //         AssetImage('assets/logo/profile.png'),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
