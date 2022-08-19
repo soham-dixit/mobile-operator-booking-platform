@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar_operator/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,8 @@ class BookingDetails extends StatefulWidget {
 }
 
 class _BookingDetailsState extends State<BookingDetails> {
+  String cancelBookingDate = '';
+  late int cancelBookingSlot;
   final list = [];
   // late Future data;
   List slot = [
@@ -47,6 +50,9 @@ class _BookingDetailsState extends State<BookingDetails> {
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
 
+    cancelBookingDate = date;
+    cancelBookingSlot = i;
+
     final address = i > 3
         ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['address']
         : databaseData['operators'][uid]['slots'][date][slot[i]]['address'];
@@ -67,6 +73,62 @@ class _BookingDetailsState extends State<BookingDetails> {
         : pref.setString('time', slot[i]);
     print(list);
     return list;
+  }
+
+  void cancelBooking(BuildContext context) async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    if (cancelBookingSlot > 3) {
+      databaseReference
+          .child('operators')
+          .child(uid)
+          .child('slots')
+          .child(cancelBookingDate)
+          .update({slot[cancelBookingSlot - 1]: false});
+      redirectBookSlots(context);
+    } else {
+      databaseReference
+          .child('operators')
+          .child(uid)
+          .child('slots')
+          .child(cancelBookingDate)
+          .update({slot[cancelBookingSlot]: false});
+      redirectBookSlots(context);
+    }
+  }
+
+  redirectBookSlots(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        });
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ));
+    showSnack();
+  }
+
+  showSnack() async {
+    final snackBar = SnackBar(
+      content: const Text(
+        'Appointment has been cancelled',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -386,7 +448,39 @@ class _BookingDetailsState extends State<BookingDetails> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Widget noButton = FlatButton(
+                                child: Text("No"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                              Widget yesButton = ElevatedButton(
+                                onPressed: () {
+                                  cancelBooking(context);
+                                },
+                                child: Text('Yes'),
+                                style: ElevatedButton.styleFrom(
+                                    shape: StadiumBorder(),
+                                    primary: Color(0xFFF23F44)),
+                              );
+                              AlertDialog alert = AlertDialog(
+                                title: const Text(
+                                    "Are you sure you want cancel the booking?",
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins', fontSize: 18)),
+                                actions: [
+                                  noButton,
+                                  yesButton,
+                                ],
+                              );
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return alert;
+                                },
+                              );
+                            },
                             style: ButtonStyle(
                               foregroundColor: MaterialStateProperty.all<Color>(
                                   Colors.white),

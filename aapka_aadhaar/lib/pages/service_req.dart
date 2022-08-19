@@ -91,7 +91,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
     pref.remove('arg1');
     pref.remove('arg2');
 
-    showSnack();
+    buildShowDialog(context);
   }
 
   buildShowDialog(BuildContext context) {
@@ -103,13 +103,28 @@ class _ServiceRequestState extends State<ServiceRequest> {
             child: CupertinoActivityIndicator(),
           );
         });
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BookSlots(),
-          ));
-    });
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BookSlots(),
+        ));
+    showSnack();
+  }
+
+  cancelAppt(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        });
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BookSlots(),
+        ));
   }
 
   showSnack() async {
@@ -572,7 +587,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    buildShowDialog(context);
+                                    cancelAppt(context);
                                   },
                                   style: ButtonStyle(
                                     foregroundColor:
@@ -610,7 +625,6 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     pref.setString('arg0', args[0].toString());
                                     pref.setString('arg1', args[1]);
                                     pref.setString('arg2', 'update');
-                                    buildShowDialog(context);
                                     openCheckout();
                                   },
                                   style: ButtonStyle(
@@ -786,7 +800,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    buildShowDialog(context);
+                                    cancelAppt(context);
                                   },
                                   style: ButtonStyle(
                                     foregroundColor:
@@ -826,7 +840,6 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     pref.setString('arg0', args[0].toString());
                                     pref.setString('arg1', args[1]);
                                     pref.setString('arg2', 'enrollment');
-                                    buildShowDialog(context);
                                     openCheckout();
                                   },
                                   style: ButtonStyle(
