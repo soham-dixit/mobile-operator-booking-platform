@@ -15,7 +15,13 @@ class _PressReleasesState extends State<PressReleases> {
     return Scaffold(
       drawer: NavigationDrawer(),
       appBar: AppBar(
-        title: Text("Press Releases"),
+        title: Text(
+          "Press Releases",
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            // fontSize: 16
+          ),
+        ),
         backgroundColor: Color(0xFFF23F44),
         actions: [
           Padding(

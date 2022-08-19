@@ -17,7 +17,13 @@ class _ContactPageState extends State<ContactPage> {
       drawer: NavigationDrawer(),
       backgroundColor: Color(0xFFFBF9F6),
       appBar: AppBar(
-        title: Text('Contact Us'),
+        title: Text(
+          'Contact Us',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            // fontSize: 16
+          ),
+        ),
         backgroundColor: Color(0xFFF23F44),
         foregroundColor: Colors.white,
         actions: [

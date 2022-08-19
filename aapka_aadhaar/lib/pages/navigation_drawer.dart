@@ -4,6 +4,7 @@ import 'package:aapka_aadhaar/pages/booking_details.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:aapka_aadhaar/pages/press-releases.dart';
 import 'package:aapka_aadhaar/pages/contact_page.dart';
+import 'package:aapka_aadhaar/pages/previous_bookings.dart';
 import 'package:aapka_aadhaar/pages/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -70,6 +71,24 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           context,
           MaterialPageRoute(
             builder: (context) => PressReleases(),
+          ));
+    });
+  }
+
+  previousBookingsRedirect(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        });
+    Future.delayed(Duration(seconds: 1), () {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PreviousBookings(),
           ));
     });
   }
@@ -215,7 +234,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             buildMenuItem(
               text: 'Previous Bookings',
               icon: Icons.history,
-              onTap: () {},
+              onTap: () {
+                previousBookingsRedirect(context);
+              },
             ),
             SizedBox(
               height: 11,
