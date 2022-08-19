@@ -162,22 +162,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             SizedBox(
               height: 11,
             ),
-            buildMenuItem(
-              text: 'Navigation',
-              icon: Icons.call,
-              onTap: () {
-                //open navigate
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NavigateToUser(),
-                  ),
-                );
-              },
-            ),
-            SizedBox(
-              height: 11,
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton.icon(
