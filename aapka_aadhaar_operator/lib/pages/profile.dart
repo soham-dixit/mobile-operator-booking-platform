@@ -92,7 +92,9 @@ class _ProfileState extends State<Profile> {
         ),
         body: SingleChildScrollView(
           child: operatorName == ''
-              ? Center(child: CupertinoActivityIndicator())
+              ? Container(
+                  padding: EdgeInsets.only(top: 300),
+                  child: Center(child: CupertinoActivityIndicator()))
               : Padding(
                   padding: const EdgeInsets.fromLTRB(30, 40, 30, 50),
                   child: Column(
