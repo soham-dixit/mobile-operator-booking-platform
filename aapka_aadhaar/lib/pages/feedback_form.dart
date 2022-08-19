@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -14,6 +15,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavigationDrawer(),
         backgroundColor: Color(0xFFFBF9F6),
         appBar: AppBar(
           title: Text('Contact Us'),
