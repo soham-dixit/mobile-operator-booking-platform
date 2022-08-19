@@ -16,7 +16,6 @@ class _FeedbackFormState extends State<FeedbackForm> {
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
-  TextEditingController intention = TextEditingController();
   TextEditingController description = TextEditingController();
 
   submitForm() async {
@@ -25,7 +24,15 @@ class _FeedbackFormState extends State<FeedbackForm> {
     final User user = await auth.currentUser!;
     final uid = user.uid;
 
-    databaseReference.child('feedbacks').child(uid).set({"name": name , "email":email, "phoneNumber": phone , "description" : description});
+    var data = {
+      "name": name.text,
+      "email": email.text,
+      "phoneNumber": phone.text,
+      "intention": _value,
+      "description": description.text
+    };
+
+    databaseReference.child('feedbacks').child(uid).push().set(data);
   }
 
   String? _value = 'Complaint';
