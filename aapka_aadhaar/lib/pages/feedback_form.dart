@@ -1,4 +1,6 @@
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -12,10 +14,25 @@ class FeedbackForm extends StatefulWidget {
 
 class _FeedbackFormState extends State<FeedbackForm> {
   int _value = 1;
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController intention = TextEditingController();
+  TextEditingController description = TextEditingController();
+
+  submitForm() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+
+    databaseReference.child('feedbacks').child(uid).set({"name": name , "email":email, "phoneNumber": phone , "description" : description});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationDrawer(),
+        drawer: NavigationDrawer(),
         backgroundColor: Color(0xFFFBF9F6),
         appBar: AppBar(
           title: Text(
@@ -50,6 +67,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
+                          controller: name,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -71,6 +89,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           height: 22,
                         ),
                         TextFormField(
+                          controller: email,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -92,6 +111,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           height: 22,
                         ),
                         TextFormField(
+                          controller: phone,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -130,10 +150,11 @@ class _FeedbackFormState extends State<FeedbackForm> {
                                 Radio(
                                   value: 1,
                                   groupValue: _value,
-                                  onChanged: (value) {
-                                  },
+                                  onChanged: (value) {},
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 Text('Complaint'),
                               ],
                             ),
@@ -142,10 +163,11 @@ class _FeedbackFormState extends State<FeedbackForm> {
                                 Radio(
                                   value: 1,
                                   groupValue: _value,
-                                  onChanged: (value) {
-                                  },
+                                  onChanged: (value) {},
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 Text('Feedback'),
                               ],
                             ),
@@ -154,19 +176,23 @@ class _FeedbackFormState extends State<FeedbackForm> {
                                 Radio(
                                   value: 1,
                                   groupValue: _value,
-                                  onChanged: (value) {
-                                  },
+                                  onChanged: (value) {},
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 Text('Suggestion'),
                               ],
                             ),
                           ],
                         ),
-                        SizedBox(height: 22,),
+                        SizedBox(
+                          height: 22,
+                        ),
                         TextFormField(
                           maxLines: null,
                           minLines: 2,
+                          controller: description,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -184,7 +210,9 @@ class _FeedbackFormState extends State<FeedbackForm> {
                             fontSize: 16,
                           ),
                         ),
-                        SizedBox(height: 22,),
+                        SizedBox(
+                          height: 22,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -215,7 +243,9 @@ class _FeedbackFormState extends State<FeedbackForm> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                submitForm();
+                              },
                               style: ButtonStyle(
                                 foregroundColor:
                                     MaterialStateProperty.all<Color>(
@@ -243,12 +273,8 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           ],
                         ),
                       ],
-                    )
-                  )
-                )
-            ]
-          ),
-        )
-      );
-    }
+                    )))
+          ]),
+        ));
+  }
 }
