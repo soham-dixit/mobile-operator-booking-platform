@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:aapka_aadhaar_operator/pages/navigation_drawer.dart';
 import 'package:aapka_aadhaar_operator/services/network_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart';
 
@@ -15,12 +18,14 @@ class NavigateToUser extends StatefulWidget {
 }
 
 class _NavigateToUserState extends State<NavigateToUser> {
-  late GoogleMapController mapController;
+  final Completer<GoogleMapController> mapController = Completer();
   List<LatLng> polyPoints = [];
   final Set<Polyline> polyLines = {};
   final Set<Marker> markers = {};
   var data;
   var duration, distance;
+  Location currentLocation = Location();
+  var location;
 
   double op_lat = 0.0;
   double op_lng = 0.0;
@@ -36,13 +41,18 @@ class _NavigateToUserState extends State<NavigateToUser> {
     final User user = await auth.currentUser!;
     final uid = user.uid;
     String user_id = '';
+    String? date = pref.getString('date');
+    String? slot = pref.getString('time');
+    print('date slot ---- $date $slot');
     if (databaseData['operators'] != null) {
       Map<dynamic, dynamic> locData =
           databaseData['operators'][uid]['location'];
       op_lat = locData['latitude'];
       op_lng = locData['longitude'];
-      user_id =
-          databaseData['operators'][uid]['slots']['22-08-2022']['11_12']['user'];
+      user_id = databaseData['operators'][uid]['slots'][date][slot]
+          ['user'];
+      print('called $op_lat');
+      print('called $op_lng');
     }
 
     if (databaseData['users'] != null) {
@@ -55,7 +65,41 @@ class _NavigateToUserState extends State<NavigateToUser> {
     }
   }
 
+  getCurrentLocation() async {
+    location = await currentLocation.getLocation();
+
+    GoogleMapController gmc = await mapController.future;
+
+    currentLocation.onLocationChanged.listen((newLoc) {
+      location = newLoc;
+      gmc.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            zoom: 13.5,
+            target: LatLng(location.latitude, location.longitude),
+          ),
+        ),
+      );
+      setState(() {
+        markers.add(
+          Marker(
+            infoWindow: InfoWindow(title: 'Live Location'),
+            markerId: MarkerId('live'),
+            position: LatLng(
+              location.latitude,
+              location.longitude,
+            ),
+            icon:
+                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+            onTap: () async {},
+          ),
+        );
+      });
+    });
+  }
+
   addMarker() {
+    print('called');
     setState(() {
       markers.addAll([
         Marker(
@@ -72,7 +116,17 @@ class _NavigateToUserState extends State<NavigateToUser> {
           position: LatLng(u_lat, u_lng),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           onTap: () async {},
-        )
+        ),
+        Marker(
+          infoWindow: InfoWindow(title: 'Live Location'),
+          markerId: MarkerId('live'),
+          position: LatLng(
+            location.latitude,
+            location.longitude,
+          ),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          onTap: () async {},
+        ),
       ]);
     });
   }
@@ -120,7 +174,12 @@ class _NavigateToUserState extends State<NavigateToUser> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getData().whenComplete(() {
+      getCurrentLocation().whenComplete(() {
+        addMarker();
+      });
+
       getJsonData();
     });
   }
@@ -152,36 +211,35 @@ class _NavigateToUserState extends State<NavigateToUser> {
         alignment: Alignment.center,
         children: [
           GoogleMap(
-              mapType: MapType.normal,
-              myLocationEnabled: false,
-              zoomControlsEnabled: false,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(19.0760, 72.8777),
-                zoom: 11.5,
-              ),
-              onMapCreated: (GoogleMapController controller) {
-                mapController = controller;
-                addMarker();
-              },
-              polylines: polyLines,
-              markers: {
-                Marker(
-                  infoWindow: InfoWindow(title: 'Your location'),
-                  markerId: MarkerId('Operator'),
-                  position: LatLng(op_lat, op_lng),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueGreen),
-                  onTap: () async {},
-                ),
-                Marker(
-                  infoWindow: InfoWindow(title: 'Destination'),
-                  markerId: MarkerId('User'),
-                  position: LatLng(u_lat, u_lng),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueRed),
-                  onTap: () async {},
-                )
-              }),
+            mapType: MapType.normal,
+            myLocationEnabled: false,
+            zoomControlsEnabled: false,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(19.0760, 72.8777),
+              zoom: 11.5,
+            ),
+            onMapCreated: (GoogleMapController controller) {
+              mapController.complete(controller);
+            },
+            polylines: polyLines,
+            markers: markers,
+            // Marker(
+            //   infoWindow: InfoWindow(title: 'Your location'),
+            //   markerId: MarkerId('Operator'),
+            //   position: LatLng(op_lat, op_lng),
+            //   icon: BitmapDescriptor.defaultMarkerWithHue(
+            //       BitmapDescriptor.hueGreen),
+            //   onTap: () async {},
+            // ),
+            // Marker(
+            //   infoWindow: InfoWindow(title: 'Destination'),
+            //   markerId: MarkerId('User'),
+            //   position: LatLng(u_lat, u_lng),
+            //   icon: BitmapDescriptor.defaultMarkerWithHue(
+            //       BitmapDescriptor.hueRed),
+            //   onTap: () async {},
+            // )
+          ),
           if (duration != null)
             Positioned(
               top: MediaQuery.of(context).size.height * 0.8,

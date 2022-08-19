@@ -1,3 +1,5 @@
+import 'package:aapka_aadhaar/pages/feedback_form.dart';
+import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -12,6 +14,7 @@ class _ContactPageState extends State<ContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavigationDrawer(),
       backgroundColor: Color(0xFFFBF9F6),
       appBar: AppBar(
         title: Text('Contact Us'),
@@ -71,9 +74,10 @@ class _ContactPageState extends State<ContactPage> {
           ),
           ElevatedButton.icon(
             onPressed: () {
-              launchRegister();
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => FeedbackForm()));
             },
-            label: Text('Register a Complaint'),
+            label: Text('Feedback | Suggestion | Complaint'),
             icon: Icon(
               Icons.gpp_bad,
             ),
@@ -87,41 +91,9 @@ class _ContactPageState extends State<ContactPage> {
               ),
             ),
           ),
-          ElevatedButton.icon(
-            onPressed: () {
-              launchStatus();
-            },
-            label: Text('Check Complaint Status'),
-            icon: Icon(
-              Icons.task_alt,
-            ),
-            style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.0),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
-  }
-
-  Future<void> launchRegister() async {
-    var url = Uri.parse("https://resident.uidai.gov.in/file-complaint");
-    if (!await launchUrl(url)) {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Future<void> launchStatus() async {
-    var url = Uri.parse("https://resident.uidai.gov.in/check-complaintstatus");
-    if (!await launchUrl(url)) {
-      throw 'Could not launch $url';
-    }
   }
 
   contact() async {

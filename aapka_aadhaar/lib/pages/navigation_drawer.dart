@@ -1,8 +1,10 @@
 import 'package:aapka_aadhaar/authentication/login_page.dart';
+import 'package:aapka_aadhaar/pages/about_us.dart';
 import 'package:aapka_aadhaar/pages/booking_details.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:aapka_aadhaar/pages/press-releases.dart';
 import 'package:aapka_aadhaar/pages/contact_page.dart';
+import 'package:aapka_aadhaar/pages/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +33,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['users'] != null) {
       info.add(databaseData['users'][uid]['fullname']);
-      info.add(databaseData['users'][uid]['phoneNumber']);
       print(info);
     }
     return info;
@@ -125,7 +126,12 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                       return Text('active');
                     case ConnectionState.done:
                       return GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Profile()));
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Column(
@@ -141,13 +147,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                               ),
                               Text(
                                 snapshot.data[0],
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18,
-                                ),
-                              ),
-                              Text(
-                                snapshot.data[1],
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 18,
@@ -233,7 +232,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             buildMenuItem(
               text: 'About Us',
               icon: Icons.person,
-              onTap: () {},
+              onTap: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => AboutUs()));
+              },
             ),
             SizedBox(
               height: 11,
