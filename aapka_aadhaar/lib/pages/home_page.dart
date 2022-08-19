@@ -344,74 +344,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: ((context) => OperatorVerification())));
-          Widget cancelButton = TextButton(
-            child: Text("Cancel"),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          );
-          Widget logoutButton = ElevatedButton(
-            onPressed: () {
-            
-            },
-            child: Text('Verify'),
-            style: ElevatedButton.styleFrom(
-                shape: StadiumBorder(), primary: Color(0xFFF23F44)),
-          );
-
-          AlertDialog alert = AlertDialog(
-            title:Column(
-              children: [
-                Text(
-                  'Operator Verification',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Please ask the operator for verification PIN, and allow them in your premise only if they authenticate",
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black38,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-            content: OtpTextField(
-              autoFocus: true,
-              numberOfFields: 4,
-              focusedBorderColor: Color(0xFFF23F44),
-              //set to true to show as box or false to show as dash
-              showFieldAsBox: true,
-              //runs when a code is typed in
-              onCodeChanged: (String code) {
-                //handle validation or checks here
-              },
-              //runs when every textfield is filled
-            ),
-            actions: [
-              cancelButton,
-              logoutButton,
-            ],
-          );
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return alert;
-            },
-          );
+          null;
         },
         child: Icon(
           Icons.history,

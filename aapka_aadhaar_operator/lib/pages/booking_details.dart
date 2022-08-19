@@ -65,7 +65,10 @@ class _BookingDetailsState extends State<BookingDetails> {
     final service = i > 3
         ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['service']
         : databaseData['operators'][uid]['slots'][date][slot[i]]['service'];
-    list.addAll([name, phone, address, service, i, date]);
+    final serviceOtp = i > 3
+        ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['otp']
+        : databaseData['operators'][uid]['slots'][date][slot[i]]['otp'];
+    list.addAll([name, phone, address, service, serviceOtp, i, date]);
     final pref = await SharedPreferences.getInstance();
     pref.setString('date', date);
     i > 3

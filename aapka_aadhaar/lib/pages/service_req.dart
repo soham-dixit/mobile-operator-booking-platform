@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,6 +47,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
     final uid = user.uid;
+    var rng = new Random();
+    var serviceOtp = rng.nextInt(9000) + 1000;
 
     setState(() {
       uORe == 'update'
@@ -63,6 +67,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'phone': phone.text,
               'req': selectedValues,
               'service': uORe,
+              'otp': serviceOtp,
               'user': uid
             })
           : databaseReference
@@ -78,6 +83,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'address': _address.text,
               'phone': _phone.text,
               'service': uORe,
+              'otp': serviceOtp,
               'user': uid
             });
     });
