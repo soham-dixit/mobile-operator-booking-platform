@@ -166,7 +166,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Widget cancelButton = FlatButton(
+                  Widget cancelButton = TextButton(
                     child: Text("Cancel"),
                     onPressed: () {
                       Navigator.pop(context);

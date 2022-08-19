@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:aapka_aadhaar/pages/about_us.dart';
 import 'package:aapka_aadhaar/pages/booking_details.dart';
@@ -22,6 +24,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   List info = [];
   late Future data;
+  String? path;
 
   getData() async {
     final databaseReference = FirebaseDatabase.instance.ref();
@@ -103,6 +106,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       print("Not logged in");
     }
     data = getData();
+    checkPreviousPhoto();
+  }
+
+  checkPreviousPhoto() async {
+    final pref = await SharedPreferences.getInstance();
+    path = pref.getString('profile-img');
+    print('profile ${path}');
   }
 
   @override
@@ -127,7 +137,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     case ConnectionState.done:
                       return GestureDetector(
                         onTap: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Profile()));
@@ -139,7 +149,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CircleAvatar(
-                                backgroundColor: Color(0xFFF23F44),
+                                backgroundImage: path == null
+                                    ? AssetImage('assets/logo/profile.png')
+                                        as ImageProvider
+                                    : FileImage(File(path.toString())),
+                                
                                 radius: 45,
                               ),
                               SizedBox(
@@ -254,7 +268,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Widget cancelButton = FlatButton(
+                  Widget cancelButton = TextButton(
                     child: Text("Cancel"),
                     onPressed: () {
                       Navigator.pop(context);
