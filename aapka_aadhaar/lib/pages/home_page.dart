@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
         if (databaseData['operators'][keys_list[i]]['loggedin'] == true) {
           if (databaseData['operators'][keys_list[i]]['location']['latitude'] !=
               null) {
-            latitudes.clear();
+            // latitudes.clear();
             latitudes.add(databaseData['operators'][keys_list[i]]['location']
                 ['latitude']);
             print('leng ${latitudes.length}');
