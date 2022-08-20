@@ -57,7 +57,7 @@ class _ProfileState extends State<Profile> {
     pref.setString('profile-img', pickedFile!.path);
 
     setState(() {
-      _imageFile = File(pickedFile!.path);
+      _imageFile = File(pickedFile.path);
     });
   }
 

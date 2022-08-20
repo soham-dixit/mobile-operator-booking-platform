@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/feedback_form.dart';
+import 'package:aapka_aadhaar/pages/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -541,7 +542,18 @@ class _BookingDetailsState extends State<BookingDetails> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final pref =
+                                  await SharedPreferences.getInstance();
+                              pref.setInt('index', args[0]);
+                              pref.setString('slot_date', args[1]);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NavigateToUser(),
+                                ),
+                              );
+                            },
                             style: ButtonStyle(
                               foregroundColor: MaterialStateProperty.all<Color>(
                                   Colors.black),
