@@ -60,7 +60,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               .child(
                 i > 3 ? slot[i - 1] : slot[i],
               )
-              .set({
+              .update({
               'name': name.text,
               'address': add.text,
               'aadhaar_num': a_num.text,
@@ -78,7 +78,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               .child(
                 i > 3 ? slot[i - 1] : slot[i],
               )
-              .set({
+              .update({
               'name': _name.text,
               'address': _address.text,
               'phone': _phone.text,

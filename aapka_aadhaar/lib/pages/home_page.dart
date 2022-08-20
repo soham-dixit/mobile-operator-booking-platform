@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:aapka_aadhaar/pages/book_slots.dart';
+import 'package:aapka_aadhaar/pages/booking_details.dart';
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:aapka_aadhaar/pages/operator_verification.dart';
 import 'package:aapka_aadhaar/pages/profile.dart';
@@ -42,6 +43,16 @@ class _HomePageState extends State<HomePage> {
   Set<Circle> _circles = {};
   Timer? timer;
   String? path;
+  bool showActive = false;
+  List slot = [
+    '10_11',
+    '11_12',
+    '12_1',
+    '2_3',
+    '3_4',
+    '4_5',
+    '5_6',
+  ];
 
   addDates() {
     print('addDates');
@@ -73,7 +84,11 @@ class _HomePageState extends State<HomePage> {
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
     dynamic keys_list = databaseData['operators'].keys.toList();
+
     if (databaseData['operators'] != null) {
       for (int i = 0; i < keys_list.length; i++) {
         key = keys_list[i];
@@ -98,6 +113,20 @@ class _HomePageState extends State<HomePage> {
           if (databaseData['operators'][keys_list[i]]['fullname'] != null) {
             operatorNames
                 .add(databaseData['operators'][keys_list[i]]['fullname']);
+          }
+          Map<dynamic, dynamic> slotData =
+              databaseData['operators'][keys_list[i]]['slots'];
+          dynamic keys_list1 = slotData.keys.toList();
+          for (int j = 0; j < slot.length; j++) {
+            if (databaseData['operators'][keys_list[i]]['slots'][keys_list1[0]]
+                    [slot[j]] !=
+                false) {
+              if (databaseData['operators'][keys_list[i]]['slots']
+                      [keys_list1[0]][slot[j]]
+                  .containsValue(uid)) {
+                showActive = true;
+              }
+            }
           }
         }
       }
@@ -310,12 +339,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     saveUid();
     timer = Timer.periodic(
         Duration(seconds: 3), (Timer t) => getOperatorLocation());
 
     addDates();
-
+    getArgs();
     setState(() {
       getLocation();
       setCustomMarker();
@@ -334,6 +364,34 @@ class _HomePageState extends State<HomePage> {
     print('profile ${path}');
   }
 
+  int? index;
+  String? day;
+
+  getArgs() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    dynamic keys_list = databaseData['operators'].keys.toList();
+    Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
+    dynamic keys_list1 = slotData.keys.toList();
+    if (databaseData['operators'] != null) {
+      for (int i = 0; i < slot.length; i++) {
+        if (databaseData['operators'][key]['slots'][keys_list1[0]][slot[i]] !=
+            false) {
+          index = databaseData['operators'][key]['slots'][keys_list1[0]]
+              [slot[i]]['args'][0];
+          day = databaseData['operators'][key]['slots'][keys_list1[0]][slot[i]]
+              ['args'][1];
+        }
+      }
+      print('uid 1 $index');
+      print('uid 2 $day');
+      // index = databaseData['operators'][]
+    }
+  }
+
   @override
   void dispose() {
     timer?.cancel();
@@ -344,14 +402,47 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // getLocation();
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          null;
-        },
-        child: Icon(
-          Icons.history,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     null;
+      //   },
+      //   child: Icon(
+      //     Icons.history,
+      //   ),
+      // ),
+      bottomNavigationBar: showActive
+          ? InkWell(
+              onTap: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => BookingDetails(),
+                      settings: RouteSettings(arguments: [index, day])),
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                color: Colors.green.shade500,
+                height: 50,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 12),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Check your appointment status here.',
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 16,
+                            color: Colors.black),
+                      ),
+                      SizedBox(width: 40),
+                      Icon(Icons.navigate_next)
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : null,
       drawer: NavigationDrawer(),
       appBar: AppBar(
         backgroundColor: Color(0xFFF23F44),
