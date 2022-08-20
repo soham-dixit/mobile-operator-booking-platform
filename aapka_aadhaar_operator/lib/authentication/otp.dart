@@ -60,6 +60,7 @@ class _OtpState extends State<Otp> {
       "phoneNumber": phoneNumber,
       "gender": gender,
       "avgRating": 0,
+      "totalRating": 0
     });
 
     addSlots();
