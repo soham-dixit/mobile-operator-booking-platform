@@ -114,7 +114,7 @@ class _BookingDetailsState extends State<BookingDetails> {
             //     textAlign: TextAlign.justify,
             //     style: TextStyle(fontSize: 12, fontFamily: 'Poppins')),
             content: RatingBar.builder(
-              initialRating: 0,
+              initialRating: 1,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: false,

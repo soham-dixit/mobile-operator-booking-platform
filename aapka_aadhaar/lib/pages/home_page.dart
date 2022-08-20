@@ -9,6 +9,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -32,7 +33,9 @@ class _HomePageState extends State<HomePage> {
   List longitudes = [];
   List genders = [];
   List operatorNames = [];
+  List operatorProfile = [];
   String? key;
+  int operatorRating = 0;
   List dates = [];
   List days = [];
   final _currentDate = DateTime.now();
@@ -207,6 +210,8 @@ class _HomePageState extends State<HomePage> {
       final _dayFormatter = DateFormat('dd-MM-yyyy');
 
       name = databaseData['operators'][key]['fullname'];
+      operatorRating = databaseData['operators'][key]['avgRating'];
+
       if (slotData[keys_list[0]].containsValue(false)) {
         firstDay = true;
       }
@@ -460,40 +465,43 @@ class _HomePageState extends State<HomePage> {
                                   return Center(
                                       child: CupertinoActivityIndicator());
                                 case ConnectionState.done:
-                                  return Expanded(
-                                    child: Text(
-                                      name.toString(),
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                  return Row(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text(name.toString(),
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontFamily: 'Poppins',
+                                                  fontWeight: FontWeight.bold)),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          RatingBarIndicator(
+                                            rating: operatorRating.toDouble(),
+                                            itemBuilder: (context, index) =>
+                                                Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            itemCount: 5,
+                                            itemSize: 22.0,
+                                            direction: Axis.horizontal,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 100,
+                                      ),
+                                      CircleAvatar(
+                                        radius: 30.0,
+                                        backgroundImage: AssetImage(
+                                            'assets/logo/profile.png'),
+                                      ),
+                                    ],
                                   );
                               }
                             }),
-                        // SizedBox(
-                        //   width: 80.0,
-                        // ),
-                        Expanded(
-                          child: CircleAvatar(
-                            // backgroundImage: path == null
-                            //     ? AssetImage('assets/logo/profile.png')
-                            //         as ImageProvider
-                            //     : FileImage(File(path.toString())),
-                            backgroundImage:
-                                AssetImage('assets/logo/profile.png'),
-                          ),
-                        ),
-                        // Expanded(
-                        //   child: CircleAvatar(
-                        //     // backgroundImage: path == null
-                        //     //     ? AssetImage('assets/logo/profile.png')
-                        //     //         as ImageProvider
-                        //     //     : FileImage(File(path.toString())),
-                        //     backgroundImage:
-                        //         AssetImage('assets/logo/profile.png'),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -518,7 +526,7 @@ class _HomePageState extends State<HomePage> {
                                     Text(days[0],
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
-                                            fontSize: 12)),
+                                            fontSize: 10)),
                                     Icon(Icons.circle,
                                         size: 20,
                                         color: firstDay
@@ -555,7 +563,7 @@ class _HomePageState extends State<HomePage> {
                                     Text(days[1],
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
-                                            fontSize: 12)),
+                                            fontSize: 10)),
                                     Icon(Icons.circle,
                                         size: 20,
                                         color: secondDay
@@ -592,7 +600,7 @@ class _HomePageState extends State<HomePage> {
                                     Text(days[2],
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
-                                            fontSize: 12)),
+                                            fontSize: 10)),
                                     Icon(Icons.circle,
                                         size: 20,
                                         color: thirdDay
@@ -629,7 +637,7 @@ class _HomePageState extends State<HomePage> {
                                     Text(days[3],
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
-                                            fontSize: 12)),
+                                            fontSize: 10)),
                                     Icon(Icons.circle,
                                         size: 20,
                                         color: fourthDay
