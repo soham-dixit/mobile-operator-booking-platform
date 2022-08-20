@@ -140,6 +140,13 @@ class _BookingDetailsState extends State<BookingDetails> {
             [slot[cancelBookingSlot - 1]]['otp'];
         if (serviceOtp == otp) {
           Navigator.pop(context);
+          databaseReference
+              .child('operators')
+              .child(key!)
+              .child('slots')
+              .child(cancelBookingDate)
+              .child(slot[cancelBookingSlot - 1])
+              .update({'verifyStatus': 'verified'});
           final snackBar = SnackBar(
             content: const Text(
               'Operator has been successfully verified',
@@ -170,6 +177,13 @@ class _BookingDetailsState extends State<BookingDetails> {
             [slot[cancelBookingSlot]]['otp'];
         if (serviceOtp == otp) {
           Navigator.pop(context);
+          databaseReference
+              .child('operators')
+              .child(key!)
+              .child('slots')
+              .child(cancelBookingDate)
+              .child(slot[cancelBookingSlot])
+              .update({'verifyStatus': 'verified'});
           final snackBar = SnackBar(
             content: const Text(
               'Operator has been successfully verified',
@@ -197,6 +211,23 @@ class _BookingDetailsState extends State<BookingDetails> {
       }
     } else {
       Navigator.pop(context);
+      if (cancelBookingSlot > 3) {
+        databaseReference
+            .child('operators')
+            .child(key!)
+            .child('slots')
+            .child(cancelBookingDate)
+            .child(slot[cancelBookingSlot - 1])
+            .update({'verifyStatus': 'unverified'});
+      } else {
+        databaseReference
+            .child('operators')
+            .child(key!)
+            .child('slots')
+            .child(cancelBookingDate)
+            .child(slot[cancelBookingSlot])
+            .update({'verifyStatus': 'unverified'});
+      }
       Future.delayed(Duration(seconds: 1), () {
         Widget reportButton = ElevatedButton(
           child: Text("Report"),
