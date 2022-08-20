@@ -33,7 +33,6 @@ class _HomePageState extends State<HomePage> {
   List longitudes = [];
   List genders = [];
   List operatorNames = [];
-  List operatorProfile = [];
   String? key;
   int operatorRating = 0;
   List dates = [];
