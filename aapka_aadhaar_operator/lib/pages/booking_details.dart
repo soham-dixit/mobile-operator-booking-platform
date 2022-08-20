@@ -2,6 +2,7 @@ import 'package:aapka_aadhaar_operator/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -135,6 +136,82 @@ class _BookingDetailsState extends State<BookingDetails> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  completeAppt(BuildContext context) async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    final verifyStatus = cancelBookingSlot > 3
+        ? databaseData['operators'][uid]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot - 1]]['verifyStatus']
+        : databaseData['operators'][uid]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot]]['verifyStatus'];
+    if (verifyStatus == 'verified') {
+      if (cancelBookingSlot > 3) {
+        databaseReference
+            .child('operators')
+            .child(uid)
+            .child('slots')
+            .child(cancelBookingDate)
+            .child(slot[cancelBookingSlot - 1])
+            .update({'status': 'completed'});
+        redirectBookSlotsComplete(context);
+      } else {
+        databaseReference
+            .child('operators')
+            .child(uid)
+            .child('slots')
+            .child(slot[cancelBookingSlot])
+            .update({'status': 'completed'});
+        redirectBookSlotsComplete(context);
+      }
+    } else {
+      Navigator.pop(context);
+      final snackBar = SnackBar(
+        content: const Text(
+          'Please do the verification before completing appointment',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 16,
+          ),
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
+  redirectBookSlotsComplete(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        });
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ));
+    showSnackCompleted();
+  }
+
+  showSnackCompleted() async {
+    final snackBar = SnackBar(
+      content: const Text(
+        'Appointment has been completed',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -244,7 +321,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ],
                         ),
                         SizedBox(
-                          height: 22,
+                          height: 30,
                         ),
                         // Text(
                         //   'Name',
@@ -276,7 +353,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                         ),
                         SizedBox(
-                          height: 22,
+                          height: 30,
                         ),
                         // Text(
                         //   'Contact Number',
@@ -304,7 +381,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                         ),
                         SizedBox(
-                          height: 22,
+                          height: 30,
                         ),
                         // Text(
                         //   'Address',
@@ -337,7 +414,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ),
                         ),
                         SizedBox(
-                          height: 22,
+                          height: 30,
                         ),
                         // Text(
                         //   'Purpose',
@@ -394,84 +471,115 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     color: Color(0xFFF23F44)),
                               ),
                               SizedBox(
-                                height: 70,
+                                height: 180,
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => NavigateToUser(),
+                        Row(
+                          children: [
+                            SizedBox(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => NavigateToUser(),
+                                    ),
+                                  );
+                                },
+                                style: ButtonStyle(
+                                  foregroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.black),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Color(0xFFFFFFFF)),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(24.0),
+                                      side: BorderSide(
+                                        width: 2,
+                                        color: Color(0xFFF23F44),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              );
-                            },
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.black),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFFFFFFFF)),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
-                                  side: BorderSide(
-                                    width: 2,
-                                    color: Color(0xFFF23F44),
+                                child: Text(
+                                  'Navigate to Location',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontFamily: 'Poppins',
                                   ),
                                 ),
                               ),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(14.0),
-                              child: Text(
-                                'Navigate Location',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
+                            SizedBox(
+                              width: 10,
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 22,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.black),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFFFFFFFF)),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
-                                  side: BorderSide(
-                                    width: 2,
-                                    color: Color(0xFFF23F44),
+                            SizedBox(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Widget noButton = TextButton(
+                                    child: Text("No"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                  Widget yesButton = ElevatedButton(
+                                    onPressed: () {
+                                      completeAppt(context);
+                                    },
+                                    child: Text('Yes'),
+                                    style: ElevatedButton.styleFrom(
+                                        shape: StadiumBorder(),
+                                        primary: Color(0xFFF23F44)),
+                                  );
+                                  AlertDialog alert = AlertDialog(
+                                    title: const Text(
+                                        "Are you sure you want to complete the booking?",
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 18)),
+                                    actions: [
+                                      noButton,
+                                      yesButton,
+                                    ],
+                                  );
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return alert;
+                                    },
+                                  );
+                                },
+                                style: ButtonStyle(
+                                  foregroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.black),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Color(0xFFFFFFFF)),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(24.0),
+                                      side: BorderSide(
+                                        width: 2,
+                                        color: Color(0xFFF23F44),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Complete Appointment',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontFamily: 'Poppins',
                                   ),
                                 ),
                               ),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(14.0),
-                              child: Text(
-                                'Notify User For Arrival',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                            ),
-                          ),
+                          ],
                         ),
                         SizedBox(
                           height: 22,

@@ -58,7 +58,10 @@ class _OtpState extends State<Otp> {
       "fullname": fullname,
       "email": email,
       "phoneNumber": phoneNumber,
-      "gender": gender
+      "gender": gender,
+      "avgRating": 0,
+      "totalRating": 0,
+      "ratingCount": 0
     });
 
     addSlots();
