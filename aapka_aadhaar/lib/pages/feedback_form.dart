@@ -33,6 +33,16 @@ class _FeedbackFormState extends State<FeedbackForm> {
     };
 
     databaseReference.child('feedbacks').child(uid).push().set(data);
+    final snackBar = SnackBar(
+      content: const Text(
+        'Your feedback has been submitted successfully!',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   String? _value = 'Complaint';
