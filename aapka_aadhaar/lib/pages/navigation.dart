@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:aapka_aadhaar_operator/pages/navigation_drawer.dart';
-import 'package:aapka_aadhaar_operator/services/network_helper.dart';
+import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
+import 'package:aapka_aadhaar/services/network_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +26,15 @@ class _NavigateToUserState extends State<NavigateToUser> {
   var duration, distance;
   Location currentLocation = Location();
   var location;
+  List slot = [
+    '10_11',
+    '11_12',
+    '12_1',
+    '2_3',
+    '3_4',
+    '4_5',
+    '5_6',
+  ];
 
   double op_lat = 0.0;
   double op_lng = 0.0;
@@ -41,22 +50,24 @@ class _NavigateToUserState extends State<NavigateToUser> {
     final User user = await auth.currentUser!;
     final uid = user.uid;
     String user_id = '';
-    String? date = pref.getString('date');
-    String? slot = pref.getString('time');
-    print('date slot ---- $date $slot');
+    int? index = pref.getInt('index');
+    String? date = pref.getString('slot_date');
+    String? key = pref.getString('operator-key');
+    print('op key $key');
+    print('date slot ---- $date $index');
     if (databaseData['operators'] != null) {
       Map<dynamic, dynamic> locData =
-          databaseData['operators'][uid]['location'];
+          databaseData['operators'][key]['location'];
       op_lat = locData['latitude'];
       op_lng = locData['longitude'];
-      user_id = databaseData['operators'][uid]['slots'][date][slot]['user'];
+      // user_id =
+      //     databaseData['operators'][uid]['slots'][date][slot[index!]]['user'];
       print('called $op_lat');
       print('called $op_lng');
     }
 
     if (databaseData['users'] != null) {
-      Map<dynamic, dynamic> locData =
-          databaseData['users'][user_id]['location'];
+      Map<dynamic, dynamic> locData = databaseData['users'][uid]['location'];
       u_lat = locData['latitude'];
       u_lng = locData['longitude'];
       print('user - $u_lat');
@@ -68,34 +79,44 @@ class _NavigateToUserState extends State<NavigateToUser> {
     final databaseReference = FirebaseDatabase.instance.ref();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
-    final uid = user.uid;
-    location = await currentLocation.getLocation();
+    final pref = await SharedPreferences.getInstance();
+    String? key = pref.getString('operator-key');
+    String? lat = '0.0';
+    String? lng = '0.0';
+    databaseReference
+        .child('operators')
+        .child(key.toString())
+        .child('location')
+        .onValue
+        .listen((event) async {
+      var snapshot = event.snapshot;
 
-    GoogleMapController gmc = await mapController.future;
+      lat = snapshot.value.toString().substring(10, 20).toString();
+      lng = snapshot.value.toString().substring(33, 41).toString();
 
-    currentLocation.onLocationChanged.listen((newLoc) {
-      location = newLoc;
+      GoogleMapController gmc = await mapController.future;
       gmc.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
             zoom: 13.5,
-            target: LatLng(location.latitude, location.longitude),
+            target: LatLng(
+                double.parse(lat.toString()),
+                double.parse(
+                  lng.toString(),
+                )),
           ),
         ),
       );
-      databaseReference.child('operators').child(uid).child('location').update(
-          {'latitude': location.latitude, 'longitude': location.longitude});
-      // databaseReference.child('operators').child(uid).child('location').onValue.listen((event){
-      //   var snapshot = event.snapshot;
-      // });
       setState(() {
         markers.add(
           Marker(
             infoWindow: InfoWindow(title: 'Live Location'),
             markerId: MarkerId('live'),
             position: LatLng(
-              location.latitude,
-              location.longitude,
+              double.parse(lat.toString()),
+              double.parse(
+                lng.toString(),
+              ),
             ),
             icon:
                 BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
@@ -104,6 +125,8 @@ class _NavigateToUserState extends State<NavigateToUser> {
         );
       });
     });
+
+    print('called new loc');
   }
 
   addMarker() {
@@ -112,29 +135,29 @@ class _NavigateToUserState extends State<NavigateToUser> {
       markers.addAll([
         Marker(
           infoWindow: InfoWindow(title: 'Your location'),
-          markerId: MarkerId('Operator'),
-          position: LatLng(op_lat, op_lng),
+          markerId: MarkerId('User'),
+          position: LatLng(u_lat, u_lng),
           icon:
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           onTap: () async {},
         ),
         Marker(
-          infoWindow: InfoWindow(title: 'Destination'),
-          markerId: MarkerId('User'),
-          position: LatLng(u_lat, u_lng),
+          infoWindow: InfoWindow(title: 'Start Location'),
+          markerId: MarkerId('Operator'),
+          position: LatLng(op_lat, op_lng),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           onTap: () async {},
         ),
-        Marker(
-          infoWindow: InfoWindow(title: 'Live Location'),
-          markerId: MarkerId('live'),
-          position: LatLng(
-            location.latitude,
-            location.longitude,
-          ),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          onTap: () async {},
-        ),
+        // Marker(
+        //   infoWindow: InfoWindow(title: 'Live Location'),
+        //   markerId: MarkerId('live'),
+        //   position: LatLng(
+        //     location.latitude,
+        //     location.longitude,
+        //   ),
+        //   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        //   onTap: () async {},
+        // ),
       ]);
     });
   }
@@ -200,7 +223,7 @@ class _NavigateToUserState extends State<NavigateToUser> {
         backgroundColor: Color(0xFFF23F44),
         foregroundColor: Color(0xFFFFFFFF),
         title: Text(
-          'Aapka Aadhaar Operator',
+          'Aapka Aadhaar',
           style: TextStyle(
             fontFamily: 'Poppins',
             // fontSize: 16
