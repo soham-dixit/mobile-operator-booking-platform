@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,10 +24,12 @@ class BookingDetails extends StatefulWidget {
 class _BookingDetailsState extends State<BookingDetails> {
   String cancelBookingDate = '';
   late int cancelBookingSlot;
+  int currentRating = 0;
   final list = [];
   String opName = '';
   String opPhone = '';
   late int serviceOtp;
+  String status = '';
   int count = 1;
   // late Future data;
   List slot = [
@@ -65,6 +68,8 @@ class _BookingDetailsState extends State<BookingDetails> {
 
     cancelBookingDate = date;
     cancelBookingSlot = i;
+
+    checkComplete();
 
     final address = i > 3
         ? databaseData['operators'][key]['slots'][date][slot[i - 1]]['address']
@@ -299,6 +304,128 @@ class _BookingDetailsState extends State<BookingDetails> {
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+
+  checkComplete() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+
+    status = cancelBookingSlot > 3
+        ? databaseData['operators'][key]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot - 1]]['status']
+        : databaseData['operators'][key]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot]]['status'];
+
+    if (status == 'completed') {
+      Widget reportButton = TextButton(
+        child: Text("Cancel"),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      );
+      Widget okButton = ElevatedButton(
+        child: Text('Submit'),
+        style: ElevatedButton.styleFrom(
+            shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+        onPressed: () {
+          submitRating();
+        },
+      );
+
+      AlertDialog alert = AlertDialog(
+        title: Text("Kindly rate your experience with operator $opName",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                fontWeight: FontWeight.bold)),
+        // content: const Text(
+        //     "(NOTE: Please report if you doubt the authenticity of operator and your booking with this operator will be cancelled.)",
+        //     textAlign: TextAlign.justify,
+        //     style: TextStyle(fontSize: 12, fontFamily: 'Poppins')),
+        content: RatingBar.builder(
+          initialRating: 0,
+          minRating: 1,
+          direction: Axis.horizontal,
+          allowHalfRating: false,
+          itemCount: 5,
+          itemPadding: EdgeInsets.symmetric(horizontal: 3.0),
+          itemBuilder: (context, _) => Icon(
+            Icons.star,
+            color: Colors.amber,
+          ),
+          onRatingUpdate: (rating) {
+            print(rating);
+            currentRating = rating.toInt();
+          },
+        ),
+        actions: [
+          reportButton,
+          okButton,
+        ],
+      );
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+  }
+
+  submitRating() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+
+    int avgRating = databaseData['operators'][key]['avgRating'];
+    int totalRating = databaseData['operators'][key]['totalRating'];
+    int ratingCount = databaseData['operators'][key]['ratingCount'];
+
+    totalRating = totalRating + currentRating;
+    ratingCount = ratingCount + 1;
+    avgRating = totalRating ~/ ratingCount;
+
+    databaseReference
+        .child('operators')
+        .child(key!)
+        .update({'avgRating': avgRating});
+    databaseReference
+        .child('operators')
+        .child(key)
+        .update({'totalRating': totalRating});
+    databaseReference
+        .child('operators')
+        .child(key)
+        .update({'ratingCount': ratingCount});
+    Navigator.pop(context);
+    final snackBar = SnackBar(
+      content: const Text(
+        'Your rating has been submitted, thank you!',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
