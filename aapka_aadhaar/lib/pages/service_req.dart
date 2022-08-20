@@ -68,6 +68,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'req': selectedValues,
               'service': uORe,
               'otp': serviceOtp,
+              'status': 'pending',
+              'ratingSubmitted': false,
               'user': uid
             })
           : databaseReference
@@ -84,6 +86,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'phone': _phone.text,
               'service': uORe,
               'otp': serviceOtp,
+              'status': 'pending',
+              'ratingSubmitted': false,
               'user': uid
             });
     });
