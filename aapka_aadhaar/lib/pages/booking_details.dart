@@ -69,7 +69,81 @@ class _BookingDetailsState extends State<BookingDetails> {
     cancelBookingDate = date;
     cancelBookingSlot = i;
 
-    checkComplete();
+    final ratingSubmittedorNot = i > 3
+        ? databaseData['operators'][key]['slots'][date][slot[i - 1]]
+            ['ratingSubmitted']
+        : databaseData['operators'][key]['slots'][date][slot[i]]
+            ['ratingSubmitted'];
+
+    databaseReference
+        .child('operators')
+        .child(key!)
+        .child('slots')
+        .child(date)
+        .child(slot[i - 1])
+        .child('status')
+        .onValue
+        .listen((event) async {
+      var snapshot = event.snapshot;
+      if (snapshot.value.toString() == 'completed') {
+        if (ratingSubmittedorNot == false) {
+          Widget reportButton = TextButton(
+            child: Text("Cancel"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+          Widget okButton = ElevatedButton(
+            child: Text('Submit'),
+            style: ElevatedButton.styleFrom(
+                shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+            onPressed: () {
+              submitRating();
+            },
+          );
+
+          AlertDialog alert = AlertDialog(
+            title: Text("Kindly rate your experience with operator $opName",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold)),
+            // content: const Text(
+            //     "(NOTE: Please report if you doubt the authenticity of operator and your booking with this operator will be cancelled.)",
+            //     textAlign: TextAlign.justify,
+            //     style: TextStyle(fontSize: 12, fontFamily: 'Poppins')),
+            content: RatingBar.builder(
+              initialRating: 0,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: false,
+              itemCount: 5,
+              itemPadding: EdgeInsets.symmetric(horizontal: 3.0),
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+                print(rating);
+                currentRating = rating.toInt();
+              },
+            ),
+            actions: [
+              reportButton,
+              okButton,
+            ],
+          );
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
+        }
+      }
+    });
+    // checkComplete();
 
     final address = i > 3
         ? databaseData['operators'][key]['slots'][date][slot[i - 1]]['address']
@@ -305,78 +379,86 @@ class _BookingDetailsState extends State<BookingDetails> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  checkComplete() async {
-    final databaseReference = FirebaseDatabase.instance.ref();
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User user = await auth.currentUser!;
-    final uid = user.uid;
-    DatabaseEvent event = await databaseReference.once();
-    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
-    final pref = await SharedPreferences.getInstance();
-    final key = pref.getString('operator-key');
+  // checkComplete() async {
+  //   final databaseReference = FirebaseDatabase.instance.ref();
+  //   final FirebaseAuth auth = FirebaseAuth.instance;
+  //   final User user = await auth.currentUser!;
+  //   final uid = user.uid;
+  //   DatabaseEvent event = await databaseReference.once();
+  //   Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+  //   final pref = await SharedPreferences.getInstance();
+  //   final key = pref.getString('operator-key');
 
-    status = cancelBookingSlot > 3
-        ? databaseData['operators'][key]['slots'][cancelBookingDate]
-            [slot[cancelBookingSlot - 1]]['status']
-        : databaseData['operators'][key]['slots'][cancelBookingDate]
-            [slot[cancelBookingSlot]]['status'];
+  //   status = cancelBookingSlot > 3
+  //       ? databaseData['operators'][key]['slots'][cancelBookingDate]
+  //           [slot[cancelBookingSlot - 1]]['status']
+  //       : databaseData['operators'][key]['slots'][cancelBookingDate]
+  //           [slot[cancelBookingSlot]]['status'];
 
-    if (status == 'completed') {
-      Widget reportButton = TextButton(
-        child: Text("Cancel"),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      );
-      Widget okButton = ElevatedButton(
-        child: Text('Submit'),
-        style: ElevatedButton.styleFrom(
-            shape: StadiumBorder(), primary: Color(0xFFF23F44)),
-        onPressed: () {
-          submitRating();
-        },
-      );
+  //   final ratingSubmittedorNot = cancelBookingSlot > 3
+  //       ? databaseData['operators'][key]['slots'][cancelBookingDate]
+  //           [slot[cancelBookingSlot - 1]]['ratingSubmitted']
+  //       : databaseData['operators'][key]['slots'][cancelBookingDate]
+  //           [slot[cancelBookingSlot]]['ratingSubmitted'];
 
-      AlertDialog alert = AlertDialog(
-        title: Text("Kindly rate your experience with operator $opName",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                fontWeight: FontWeight.bold)),
-        // content: const Text(
-        //     "(NOTE: Please report if you doubt the authenticity of operator and your booking with this operator will be cancelled.)",
-        //     textAlign: TextAlign.justify,
-        //     style: TextStyle(fontSize: 12, fontFamily: 'Poppins')),
-        content: RatingBar.builder(
-          initialRating: 0,
-          minRating: 1,
-          direction: Axis.horizontal,
-          allowHalfRating: false,
-          itemCount: 5,
-          itemPadding: EdgeInsets.symmetric(horizontal: 3.0),
-          itemBuilder: (context, _) => Icon(
-            Icons.star,
-            color: Colors.amber,
-          ),
-          onRatingUpdate: (rating) {
-            print(rating);
-            currentRating = rating.toInt();
-          },
-        ),
-        actions: [
-          reportButton,
-          okButton,
-        ],
-      );
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-    }
-  }
+  //   if (status == 'completed') {
+  //     if (ratingSubmittedorNot == false) {
+  //       Widget reportButton = TextButton(
+  //         child: Text("Cancel"),
+  //         onPressed: () {
+  //           Navigator.pop(context);
+  //         },
+  //       );
+  //       Widget okButton = ElevatedButton(
+  //         child: Text('Submit'),
+  //         style: ElevatedButton.styleFrom(
+  //             shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+  //         onPressed: () {
+  //           submitRating();
+  //         },
+  //       );
+
+  //       AlertDialog alert = AlertDialog(
+  //         title: Text("Kindly rate your experience with operator $opName",
+  //             textAlign: TextAlign.center,
+  //             style: TextStyle(
+  //                 fontFamily: 'Poppins',
+  //                 fontSize: 16,
+  //                 fontWeight: FontWeight.bold)),
+  //         // content: const Text(
+  //         //     "(NOTE: Please report if you doubt the authenticity of operator and your booking with this operator will be cancelled.)",
+  //         //     textAlign: TextAlign.justify,
+  //         //     style: TextStyle(fontSize: 12, fontFamily: 'Poppins')),
+  //         content: RatingBar.builder(
+  //           initialRating: 0,
+  //           minRating: 1,
+  //           direction: Axis.horizontal,
+  //           allowHalfRating: false,
+  //           itemCount: 5,
+  //           itemPadding: EdgeInsets.symmetric(horizontal: 3.0),
+  //           itemBuilder: (context, _) => Icon(
+  //             Icons.star,
+  //             color: Colors.amber,
+  //           ),
+  //           onRatingUpdate: (rating) {
+  //             print(rating);
+  //             currentRating = rating.toInt();
+  //           },
+  //         ),
+  //         actions: [
+  //           reportButton,
+  //           okButton,
+  //         ],
+  //       );
+  //       showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return alert;
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
 
   submitRating() async {
     final databaseReference = FirebaseDatabase.instance.ref();
@@ -408,6 +490,23 @@ class _BookingDetailsState extends State<BookingDetails> {
         .child('operators')
         .child(key)
         .update({'ratingCount': ratingCount});
+    if (cancelBookingSlot > 3) {
+      databaseReference
+          .child('operators')
+          .child(key)
+          .child('slots')
+          .child(cancelBookingDate)
+          .child(slot[cancelBookingSlot - 1])
+          .update({'ratingSubmitted': true});
+    } else {
+      databaseReference
+          .child('operators')
+          .child(key)
+          .child('slots')
+          .child(cancelBookingDate)
+          .child(slot[cancelBookingSlot])
+          .update({'ratingSubmitted': true});
+    }
     Navigator.pop(context);
     final snackBar = SnackBar(
       content: const Text(
