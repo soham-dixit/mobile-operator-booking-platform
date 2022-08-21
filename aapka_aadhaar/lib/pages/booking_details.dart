@@ -1,4 +1,4 @@
-import 'dart:math';
+
 import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/feedback_form.dart';
 import 'package:aapka_aadhaar/pages/navigation.dart';
@@ -6,12 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookingDetails extends StatefulWidget {
@@ -28,6 +24,7 @@ class _BookingDetailsState extends State<BookingDetails> {
   final list = [];
   String opName = '';
   String opPhone = '';
+  String purpose = '';
   late int serviceOtp;
   String status = '';
   int count = 1;
@@ -64,6 +61,9 @@ class _BookingDetailsState extends State<BookingDetails> {
     final key = pref.getString('operator-key');
 
     opName = databaseData['operators'][key]['fullname'];
+    purpose = i > 3
+        ? databaseData['operators'][key]['slots'][date][slot[i - 1]]['service']
+        : databaseData['operators'][key]['slots'][date][slot[i]]['service'];
     opPhone = databaseData['operators'][key]['phoneNumber'];
 
     cancelBookingDate = date;
@@ -86,6 +86,7 @@ class _BookingDetailsState extends State<BookingDetails> {
         .listen((event) async {
       var snapshot = event.snapshot;
       if (snapshot.value.toString() == 'completed') {
+        status = 'completed';
         if (ratingSubmittedorNot == false) {
           Widget reportButton = TextButton(
             child: Text("Cancel"),
@@ -509,6 +510,32 @@ class _BookingDetailsState extends State<BookingDetails> {
           .child(cancelBookingDate)
           .child(slot[cancelBookingSlot - 1])
           .update({'ratingSubmitted': true});
+      databaseReference
+          .child('users')
+          .child(uid)
+          .child('previousBookings')
+          .child(cancelBookingDate)
+          .child(slot[cancelBookingSlot - 1])
+          .set({
+        'operatorName': opName,
+        'purpose': purpose,
+        'status': status,
+        'rating': currentRating
+      });
+      final customerName = databaseData['operators'][key]['slots']
+          [cancelBookingDate][slot[cancelBookingSlot - 1]]['name'];
+      databaseReference
+          .child('operators')
+          .child(key)
+          .child('previousBookings')
+          .child(cancelBookingDate)
+          .child(slot[cancelBookingSlot - 1])
+          .update({
+        'customerName': customerName,
+        'purpose': purpose,
+        'status': status,
+        'rating': currentRating
+      });
     } else {
       databaseReference
           .child('operators')
@@ -524,6 +551,32 @@ class _BookingDetailsState extends State<BookingDetails> {
           .child(cancelBookingDate)
           .child(slot[cancelBookingSlot])
           .update({'ratingSubmitted': true});
+      databaseReference
+          .child('users')
+          .child(uid)
+          .child('previousBookings')
+          .child(cancelBookingDate)
+          .child(slot[cancelBookingSlot])
+          .set({
+        'operatorName': opName,
+        'purpose': purpose,
+        'status': status,
+        'rating': currentRating
+      });
+      final customerName = databaseData['operators'][key]['slots']
+          [cancelBookingDate][slot[cancelBookingSlot]]['name'];
+      databaseReference
+          .child('operators')
+          .child(key)
+          .child('previousBookings')
+          .child(cancelBookingDate)
+          .child(slot[cancelBookingSlot])
+          .update({
+        'customerName': customerName,
+        'purpose': purpose,
+        'status': status,
+        'rating': currentRating
+      });
     }
     Navigator.pop(context);
     final snackBar = SnackBar(
