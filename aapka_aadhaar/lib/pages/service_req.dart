@@ -70,7 +70,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'otp': serviceOtp,
               'status': 'pending',
               'ratingSubmitted': false,
-              'user': uid
+              'user': uid,
+              'args': [i, day]
             })
           : databaseReference
               .child('operators')
@@ -88,7 +89,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'otp': serviceOtp,
               'status': 'pending',
               'ratingSubmitted': false,
-              'user': uid
+              'user': uid,
+              'args': [i, day]
             });
     });
     databaseReference

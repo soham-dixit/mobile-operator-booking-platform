@@ -90,30 +90,30 @@ class _BookSlotsState extends State<BookSlots> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  addArgs(int i, String day) async {
-    print('args called');
-    final databaseReference = FirebaseDatabase.instance.ref();
-    final pref = await SharedPreferences.getInstance();
-    final key = pref.getString('operator-key');
+  // addArgs(int i, String day) async {
+  //   print('args called');
+  //   final databaseReference = FirebaseDatabase.instance.ref();
+  //   final pref = await SharedPreferences.getInstance();
+  //   final key = pref.getString('operator-key');
 
-    databaseReference
-        .child('operators')
-        .child(key.toString())
-        .child('slots')
-        .child(day)
-        .child(i > 3 ? slot[i - 1] : slot[i])
-        .update({'args': ''});
+  //   databaseReference
+  //       .child('operators')
+  //       .child(key.toString())
+  //       .child('slots')
+  //       .child(day)
+  //       .child(i > 3 ? slot[i - 1] : slot[i])
+  //       .update({'args': ''});
 
-    databaseReference
-       .child('operators')
-        .child(key.toString())
-        .child('slots')
-        .child(day)
-        .child(i > 3 ? slot[i - 1] : slot[i])
-        .update({
-      'args': [i, day]
-    });
-  }
+  //   databaseReference
+  //      .child('operators')
+  //       .child(key.toString())
+  //       .child('slots')
+  //       .child(day)
+  //       .child(i > 3 ? slot[i - 1] : slot[i])
+  //       .update({
+  //     'args': [i, day]
+  //   });
+  // }
 
   @override
   void initState() {
@@ -373,8 +373,8 @@ class _BookSlotsState extends State<BookSlots> {
                                                       if (snapshot.data[i]
                                                               ['user'] ==
                                                           uid) {
-                                                        addArgs(
-                                                            i, dayG.toString());
+                                                        // addArgs(
+                                                        //     i, dayG.toString());
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
@@ -393,8 +393,8 @@ class _BookSlotsState extends State<BookSlots> {
                                                         alreadyBooked();
                                                       }
                                                     } else {
-                                                      addArgs(
-                                                          i, dayG.toString());
+                                                      // addArgs(
+                                                      //     i, dayG.toString());
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
