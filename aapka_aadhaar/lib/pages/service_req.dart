@@ -51,6 +51,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
     var serviceOtp = rng.nextInt(9000) + 1000;
 
     setState(() {
+      
       uORe == 'update'
           ? databaseReference
               .child('operators')
@@ -63,7 +64,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               .update({
               'name': name.text,
               'address': add.text,
-              'aadhaar_num': a_num.text,
+              'aadhaar_num': a_num.text.replaceRange(0, 8, 'XXXXXXXX'),
               'phone': phone.text,
               'req': selectedValues,
               'service': uORe,

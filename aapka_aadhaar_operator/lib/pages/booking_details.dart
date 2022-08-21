@@ -70,14 +70,32 @@ class _BookingDetailsState extends State<BookingDetails> {
     final serviceOtp = i > 3
         ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['otp']
         : databaseData['operators'][uid]['slots'][date][slot[i]]['otp'];
-    list.addAll([name, phone, address, service, i, date, serviceOtp]);
-    final pref = await SharedPreferences.getInstance();
-    pref.setString('date', date);
-    i > 3
-        ? pref.setString('time', slot[i - 1])
-        : pref.setString('time', slot[i]);
-    print(list);
-    return list;
+
+    if (service == 'update') {
+      final aadhaar = i > 3
+          ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]
+              ['aadhaar_num']
+          : databaseData['operators'][uid]['slots'][date][slot[i]]
+              ['aadhaar_num'];
+      list.addAll(
+          [name, phone, address, service, i, date, serviceOtp, aadhaar]);
+      final pref = await SharedPreferences.getInstance();
+      pref.setString('date', date);
+      i > 3
+          ? pref.setString('time', slot[i - 1])
+          : pref.setString('time', slot[i]);
+      print(list);
+      return list;
+    } else {
+      list.addAll([name, phone, address, service, i, date, serviceOtp, null]);
+      final pref = await SharedPreferences.getInstance();
+      pref.setString('date', date);
+      i > 3
+          ? pref.setString('time', slot[i - 1])
+          : pref.setString('time', slot[i]);
+      print(list);
+      return list;
+    }
   }
 
   void cancelBooking(BuildContext context) async {
@@ -446,6 +464,33 @@ class _BookingDetailsState extends State<BookingDetails> {
                             fontSize: 16,
                           ),
                         ),
+                        if (snapshot.data[7] != null)
+                          SizedBox(
+                            height: 30,
+                          ),
+                        if (snapshot.data[7] != null)
+                          TextFormField(
+                            initialValue: snapshot.data[7],
+                            maxLines: null,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              labelText: 'Aadhaar Number',
+                              labelStyle: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              isDense: true,
+                            ),
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                            ),
+                          ),
                         SizedBox(
                           height: 0,
                         ),
@@ -471,7 +516,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     color: Color(0xFFF23F44)),
                               ),
                               SizedBox(
-                                height: 180,
+                                height: 90,
                               ),
                             ],
                           ),
