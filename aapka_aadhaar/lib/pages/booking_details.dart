@@ -74,7 +74,7 @@ class _BookingDetailsState extends State<BookingDetails> {
             ['ratingSubmitted']
         : databaseData['operators'][key]['slots'][date][slot[i]]
             ['ratingSubmitted'];
-    
+
     databaseReference
         .child('operators')
         .child(key!)
@@ -366,8 +366,6 @@ class _BookingDetailsState extends State<BookingDetails> {
     }
   }
 
-  
-
   showSnack() async {
     final snackBar = SnackBar(
       content: const Text(
@@ -492,7 +490,18 @@ class _BookingDetailsState extends State<BookingDetails> {
         .child('operators')
         .child(key)
         .update({'ratingCount': ratingCount});
+    databaseReference
+        .child('operators')
+        .child(key)
+        .update({'ratingCount': ratingCount});
     if (cancelBookingSlot > 3) {
+      databaseReference
+          .child('operators')
+          .child(key)
+          .child('slots')
+          .child(cancelBookingDate)
+          .child(slot[cancelBookingSlot - 1])
+          .update({'rating': currentRating});
       databaseReference
           .child('operators')
           .child(key)
@@ -501,6 +510,13 @@ class _BookingDetailsState extends State<BookingDetails> {
           .child(slot[cancelBookingSlot - 1])
           .update({'ratingSubmitted': true});
     } else {
+      databaseReference
+          .child('operators')
+          .child(key)
+          .child('slots')
+          .child(cancelBookingDate)
+          .child(slot[cancelBookingSlot])
+          .update({'rating': currentRating});
       databaseReference
           .child('operators')
           .child(key)
