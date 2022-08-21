@@ -1,4 +1,3 @@
-
 import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/feedback_form.dart';
 import 'package:aapka_aadhaar/pages/navigation.dart';
@@ -521,31 +520,17 @@ class _BookingDetailsState extends State<BookingDetails> {
           .child(cancelBookingDate)
           .child(slot[cancelBookingSlot - 1])
           .update({'ratingSubmitted': true});
-      databaseReference
-          .child('users')
-          .child(uid)
-          .child('previousBookings')
-          .child(cancelBookingDate)
-          .child(slot[cancelBookingSlot - 1])
-          .set({
-        'operatorName': opName,
-        'purpose': purpose,
-        'status': status,
-        'rating': currentRating
-      });
+
       final customerName = databaseData['operators'][key]['slots']
           [cancelBookingDate][slot[cancelBookingSlot - 1]]['name'];
-      databaseReference
-          .child('operators')
-          .child(key)
-          .child('previousBookings')
-          .child(cancelBookingDate)
-          .child(slot[cancelBookingSlot - 1])
-          .update({
+
+      databaseReference.child('previousBookings').child(key).child(uid).update({
         'customerName': customerName,
         'purpose': purpose,
         'status': status,
-        'rating': currentRating
+        'rating': currentRating,
+        'date': cancelBookingDate,
+        'time': slot[cancelBookingSlot - 1],
       });
     } else {
       databaseReference
@@ -562,31 +547,17 @@ class _BookingDetailsState extends State<BookingDetails> {
           .child(cancelBookingDate)
           .child(slot[cancelBookingSlot])
           .update({'ratingSubmitted': true});
-      databaseReference
-          .child('users')
-          .child(uid)
-          .child('previousBookings')
-          .child(cancelBookingDate)
-          .child(slot[cancelBookingSlot])
-          .set({
-        'operatorName': opName,
-        'purpose': purpose,
-        'status': status,
-        'rating': currentRating
-      });
+
       final customerName = databaseData['operators'][key]['slots']
           [cancelBookingDate][slot[cancelBookingSlot]]['name'];
-      databaseReference
-          .child('operators')
-          .child(key)
-          .child('previousBookings')
-          .child(cancelBookingDate)
-          .child(slot[cancelBookingSlot])
-          .update({
+
+      databaseReference.child('previousBookings').child(key).child(uid).update({
         'customerName': customerName,
         'purpose': purpose,
         'status': status,
-        'rating': currentRating
+        'rating': currentRating,
+        'date': cancelBookingDate,
+        'time': slot[cancelBookingSlot]
       });
     }
     Navigator.pop(context);

@@ -54,7 +54,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
     if (databaseData['operatorsEmailList'] != null &&
         databaseData['operatorsPhoneList'] != null) {
       // dynamic keys_list = databaseData['operators'].keys.toList();
-      print('Res --- ${databaseData['operatorsPhoneList'][5].runtimeType}');
+      // print('Res --- ${databaseData['operatorsPhoneList'][5].runtimeType}');
       int i = int.parse(_phoneController.text.toString());
       if (databaseData['operatorsPhoneList'].contains(i)) {
         already_exists_phone = true;
