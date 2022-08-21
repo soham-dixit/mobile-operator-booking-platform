@@ -60,6 +60,122 @@ class _ProfileState extends State<Profile> {
     print('profile ${path}');
   }
 
+  changeEmail() {
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget saveButton = ElevatedButton(
+      onPressed: () async {
+        final databaseReference = FirebaseDatabase.instance.ref();
+        final FirebaseAuth auth = FirebaseAuth.instance;
+        final User user = await auth.currentUser!;
+        final uid = user.uid;
+        databaseReference.child('users').child(uid).update({
+          'email': userEmail,
+        });
+        Navigator.pop(context);
+        final snackBar = SnackBar(
+          content: const Text(
+            'Your email ID has been updated successfully!',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 16,
+            ),
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        setState(() {});
+      },
+      child: Text('Save'),
+      style: ElevatedButton.styleFrom(
+          shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("Change Email",
+          style: TextStyle(fontFamily: 'Poppins', fontSize: 18)),
+      content: TextField(
+        decoration: InputDecoration(
+          hintText: 'New Email',
+        ),
+        onChanged: (value) {
+          userEmail = value;
+        },
+      ),
+      actions: [
+        cancelButton,
+        saveButton,
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  changePhone() {
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget saveButton = ElevatedButton(
+      onPressed: () async {
+        final databaseReference = FirebaseDatabase.instance.ref();
+        final FirebaseAuth auth = FirebaseAuth.instance;
+        final User user = await auth.currentUser!;
+        final uid = user.uid;
+        databaseReference.child('users').child(uid).update({
+          'phoneNumber': userEmail,
+        });
+        Navigator.pop(context);
+        final snackBar = SnackBar(
+          content: const Text(
+            'Your phone number has been updated successfully!',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 16,
+            ),
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        setState(() {});
+      },
+      child: Text('Save'),
+      style: ElevatedButton.styleFrom(
+          shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("Change Phone",
+          style: TextStyle(fontFamily: 'Poppins', fontSize: 18)),
+      content: TextField(
+        decoration: InputDecoration(
+          hintText: 'New Phone Number',
+        ),
+        onChanged: (value) {
+          userPhone = value;
+        },
+      ),
+      actions: [
+        cancelButton,
+        saveButton,
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   void initState() {
     getData();
@@ -175,7 +291,9 @@ class _ProfileState extends State<Profile> {
                             maxLines: 1,
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              changeEmail();
+                            },
                             icon: Icon(Icons.edit),
                             color: Color(0xFFF23F44),
                           ),
@@ -209,7 +327,9 @@ class _ProfileState extends State<Profile> {
                             maxLines: 1,
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              changePhone();
+                            },
                             icon: Icon(Icons.edit),
                             color: Color(0xFFF23F44),
                           ),
