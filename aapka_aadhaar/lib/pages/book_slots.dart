@@ -90,6 +90,31 @@ class _BookSlotsState extends State<BookSlots> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  // addArgs(int i, String day) async {
+  //   print('args called');
+  //   final databaseReference = FirebaseDatabase.instance.ref();
+  //   final pref = await SharedPreferences.getInstance();
+  //   final key = pref.getString('operator-key');
+
+  //   databaseReference
+  //       .child('operators')
+  //       .child(key.toString())
+  //       .child('slots')
+  //       .child(day)
+  //       .child(i > 3 ? slot[i - 1] : slot[i])
+  //       .update({'args': ''});
+
+  //   databaseReference
+  //      .child('operators')
+  //       .child(key.toString())
+  //       .child('slots')
+  //       .child(day)
+  //       .child(i > 3 ? slot[i - 1] : slot[i])
+  //       .update({
+  //     'args': [i, day]
+  //   });
+  // }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -321,9 +346,9 @@ class _BookSlotsState extends State<BookSlots> {
                                                                   'Poppins',
                                                               fontSize: 14),
                                                         )
-                                                      :snapshot.data[i]
-                                                              ['user'] ==
-                                                          uid
+                                                      : snapshot.data[i]
+                                                                  ['user'] ==
+                                                              uid
                                                           ? Text(
                                                               'Details',
                                                               style: TextStyle(
@@ -342,12 +367,14 @@ class _BookSlotsState extends State<BookSlots> {
                                                                       .black,
                                                                   fontSize: 14),
                                                             ),
-                                                  onPressed: () {
+                                                  onPressed: () async {
                                                     if (snapshot.data[i] !=
                                                         false) {
                                                       if (snapshot.data[i]
                                                               ['user'] ==
                                                           uid) {
+                                                        // addArgs(
+                                                        //     i, dayG.toString());
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
@@ -366,6 +393,8 @@ class _BookSlotsState extends State<BookSlots> {
                                                         alreadyBooked();
                                                       }
                                                     } else {
+                                                      // addArgs(
+                                                      //     i, dayG.toString());
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(

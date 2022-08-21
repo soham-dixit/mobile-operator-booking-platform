@@ -60,7 +60,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               .child(
                 i > 3 ? slot[i - 1] : slot[i],
               )
-              .set({
+              .update({
               'name': name.text,
               'address': add.text,
               'aadhaar_num': a_num.text,
@@ -70,7 +70,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'otp': serviceOtp,
               'status': 'pending',
               'ratingSubmitted': false,
-              'user': uid
+              'user': uid,
+              'args': [i, day]
             })
           : databaseReference
               .child('operators')
@@ -80,7 +81,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               .child(
                 i > 3 ? slot[i - 1] : slot[i],
               )
-              .set({
+              .update({
               'name': _name.text,
               'address': _address.text,
               'phone': _phone.text,
@@ -88,7 +89,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'otp': serviceOtp,
               'status': 'pending',
               'ratingSubmitted': false,
-              'user': uid
+              'user': uid,
+              'args': [i, day]
             });
     });
     databaseReference

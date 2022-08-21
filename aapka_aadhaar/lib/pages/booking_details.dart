@@ -74,13 +74,13 @@ class _BookingDetailsState extends State<BookingDetails> {
             ['ratingSubmitted']
         : databaseData['operators'][key]['slots'][date][slot[i]]
             ['ratingSubmitted'];
-
+    
     databaseReference
         .child('operators')
         .child(key!)
         .child('slots')
         .child(date)
-        .child(slot[i - 1])
+        .child(i > 3 ? slot[i - 1] : slot[i])
         .child('status')
         .onValue
         .listen((event) async {
@@ -158,7 +158,7 @@ class _BookingDetailsState extends State<BookingDetails> {
         ? databaseData['operators'][key]['slots'][date][slot[i - 1]]['service']
         : databaseData['operators'][key]['slots'][date][slot[i]]['service'];
     list.addAll([name, phone, address, service, i, date]);
-    print(list);
+    print('List $list');
     return list;
   }
 
@@ -365,6 +365,8 @@ class _BookingDetailsState extends State<BookingDetails> {
       });
     }
   }
+
+  
 
   showSnack() async {
     final snackBar = SnackBar(
