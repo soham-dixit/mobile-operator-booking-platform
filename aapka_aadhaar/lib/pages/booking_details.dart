@@ -158,9 +158,20 @@ class _BookingDetailsState extends State<BookingDetails> {
     final service = i > 3
         ? databaseData['operators'][key]['slots'][date][slot[i - 1]]['service']
         : databaseData['operators'][key]['slots'][date][slot[i]]['service'];
-    list.addAll([name, phone, address, service, i, date]);
-    print('List $list');
-    return list;
+    if (service == 'update') {
+      final aadhaar = i > 3
+          ? databaseData['operators'][key]['slots'][date][slot[i - 1]]
+              ['aadhaar_num']
+          : databaseData['operators'][key]['slots'][date][slot[i]]
+              ['aadhaar_num'];
+      list.addAll([name, phone, address, service, i, date, aadhaar]);
+      print('List $list');
+      return list;
+    } else {
+      list.addAll([name, phone, address, service, i, date, null]);
+      print('List $list');
+      return list;
+    }
   }
 
   void cancelBooking(BuildContext context) async {
@@ -834,6 +845,33 @@ class _BookingDetailsState extends State<BookingDetails> {
                             fontSize: 16,
                           ),
                         ),
+                        if (snapshot.data[6] != null)
+                          SizedBox(
+                            height: 30,
+                          ),
+                        if (snapshot.data[6] != null)
+                          TextFormField(
+                            initialValue: snapshot.data[6],
+                            maxLines: null,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              labelText: 'Aadhaar Number',
+                              labelStyle: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              isDense: true,
+                            ),
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                            ),
+                          ),
                         SizedBox(
                           height: 5,
                         ),
