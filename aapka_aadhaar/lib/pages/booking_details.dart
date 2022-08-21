@@ -48,6 +48,16 @@ class _BookingDetailsState extends State<BookingDetails> {
     '5:00 PM to 6:00 PM'
   ];
 
+  List timingsForPB = [
+    '10:00 - 11:00 PM',
+    '11:00 - 12:00 PM',
+    '12:00 - 1:00 PM',
+    '2:00 - 3:00 PM',
+    '3:00 - 4:00 PM',
+    '4:00 - 5:00 PM',
+    '5:00 - 6:00 PM'
+  ];
+
   getData(int i, String date) async {
     list.clear();
     final databaseReference = FirebaseDatabase.instance.ref();
@@ -527,17 +537,11 @@ class _BookingDetailsState extends State<BookingDetails> {
       int index = 0;
       dynamic previousBookingsData = databaseData['previousBookings'][key];
       dynamic key_list = previousBookingsData.keys;
-      print('previos $key_list');
+
       if (key_list.contains(uid)) {
-        print('previos executed');
         dynamic user_data = previousBookingsData[uid];
-        print('previos ${user_data}');
 
-        print('previos ${user_data.length}');
         index = user_data.length;
-        print('previos index');
-
-        print(' uid true');
       } else {
         print('uid false');
       }
@@ -549,7 +553,7 @@ class _BookingDetailsState extends State<BookingDetails> {
           'status': status,
           'rating': currentRating,
           'date': cancelBookingDate,
-          'time': timings[cancelBookingSlot - 1]
+          'time': timingsForPB[cancelBookingSlot - 1]
         }
       });
     } else {
@@ -574,17 +578,11 @@ class _BookingDetailsState extends State<BookingDetails> {
       int index = 0;
       dynamic previousBookingsData = databaseData['previousBookings'][key];
       dynamic key_list = previousBookingsData.keys;
-      print('previos $key_list');
+
       if (key_list.contains(uid)) {
-        print('previos executed');
         dynamic user_data = previousBookingsData[uid];
-        print('previos ${user_data}');
 
-        print('previos ${user_data.length}');
         index = user_data.length;
-        print('previos index');
-
-        print(' uid true');
       } else {
         print('uid false');
       }
@@ -596,7 +594,7 @@ class _BookingDetailsState extends State<BookingDetails> {
           'status': status,
           'rating': currentRating,
           'date': cancelBookingDate,
-          'time': timings[cancelBookingSlot]
+          'time': timingsForPB[cancelBookingSlot]
         }
       });
     }
