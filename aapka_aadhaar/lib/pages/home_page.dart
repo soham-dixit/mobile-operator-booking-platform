@@ -277,8 +277,7 @@ class _HomePageState extends State<HomePage> {
       var _currentDate = DateTime.now();
       final _dayFormatter = DateFormat('dd-MM-yyyy');
 
-      if (_dayFormatter.format(_currentDate) ==
-          keys_list[1]) {
+      if (_dayFormatter.format(_currentDate) == keys_list[1]) {
         databaseReference
             .child("operators")
             .child(key.toString())
@@ -429,20 +428,20 @@ class _HomePageState extends State<HomePage> {
               },
               child: Container(
                 width: double.infinity,
-                color: Colors.green.shade500,
+                color: Color(0xFFF23F44),
                 height: 50,
                 child: Padding(
                   padding: EdgeInsets.only(left: 12),
                   child: Row(
                     children: [
                       Text(
-                        'Check your appointment status here.',
+                        'Check your appointment status here',
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 16,
                             color: Colors.black),
                       ),
-                      SizedBox(width: 40),
+                      SizedBox(width: 10),
                       Icon(Icons.navigate_next)
                     ],
                   ),
