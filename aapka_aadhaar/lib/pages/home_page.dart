@@ -238,7 +238,7 @@ class _HomePageState extends State<HomePage> {
       final _dayFormatter = DateFormat('dd-MM-yyyy');
 
       name = databaseData['operators'][key]['fullname'];
-      operatorRating = databaseData['operators'][key]['avgRating'];
+      operatorRating = databaseData['operators'][key]['avgRating'] ?? 0;
 
       if (slotData[keys_list[0]].containsValue(false)) {
         firstDay = true;
@@ -349,7 +349,7 @@ class _HomePageState extends State<HomePage> {
         Duration(seconds: 3), (Timer t) => getOperatorLocation());
 
     addDates();
-    getArgs();
+
     setState(() {
       getLocation();
       setCustomMarker();
@@ -417,12 +417,14 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: showActive
           ? InkWell(
               onTap: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => BookingDetails(),
-                      settings: RouteSettings(arguments: [index, day])),
-                );
+                getArgs().whenComplete(() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BookingDetails(),
+                        settings: RouteSettings(arguments: [index, day])),
+                  );
+                });
               },
               child: Container(
                 width: double.infinity,
