@@ -45,6 +45,7 @@ class _BookSlotsState extends State<BookSlots> {
   ];
   List activeColor = [true, false, false, false];
   bool booked = false;
+  dynamic keys_list1;
 
   getData(String day) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -111,7 +112,7 @@ class _BookSlotsState extends State<BookSlots> {
     final pref = await SharedPreferences.getInstance();
     final key = pref.getString('operator-key');
     Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
-    dynamic keys_list1 = slotData.keys.toList();
+    keys_list1 = slotData.keys.toList();
     for (int j = 0; j < slot.length; j++) {
       if (databaseData['operators'][key]['slots'][keys_list1[0]][slot[j]] !=
           false) {
@@ -403,8 +404,11 @@ class _BookSlotsState extends State<BookSlots> {
                                                           alreadyBooked();
                                                         }
                                                       } else {
-                                                        if (booked) {
-                                                          oneBookingSnack();
+                                                        if (dayG ==
+                                                            keys_list1[0]) {
+                                                          if (booked) {
+                                                            oneBookingSnack();
+                                                          }
                                                         } else {
                                                           Navigator.push(
                                                               context,
