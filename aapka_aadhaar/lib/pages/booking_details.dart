@@ -524,13 +524,33 @@ class _BookingDetailsState extends State<BookingDetails> {
       final customerName = databaseData['operators'][key]['slots']
           [cancelBookingDate][slot[cancelBookingSlot - 1]]['name'];
 
+      int index = 0;
+      dynamic previousBookingsData = databaseData['previousBookings'][key];
+      dynamic key_list = previousBookingsData.keys;
+      print('previos $key_list');
+      if (key_list.contains(uid)) {
+        print('previos executed');
+        dynamic user_data = previousBookingsData[uid];
+        print('previos ${user_data}');
+
+        print('previos ${user_data.length}');
+        index = user_data.length;
+        print('previos index');
+
+        print(' uid true');
+      } else {
+        print('uid false');
+      }
+
       databaseReference.child('previousBookings').child(key).child(uid).update({
-        'customerName': customerName,
-        'purpose': purpose,
-        'status': status,
-        'rating': currentRating,
-        'date': cancelBookingDate,
-        'time': slot[cancelBookingSlot - 1],
+        '$index': {
+          'customerName': customerName,
+          'purpose': purpose,
+          'status': status,
+          'rating': currentRating,
+          'date': cancelBookingDate,
+          'time': timings[cancelBookingSlot - 1]
+        }
       });
     } else {
       databaseReference
@@ -554,11 +574,16 @@ class _BookingDetailsState extends State<BookingDetails> {
       int index = 0;
       dynamic previousBookingsData = databaseData['previousBookings'][key];
       dynamic key_list = previousBookingsData.keys;
+      print('previos $key_list');
       if (key_list.contains(uid)) {
+        print('previos executed');
         dynamic user_data = previousBookingsData[uid];
-        dynamic index_list = user_data.length;
+        print('previos ${user_data}');
+
+        print('previos ${user_data.length}');
         index = user_data.length;
-        print('uid $index');
+        print('previos index');
+
         print(' uid true');
       } else {
         print('uid false');
