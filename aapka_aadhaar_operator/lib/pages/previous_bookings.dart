@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PreviousBookings extends StatefulWidget {
   const PreviousBookings({Key? key}) : super(key: key);
@@ -12,9 +13,21 @@ class PreviousBookings extends StatefulWidget {
   State<PreviousBookings> createState() => _PreviousBookingsState();
 }
 
+class Data {
+  late String customerName;
+  late String purpose;
+  late String status;
+  late String date;
+  late int rating;
+  late String time;
+
+  Data(this.customerName, this.purpose, this.status, this.date, this.rating , this.time);
+}
+
 class _PreviousBookingsState extends State<PreviousBookings> {
   List status = [];
   var uid;
+  List<Data> dataList = [];
   List timings = [
     '10:00 - 11:00 AM',
     '11:00 - 12:00 PM',
@@ -41,20 +54,30 @@ class _PreviousBookingsState extends State<PreviousBookings> {
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    if (databaseData['previousBookings'] != null) {
+      dynamic operatorBookings = databaseData['previousBookings'][uid];
+      dynamic keys_list = operatorBookings.keys.toList();
+      print('uid $keys_list');
+      dataList.clear();
+      for (int i = 0; i < keys_list.length; i++) {
+        dynamic user_data = operatorBookings[keys_list[i]];
 
-    if (databaseData['operators'] != null) {
-      Map<dynamic, dynamic> previousData =
-          databaseData['operators'][uid]['previousBookings'];
-      dynamic keys_list = previousData.keys.toList();
+        for (var h in user_data) {
+          Data data = Data(h['customerName'], h['purpose'], h['status'],
+              h['date'], h['rating'] , h['time']);
+          dataList.add(data);
+        }
+        print('uid ${dataList}');
+      }
+      // for(var i in operatorBookings){
+      //   Data data = Data()
+      //   dataList.add()
+      // }
 
-      print("key list=========$keys_list");
-
-      status.clear();
-      status.addAll([]);
-
-      print('staus==========$status');
-      return status;
     }
+    return dataList;
   }
 
   @override
@@ -122,8 +145,10 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                       return ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
-                          itemCount: status.length,
+                          itemCount: dataList.length,
                           itemBuilder: (context, i) {
+                            print(
+                                'uid snapshot ${snapshot.data[i].customerName}');
                             return Card(
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(
@@ -158,7 +183,7 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                                                         fontWeight:
                                                             FontWeight.bold)),
                                                 TextSpan(
-                                                  text: '15/08/2022',
+                                                  text: snapshot.data[i].date,
                                                 ),
                                               ],
                                             ),
@@ -180,7 +205,7 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                                                         fontWeight:
                                                             FontWeight.bold)),
                                                 TextSpan(
-                                                  text: '15:00 PM',
+                                                  text: snapshot.data[i].time,
                                                 ),
                                               ],
                                             ),
@@ -205,7 +230,7 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                            text: 'Customer Name',
+                                            text: snapshot.data[i].customerName,
                                           ),
                                         ],
                                       ),
@@ -227,7 +252,7 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                            text: 'Updation/Enrollment',
+                                            text: snapshot.data[i].purpose,
                                           ),
                                         ],
                                       ),
@@ -249,17 +274,17 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                              text: 'Completed',
+                                              text: snapshot.data[i].status,
                                               style: TextStyle(
                                                   color: Colors.green)),
-                                          TextSpan(
-                                              text: '/',
-                                              style: TextStyle(
-                                                  color: Colors.black)),
-                                          TextSpan(
-                                              text: 'Cancelled',
-                                              style:
-                                                  TextStyle(color: Colors.red)),
+                                          // TextSpan(
+                                          //     text: '/',
+                                          //     style: TextStyle(
+                                          //         color: Colors.black)),
+                                          // TextSpan(
+                                          //     text: 'Cancelled',
+                                          //     style:
+                                          //         TextStyle(color: Colors.red)),
                                         ],
                                       ),
                                     ),
@@ -288,7 +313,7 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                                           ),
                                         ),
                                         RatingBarIndicator(
-                                          rating: 3,
+                                          rating: double.parse(snapshot.data[i].rating.toString()),
                                           itemBuilder: (context, index) => Icon(
                                             Icons.star,
                                             color: Colors.amber,

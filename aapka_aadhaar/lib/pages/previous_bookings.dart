@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PreviousBookings extends StatefulWidget {
   const PreviousBookings({Key? key}) : super(key: key);
@@ -12,9 +13,12 @@ class PreviousBookings extends StatefulWidget {
   State<PreviousBookings> createState() => _PreviousBookingsState();
 }
 
+
+
 class _PreviousBookingsState extends State<PreviousBookings> {
   List status = [];
   var uid;
+  
   List timings = [
     '10:00 - 11:00 AM',
     '11:00 - 12:00 PM',
@@ -41,19 +45,11 @@ class _PreviousBookingsState extends State<PreviousBookings> {
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
-
-    if (databaseData['users'] != null) {
-      Map<dynamic, dynamic> previousData =
-          databaseData['users'][uid]['previousBookings'];
-      dynamic keys_list = previousData.keys.toList();
-
-      print("key list=========$keys_list");
-
-      status.clear();
-      status.addAll([]);
-
-      print('staus==========$status');
-      return status;
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    if (databaseData['previousBookings'] != null) {
+      Map<String, dynamic> operatorBookings =
+          databaseData['previousBookings'][key];
     }
   }
 

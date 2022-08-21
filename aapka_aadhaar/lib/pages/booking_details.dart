@@ -551,13 +551,28 @@ class _BookingDetailsState extends State<BookingDetails> {
       final customerName = databaseData['operators'][key]['slots']
           [cancelBookingDate][slot[cancelBookingSlot]]['name'];
 
+      int index = 0;
+      dynamic previousBookingsData = databaseData['previousBookings'][key];
+      dynamic key_list = previousBookingsData.keys;
+      if (key_list.contains(uid)) {
+        dynamic user_data = previousBookingsData[uid];
+        dynamic index_list = user_data.length;
+        index = user_data.length;
+        print('uid $index');
+        print(' uid true');
+      } else {
+        print('uid false');
+      }
+
       databaseReference.child('previousBookings').child(key).child(uid).update({
-        'customerName': customerName,
-        'purpose': purpose,
-        'status': status,
-        'rating': currentRating,
-        'date': cancelBookingDate,
-        'time': slot[cancelBookingSlot]
+        '$index': {
+          'customerName': customerName,
+          'purpose': purpose,
+          'status': status,
+          'rating': currentRating,
+          'date': cancelBookingDate,
+          'time': timings[cancelBookingSlot]
+        }
       });
     }
     Navigator.pop(context);
