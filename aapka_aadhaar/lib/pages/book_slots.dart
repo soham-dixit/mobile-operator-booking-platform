@@ -93,6 +93,7 @@ class _BookSlotsState extends State<BookSlots> {
   }
 
   oneBookingSnack() {
+    booked = false;
     final snackBar = SnackBar(
       content: const Text(
         'You already have an appointment for the day!',
@@ -105,7 +106,7 @@ class _BookSlotsState extends State<BookSlots> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  oneBookingPerDay() async {
+  oneBookingPerDay(String day) async {
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
@@ -113,15 +114,24 @@ class _BookSlotsState extends State<BookSlots> {
     final key = pref.getString('operator-key');
     Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
     keys_list1 = slotData.keys.toList();
+    // day = dayG.toString();
+    print('day $day');
     for (int j = 0; j < slot.length; j++) {
-      if (databaseData['operators'][key]['slots'][keys_list1[0]][slot[j]] !=
-          false) {
-        if (databaseData['operators'][key]['slots'][keys_list1[0]][slot[j]]
+      if (databaseData['operators'][key]['slots'][day][slot[j]] != false) {
+        if (databaseData['operators'][key]['slots'][day][slot[j]]
             .containsValue(uid)) {
           booked = true;
         }
       }
     }
+  }
+
+  navigate(i) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ServiceRequest(),
+            settings: RouteSettings(arguments: [i, dayG])));
   }
 
   @override
@@ -377,7 +387,8 @@ class _BookSlotsState extends State<BookSlots> {
                                                                   fontSize: 14),
                                                             ),
                                                   onPressed: () async {
-                                                    oneBookingPerDay()
+                                                    oneBookingPerDay(
+                                                            dayG.toString())
                                                         .whenComplete(() {
                                                       if (snapshot.data[i] !=
                                                           false) {
@@ -408,20 +419,30 @@ class _BookSlotsState extends State<BookSlots> {
                                                             keys_list1[0]) {
                                                           if (booked) {
                                                             oneBookingSnack();
+                                                          } else {
+                                                            navigate(i);
                                                           }
-                                                        } else {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          ServiceRequest(),
-                                                                  settings:
-                                                                      RouteSettings(
-                                                                          arguments: [
-                                                                        i,
-                                                                        dayG
-                                                                      ])));
+                                                        } else if (dayG ==
+                                                            keys_list1[1]) {
+                                                          if (booked) {
+                                                            oneBookingSnack();
+                                                          } else {
+                                                            navigate(i);
+                                                          }
+                                                        } else if (dayG ==
+                                                            keys_list1[2]) {
+                                                          if (booked) {
+                                                            oneBookingSnack();
+                                                          } else {
+                                                            navigate(i);
+                                                          }
+                                                        } else if (dayG ==
+                                                            keys_list1[3]) {
+                                                          if (booked) {
+                                                            oneBookingSnack();
+                                                          } else {
+                                                            navigate(i);
+                                                          }
                                                         }
                                                       }
                                                     });
