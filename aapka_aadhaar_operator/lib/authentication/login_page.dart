@@ -18,7 +18,7 @@ class OperatorLogin extends StatefulWidget {
 
 class _OperatorLoginState extends State<OperatorLogin> {
   void navigateToRegister() {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => OperatorRegister(),
