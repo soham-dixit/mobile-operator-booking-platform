@@ -127,7 +127,10 @@ class _HomePageState extends State<HomePage> {
 
         String? day;
 
-        day = DateFormat("dd-MM-yyyy").parse(keys_list[3]).add(Duration(days: 1)).toString();
+        day = DateFormat("dd-MM-yyyy")
+            .parse(keys_list[3])
+            .add(Duration(days: 1))
+            .toString();
         print('Day 1 day- $day');
 
         if (DateTime.parse(day).day == 'Sunday') {
@@ -394,22 +397,24 @@ class _HomePageState extends State<HomePage> {
                                               child: ListTile(
                                                 title: Text(timings[i]),
                                                 trailing: ElevatedButton(
-                                                  child:
-                                                      snapshot.data[i] == false
-                                                          ? Text(
-                                                              'Vacant',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Poppins',
-                                                                  fontSize: 14),
-                                                            )
-                                                          : Text(
-                                                              'Details',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Poppins',
-                                                                  fontSize: 14),
-                                                            ),
+                                                  child: snapshot.data[i] ==
+                                                          false
+                                                      ? Text(
+                                                          'Vacant',
+                                                          style: TextStyle(
+                                                              // fontFamily:
+                                                              //     'Poppins',
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 14),
+                                                        )
+                                                      : Text(
+                                                          'Details',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              fontSize: 14),
+                                                        ),
                                                   onPressed: () {
                                                     if (snapshot.data[i] !=
                                                         false) {

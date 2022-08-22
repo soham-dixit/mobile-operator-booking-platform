@@ -12,6 +12,9 @@ void main() async {
   runApp(
     AapkaAadhaar(
       child: MaterialApp(
+        theme: ThemeData(
+          fontFamily: 'Poppins',
+        ),
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
       ),
