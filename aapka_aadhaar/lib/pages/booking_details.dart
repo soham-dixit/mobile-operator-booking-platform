@@ -576,15 +576,20 @@ class _BookingDetailsState extends State<BookingDetails> {
           [cancelBookingDate][slot[cancelBookingSlot]]['name'];
 
       int index = 0;
-      dynamic previousBookingsData = databaseData['previousBookings'][key];
-      dynamic key_list = previousBookingsData.keys;
+      dynamic previousBookingsData = databaseData['previousBookings'];
+      if (previousBookingsData != null) {
+        if (previousBookingsData.containsValue(key)) {
+          dynamic opdata = previousBookingsData[key];
+          dynamic key_list = previousBookingsData.keys;
 
-      if (key_list.contains(uid)) {
-        dynamic user_data = previousBookingsData[uid];
+          if (key_list.contains(uid)) {
+            dynamic user_data = previousBookingsData[uid];
 
-        index = user_data.length;
-      } else {
-        print('uid false');
+            index = user_data.length;
+          } else {
+            print('uid false');
+          }
+        }
       }
 
       databaseReference.child('previousBookings').child(key).child(uid).update({

@@ -144,6 +144,7 @@ class _PreviousBookingsState extends State<PreviousBookings> {
               child: FutureBuilder(
                   future: getData(),
                   builder: (context, AsyncSnapshot snapshot) {
+                    print('snapshot ${snapshot.data}');
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
                         return Padding(
@@ -154,35 +155,174 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                       case ConnectionState.active:
                         return Text('active');
                       case ConnectionState.done:
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            physics: ClampingScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemCount: dataList.length,
-                            itemBuilder: (context, i) {
-                              return Container(
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color:
-                                          Theme.of(context).colorScheme.outline,
+                        if (snapshot.data.length != 0) {
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              itemCount: dataList.length,
+                              itemBuilder: (context, i) {
+                                return Container(
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .outline,
+                                      ),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(12)),
                                     ),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(12)),
-                                  ),
-                                  elevation: 4,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                              child: RichText(
+                                    elevation: 4,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                child: RichText(
+                                                  softWrap: true,
+                                                  textAlign: TextAlign.justify,
+                                                  text: TextSpan(
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                    children: [
+                                                      TextSpan(
+                                                          text: 'Date: ',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                      TextSpan(
+                                                        text: snapshot
+                                                            .data[i].date,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: RichText(
+                                                  softWrap: true,
+                                                  textAlign: TextAlign.justify,
+                                                  text: TextSpan(
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                    children: [
+                                                      TextSpan(
+                                                          text: 'Time: ',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                      TextSpan(
+                                                        text: snapshot
+                                                            .data[i].time,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          RichText(
+                                            softWrap: true,
+                                            textAlign: TextAlign.justify,
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 16,
+                                                  color: Colors.black),
+                                              children: [
+                                                TextSpan(
+                                                    text: 'Customer Name: ',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                TextSpan(
+                                                  text: snapshot
+                                                      .data[i].customerName,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          RichText(
+                                            softWrap: true,
+                                            textAlign: TextAlign.justify,
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 16,
+                                                  color: Colors.black),
+                                              children: [
+                                                TextSpan(
+                                                    text: 'Purpose: ',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                TextSpan(
+                                                  text:
+                                                      snapshot.data[i].purpose,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          RichText(
+                                            softWrap: true,
+                                            textAlign: TextAlign.justify,
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 16,
+                                                  color: Colors.black),
+                                              children: [
+                                                TextSpan(
+                                                    text: 'Status: ',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                TextSpan(
+                                                    text:
+                                                        snapshot.data[i].status,
+                                                    style: TextStyle(
+                                                        color: Colors.green)),
+                                                // TextSpan(
+                                                //     text: '/',
+                                                //     style: TextStyle(
+                                                //         color: Colors.black)),
+                                                // TextSpan(
+                                                //     text: 'Cancelled',
+                                                //     style:
+                                                //         TextStyle(color: Colors.red)),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              RichText(
                                                 softWrap: true,
                                                 textAlign: TextAlign.justify,
                                                 text: TextSpan(
@@ -192,169 +332,49 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                                                       color: Colors.black),
                                                   children: [
                                                     TextSpan(
-                                                        text: 'Date: ',
+                                                        text: 'Rating: ',
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight
                                                                     .bold)),
-                                                    TextSpan(
-                                                      text:
-                                                          snapshot.data[i].date,
-                                                    ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                            Expanded(
-                                              child: RichText(
-                                                softWrap: true,
-                                                textAlign: TextAlign.justify,
-                                                text: TextSpan(
-                                                  style: TextStyle(
-                                                      fontFamily: 'Poppins',
-                                                      fontSize: 16,
-                                                      color: Colors.black),
-                                                  children: [
-                                                    TextSpan(
-                                                        text: 'Time: ',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                    TextSpan(
-                                                      text:
-                                                          snapshot.data[i].time,
-                                                    ),
-                                                  ],
+                                              RatingBarIndicator(
+                                                rating: double.parse(snapshot
+                                                    .data[i].rating
+                                                    .toString()),
+                                                itemBuilder: (context, index) =>
+                                                    Icon(
+                                                  Icons.star,
+                                                  color: Colors.amber,
                                                 ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        RichText(
-                                          softWrap: true,
-                                          textAlign: TextAlign.justify,
-                                          text: TextSpan(
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontSize: 16,
-                                                color: Colors.black),
-                                            children: [
-                                              TextSpan(
-                                                  text: 'Customer Name: ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              TextSpan(
-                                                text: snapshot
-                                                    .data[i].customerName,
+                                                itemCount: 5,
+                                                itemSize: 20.0,
+                                                direction: Axis.horizontal,
                                               ),
                                             ],
                                           ),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        RichText(
-                                          softWrap: true,
-                                          textAlign: TextAlign.justify,
-                                          text: TextSpan(
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontSize: 16,
-                                                color: Colors.black),
-                                            children: [
-                                              TextSpan(
-                                                  text: 'Purpose: ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              TextSpan(
-                                                text: snapshot.data[i].purpose,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        RichText(
-                                          softWrap: true,
-                                          textAlign: TextAlign.justify,
-                                          text: TextSpan(
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontSize: 16,
-                                                color: Colors.black),
-                                            children: [
-                                              TextSpan(
-                                                  text: 'Status: ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              TextSpan(
-                                                  text: snapshot.data[i].status,
-                                                  style: TextStyle(
-                                                      color: Colors.green)),
-                                              // TextSpan(
-                                              //     text: '/',
-                                              //     style: TextStyle(
-                                              //         color: Colors.black)),
-                                              // TextSpan(
-                                              //     text: 'Cancelled',
-                                              //     style:
-                                              //         TextStyle(color: Colors.red)),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            RichText(
-                                              softWrap: true,
-                                              textAlign: TextAlign.justify,
-                                              text: TextSpan(
-                                                style: TextStyle(
-                                                    fontFamily: 'Poppins',
-                                                    fontSize: 16,
-                                                    color: Colors.black),
-                                                children: [
-                                                  TextSpan(
-                                                      text: 'Rating: ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold)),
-                                                ],
-                                              ),
-                                            ),
-                                            RatingBarIndicator(
-                                              rating: double.parse(snapshot
-                                                  .data[i].rating
-                                                  .toString()),
-                                              itemBuilder: (context, index) =>
-                                                  Icon(
-                                                Icons.star,
-                                                color: Colors.amber,
-                                              ),
-                                              itemCount: 5,
-                                              itemSize: 20.0,
-                                              direction: Axis.horizontal,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            });
+                                );
+                              });
+                        } else {
+                          return Container(
+                            padding: EdgeInsets.only(top: 300),
+                            child: Center(
+                              child: Text(
+                                'No bookings completed yet.',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          );
+                        }
                     }
                   }),
             ),
