@@ -145,14 +145,6 @@ class _HomePageState extends State<HomePage> {
 
         print('Day 1 final $final_day');
 
-        databaseReference
-            .child("operators")
-            .child(uid)
-            .child("slots")
-            .update({final_day: ''});
-
-        print('called');
-
         databaseReference.child("operators").child(uid).child("slots").update({
           final_day: {
             "10_11": false,
@@ -162,8 +154,22 @@ class _HomePageState extends State<HomePage> {
             "3_4": false,
             "4_5": false,
             "5_6": false,
-          },
+          }
         });
+
+        print('called');
+
+        // databaseReference.child("operators").child(uid).child("slots").update({
+        //   final_day: {
+        //     "10_11": false,
+        //     "11_12": false,
+        //     "12_1": false,
+        //     "2_3": false,
+        //     "3_4": false,
+        //     "4_5": false,
+        //     "5_6": false,
+        //   },
+        // });
       } else {}
     }
   }
