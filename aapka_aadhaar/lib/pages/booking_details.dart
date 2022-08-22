@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/feedback_form.dart';
 import 'package:aapka_aadhaar/pages/navigation.dart';
@@ -6,12 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookingDetails extends StatefulWidget {
@@ -28,6 +23,7 @@ class _BookingDetailsState extends State<BookingDetails> {
   final list = [];
   String opName = '';
   String opPhone = '';
+  String purpose = '';
   late int serviceOtp;
   String status = '';
   int count = 1;
@@ -52,6 +48,16 @@ class _BookingDetailsState extends State<BookingDetails> {
     '5:00 PM to 6:00 PM'
   ];
 
+  List timingsForPB = [
+    '10:00 - 11:00 PM',
+    '11:00 - 12:00 PM',
+    '12:00 - 1:00 PM',
+    '2:00 - 3:00 PM',
+    '3:00 - 4:00 PM',
+    '4:00 - 5:00 PM',
+    '5:00 - 6:00 PM'
+  ];
+
   getData(int i, String date) async {
     list.clear();
     final databaseReference = FirebaseDatabase.instance.ref();
@@ -64,6 +70,9 @@ class _BookingDetailsState extends State<BookingDetails> {
     final key = pref.getString('operator-key');
 
     opName = databaseData['operators'][key]['fullname'];
+    purpose = i > 3
+        ? databaseData['operators'][key]['slots'][date][slot[i - 1]]['service']
+        : databaseData['operators'][key]['slots'][date][slot[i]]['service'];
     opPhone = databaseData['operators'][key]['phoneNumber'];
 
     cancelBookingDate = date;
@@ -86,6 +95,7 @@ class _BookingDetailsState extends State<BookingDetails> {
         .listen((event) async {
       var snapshot = event.snapshot;
       if (snapshot.value.toString() == 'completed') {
+        status = 'completed';
         if (ratingSubmittedorNot == false) {
           Widget reportButton = TextButton(
             child: Text("Cancel"),
@@ -501,6 +511,10 @@ class _BookingDetailsState extends State<BookingDetails> {
         .child('operators')
         .child(key)
         .update({'ratingCount': ratingCount});
+    databaseReference
+        .child('operators')
+        .child(key)
+        .update({'ratingCount': ratingCount});
     if (cancelBookingSlot > 3) {
       databaseReference
           .child('operators')
@@ -508,7 +522,40 @@ class _BookingDetailsState extends State<BookingDetails> {
           .child('slots')
           .child(cancelBookingDate)
           .child(slot[cancelBookingSlot - 1])
+          .update({'rating': currentRating});
+      databaseReference
+          .child('operators')
+          .child(key)
+          .child('slots')
+          .child(cancelBookingDate)
+          .child(slot[cancelBookingSlot - 1])
           .update({'ratingSubmitted': true});
+
+      final customerName = databaseData['operators'][key]['slots']
+          [cancelBookingDate][slot[cancelBookingSlot - 1]]['name'];
+
+      int index = 0;
+      dynamic previousBookingsData = databaseData['previousBookings'][key];
+      dynamic key_list = previousBookingsData.keys;
+
+      if (key_list.contains(uid)) {
+        dynamic user_data = previousBookingsData[uid];
+
+        index = user_data.length;
+      } else {
+        print('uid false');
+      }
+
+      databaseReference.child('previousBookings').child(key).child(uid).update({
+        '$index': {
+          'customerName': customerName,
+          'purpose': purpose,
+          'status': status,
+          'rating': currentRating,
+          'date': cancelBookingDate,
+          'time': timingsForPB[cancelBookingSlot - 1]
+        }
+      });
     } else {
       databaseReference
           .child('operators')
@@ -516,7 +563,45 @@ class _BookingDetailsState extends State<BookingDetails> {
           .child('slots')
           .child(cancelBookingDate)
           .child(slot[cancelBookingSlot])
+          .update({'rating': currentRating});
+      databaseReference
+          .child('operators')
+          .child(key)
+          .child('slots')
+          .child(cancelBookingDate)
+          .child(slot[cancelBookingSlot])
           .update({'ratingSubmitted': true});
+
+      final customerName = databaseData['operators'][key]['slots']
+          [cancelBookingDate][slot[cancelBookingSlot]]['name'];
+
+      int index = 0;
+      dynamic previousBookingsData = databaseData['previousBookings'];
+      if (previousBookingsData != null) {
+        if (previousBookingsData.containsValue(key)) {
+          dynamic opdata = previousBookingsData[key];
+          dynamic key_list = previousBookingsData.keys;
+
+          if (key_list.contains(uid)) {
+            dynamic user_data = previousBookingsData[uid];
+
+            index = user_data.length;
+          } else {
+            print('uid false');
+          }
+        }
+      }
+
+      databaseReference.child('previousBookings').child(key).child(uid).update({
+        '$index': {
+          'customerName': customerName,
+          'purpose': purpose,
+          'status': status,
+          'rating': currentRating,
+          'date': cancelBookingDate,
+          'time': timingsForPB[cancelBookingSlot]
+        }
+      });
     }
     Navigator.pop(context);
     final snackBar = SnackBar(

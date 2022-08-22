@@ -181,6 +181,7 @@ class _BookingDetailsState extends State<BookingDetails> {
             .child('operators')
             .child(uid)
             .child('slots')
+            .child(cancelBookingDate)
             .child(slot[cancelBookingSlot])
             .update({'status': 'completed'});
         redirectBookSlotsComplete(context);

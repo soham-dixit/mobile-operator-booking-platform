@@ -257,22 +257,22 @@ class _NavigateToUserState extends State<NavigateToUser> {
                   horizontal: 12.0,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.yellowAccent,
+                  color: Color(0xFFF23F44),
                   borderRadius: BorderRadius.circular(20.0),
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black26,
                       offset: Offset(0, 2),
-                      blurRadius: 6.0,
+                      blurRadius: 50.0,
                     )
                   ],
                 ),
                 child: Text(
-                  "${distance.toStringAsFixed(2)} Kms, ${duration.toStringAsFixed(2)} Mins",
+                  "${distance.toStringAsFixed(2)} KM, ${duration.toStringAsFixed(2)} Mins",
                   style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
-                  ),
+                      fontSize: 18.0,
+                      color: Colors.black,
+                      fontFamily: 'Poppins'),
                 ),
               ),
             )
