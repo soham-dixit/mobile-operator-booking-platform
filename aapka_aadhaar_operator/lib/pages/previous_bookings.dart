@@ -300,10 +300,14 @@ class _PreviousBookingsState extends State<PreviousBookings> {
                                                         fontWeight:
                                                             FontWeight.bold)),
                                                 TextSpan(
-                                                    text:
-                                                        snapshot.data[i].status,
-                                                    style: TextStyle(
-                                                        color: Colors.green)),
+                                                  text: snapshot.data[i].status,
+                                                  style: TextStyle(
+                                                      color: snapshot.data[i]
+                                                                  .status ==
+                                                              'completed'
+                                                          ? Colors.green
+                                                          : Colors.red),
+                                                ),
                                                 // TextSpan(
                                                 //     text: '/',
                                                 //     style: TextStyle(
