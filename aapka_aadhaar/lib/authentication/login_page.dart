@@ -58,17 +58,17 @@ class _LoginPageState extends State<LoginPage> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  // reqPermission()async{
-  //     Map<ph.Permission, ph.PermissionStatus> statuses =
-  //       await[ph.Permission.location].request();
-  //   print(statuses[ph.Permission.location]);
-  // }
+  reqPermission() async {
+    Map<ph.Permission, ph.PermissionStatus> statuses =
+        await [ph.Permission.location].request();
+    print(statuses[ph.Permission.location]);
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // reqPermission();
+    reqPermission();
   }
 
   @override

@@ -163,6 +163,7 @@ class _HomePageState extends State<HomePage> {
         }
       }
     }
+    getLocation();
   }
 
   void getLocation() async {
