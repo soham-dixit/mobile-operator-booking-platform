@@ -173,6 +173,7 @@ class _HomePageState extends State<HomePage> {
         target: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
         zoom: 13,
       )));
+      print('location updated');
       print(loc.latitude);
       print(loc.longitude);
 
@@ -180,7 +181,7 @@ class _HomePageState extends State<HomePage> {
         _markers.addAll([
           Marker(
               markerId: MarkerId('User Location'),
-              position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
+              position: LatLng(loc.latitude!, loc.longitude!),
               icon: mapMarker),
         ]);
         _circles.add(
