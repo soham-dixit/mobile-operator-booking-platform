@@ -5,6 +5,7 @@ import 'package:aapka_aadhaar/services/otp_verification.dart';
 import 'package:aapka_aadhaar/widgets/progress_dialog.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart' as ph;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -55,6 +56,19 @@ class _LoginPageState extends State<LoginPage> {
     // Find the ScaffoldMessenger in the widget tree
     // and use it to show a SnackBar.
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  // reqPermission()async{
+  //     Map<ph.Permission, ph.PermissionStatus> statuses =
+  //       await[ph.Permission.location].request();
+  //   print(statuses[ph.Permission.location]);
+  // }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // reqPermission();
   }
 
   @override

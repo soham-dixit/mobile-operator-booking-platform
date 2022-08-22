@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
     currentLocation.onLocationChanged.listen((LocationData loc) {
       _controller
           ?.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
-        target: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
+        target: LatLng(loc.latitude!, loc.longitude!),
         zoom: 13,
       )));
       print('location updated');
@@ -369,22 +369,20 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getActiveBooking();
-    saveUid();
-    timer = Timer.periodic(
-        Duration(seconds: 3), (Timer t) => getOperatorLocation());
-
-    addDates();
-
     setState(() {
-      getLocation();
-      setCustomMarker();
       if (FirebaseAuth.instance.currentUser != null) {
         print("logged in");
+        getLocation();
+        setCustomMarker();
       } else {
         print("not logged in");
       }
     });
+    getActiveBooking();
+    saveUid();
+    timer = Timer.periodic(
+        Duration(seconds: 3), (Timer t) => getOperatorLocation());
+    addDates();
     checkOperatorPhoto();
   }
 
