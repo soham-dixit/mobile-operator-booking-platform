@@ -116,20 +116,6 @@ class _HomePageState extends State<HomePage> {
             operatorNames
                 .add(databaseData['operators'][keys_list[i]]['fullname']);
           }
-          Map<dynamic, dynamic> slotData =
-              databaseData['operators'][keys_list[i]]['slots'];
-          dynamic keys_list1 = slotData.keys.toList();
-          for (int j = 0; j < slot.length; j++) {
-            if (databaseData['operators'][keys_list[i]]['slots'][keys_list1[0]]
-                    [slot[j]] !=
-                false) {
-              if (databaseData['operators'][keys_list[i]]['slots']
-                      [keys_list1[0]][slot[j]]
-                  .containsValue(uid)) {
-                showActive = true;
-              }
-            }
-          }
         }
       }
       int count = 0;
@@ -332,6 +318,35 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  getActiveBooking() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    dynamic keys_list = databaseData['operators'].keys.toList();
+    if (databaseData['operators'] != null) {
+      for (int i = 0; i < keys_list.length; i++) {
+        key = keys_list[i];
+        Map<dynamic, dynamic> slotData =
+            databaseData['operators'][keys_list[i]]['slots'];
+        dynamic keys_list1 = slotData.keys.toList();
+        for (int j = 0; j < slot.length; j++) {
+          if (databaseData['operators'][keys_list[i]]['slots'][keys_list1[0]]
+                  [slot[j]] !=
+              false) {
+            if (databaseData['operators'][keys_list[i]]['slots'][keys_list1[0]]
+                    [slot[j]]
+                .containsValue(uid)) {
+              showActive = true;
+            }
+          }
+        }
+      }
+    }
+  }
+
   saveUid() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = await auth.currentUser!;
@@ -343,7 +358,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
+    getActiveBooking();
     saveUid();
     timer = Timer.periodic(
         Duration(seconds: 3), (Timer t) => getOperatorLocation());
