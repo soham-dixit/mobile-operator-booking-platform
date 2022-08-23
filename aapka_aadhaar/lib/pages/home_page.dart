@@ -413,7 +413,10 @@ class _HomePageState extends State<HomePage> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     dynamic keys_list = databaseData['operators'].keys.toList();
     Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
-    dynamic keys_list1 = slotData.keys.toList();
+    List keys_list1 = slotData.keys.toList();
+    keys_list1.sort((a, b) {
+        return a.compareTo(b);
+      });
     if (databaseData['operators'] != null) {
       for (int i = 0; i < slot.length; i++) {
         if (databaseData['operators'][key]['slots'][keys_list1[0]][slot[i]] !=
