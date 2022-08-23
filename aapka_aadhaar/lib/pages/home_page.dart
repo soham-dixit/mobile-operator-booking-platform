@@ -343,14 +343,23 @@ class _HomePageState extends State<HomePage> {
         key = keys_list[i];
         Map<dynamic, dynamic> slotData =
             databaseData['operators'][keys_list[i]]['slots'];
-        dynamic keys_list1 = slotData.keys.toList();
+        print('slot $slotData');
+        List keys_list1 = slotData.keys.toList();
+        keys_list1.sort((a, b) {
+        return a.compareTo(b);
+      });
+        print('slot $keys_list1');
         for (int j = 0; j < slot.length; j++) {
+          print(
+              'slot ${databaseData['operators'][keys_list[i]]['slots'][keys_list1[0]][slot[j]]}');
           if (databaseData['operators'][keys_list[i]]['slots'][keys_list1[0]]
                   [slot[j]] !=
               false) {
             if (databaseData['operators'][keys_list[i]]['slots'][keys_list1[0]]
                     [slot[j]]
                 .containsValue(uid)) {
+              print(
+                  'slot ${databaseData['operators'][keys_list[i]]['slots'][keys_list1[0]][slot[j]]}');
               showActive = true;
             }
           }
