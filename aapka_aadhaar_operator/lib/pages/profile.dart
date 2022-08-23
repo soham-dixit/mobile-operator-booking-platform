@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aapka_aadhaar_operator/pages/navigation_drawer.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -25,6 +26,7 @@ class _ProfileState extends State<Profile> {
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
   String? path;
+  late String url;
 
   getData() async {
     final databaseReference = FirebaseDatabase.instance.ref();
@@ -46,26 +48,51 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     getData();
-    checkPreviousPhoto();
   }
 
   void takePhoto(ImageSource source) async {
     final pickedFile = await _picker.getImage(
       source: source,
     );
-    final pref = await SharedPreferences.getInstance();
-    pref.setString('profile-img', pickedFile!.path);
+    // final pref = await SharedPreferences.getInstance();
+    // pref.setString('profile-img', pickedFile!.path);
 
     setState(() {
-      _imageFile = File(pickedFile.path);
+      _imageFile = File(pickedFile!.path);
     });
+    uploadToFirebase();
   }
 
-  checkPreviousPhoto() async {
-    final pref = await SharedPreferences.getInstance();
-    path = pref.getString('profile-img');
-    print('profile ${path}');
+  Future<String> uploadFile(File image) async {
+    String downloadURL;
+    String postId = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child("images")
+        .child("post_$postId.jpg");
+    await ref.putFile(image);
+    downloadURL = await ref.getDownloadURL();
+    return downloadURL;
   }
+
+  uploadToFirebase() async {
+    url = await uploadFile(
+        _imageFile!); // this will upload the file and store url in the variable 'url'
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    databaseReference
+        .child("operators")
+        .child(uid)
+        .update({"profileImage": url});
+  }
+
+  // checkPreviousPhoto() async {
+  //   final pref = await SharedPreferences.getInstance();
+  //   path = pref.getString('profile-img');
+  //   print('profile ${path}');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +133,7 @@ class _ProfileState extends State<Profile> {
                       Center(
                         child: InkWell(
                           child: CircleAvatar(
-                            backgroundImage: _imageFile != null
+                            backgroundImage: url != null
                                 ? FileImage(_imageFile!)
                                 : path == null
                                     ? AssetImage('assets/profile.png')
