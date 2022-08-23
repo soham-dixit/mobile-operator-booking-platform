@@ -78,7 +78,7 @@ class _NavigateToUserState extends State<NavigateToUser> {
       gmc.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
-            zoom: 13.5,
+            zoom: 17,
             target: LatLng(location.latitude, location.longitude),
           ),
         ),
@@ -88,21 +88,21 @@ class _NavigateToUserState extends State<NavigateToUser> {
       // databaseReference.child('operators').child(uid).child('location').onValue.listen((event){
       //   var snapshot = event.snapshot;
       // });
-      setState(() {
-        markers.add(
-          Marker(
-            infoWindow: InfoWindow(title: 'Live Location'),
-            markerId: MarkerId('live'),
-            position: LatLng(
-              location.latitude,
-              location.longitude,
-            ),
-            icon:
-                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-            onTap: () async {},
-          ),
-        );
-      });
+      // setState(() {
+      //   markers.add(
+      //     Marker(
+      //       infoWindow: InfoWindow(title: 'Live Location'),
+      //       markerId: MarkerId('live'),
+      //       position: LatLng(
+      //         location.latitude,
+      //         location.longitude,
+      //       ),
+      //       icon:
+      //           BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      //       onTap: () async {},
+      //     ),
+      //   );
+      // });
     });
   }
 
@@ -110,14 +110,14 @@ class _NavigateToUserState extends State<NavigateToUser> {
     print('called');
     setState(() {
       markers.addAll([
-        Marker(
-          infoWindow: InfoWindow(title: 'Your location'),
-          markerId: MarkerId('Operator'),
-          position: LatLng(op_lat, op_lng),
-          icon:
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-          onTap: () async {},
-        ),
+        // Marker(
+        //   infoWindow: InfoWindow(title: 'Your location'),
+        //   markerId: MarkerId('Operator'),
+        //   position: LatLng(op_lat, op_lng),
+        //   icon:
+        //       BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        //   onTap: () async {},
+        // ),
         Marker(
           infoWindow: InfoWindow(title: 'Destination'),
           markerId: MarkerId('User'),
@@ -125,16 +125,16 @@ class _NavigateToUserState extends State<NavigateToUser> {
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           onTap: () async {},
         ),
-        Marker(
-          infoWindow: InfoWindow(title: 'Live Location'),
-          markerId: MarkerId('live'),
-          position: LatLng(
-            location.latitude,
-            location.longitude,
-          ),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          onTap: () async {},
-        ),
+        // Marker(
+        //   infoWindow: InfoWindow(title: 'Live Location'),
+        //   markerId: MarkerId('live'),
+        //   position: LatLng(
+        //     location.latitude,
+        //     location.longitude,
+        //   ),
+        //   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        //   onTap: () async {},
+        // ),
       ]);
     });
   }
@@ -220,8 +220,9 @@ class _NavigateToUserState extends State<NavigateToUser> {
         children: [
           GoogleMap(
             mapType: MapType.normal,
-            myLocationEnabled: false,
-            zoomControlsEnabled: false,
+            myLocationEnabled: true,
+            zoomControlsEnabled: true,
+            mapToolbarEnabled: false,
             initialCameraPosition: CameraPosition(
               target: LatLng(19.0760, 72.8777),
               zoom: 11.5,
