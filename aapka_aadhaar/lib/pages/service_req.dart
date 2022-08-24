@@ -21,6 +21,8 @@ class ServiceRequest extends StatefulWidget {
 class _ServiceRequestState extends State<ServiceRequest> {
   late Razorpay razorpay;
 
+  String? _value = 'Cash On Service';
+
   final updationFormKey = GlobalKey<FormState>();
   final enrollmentFormKey = GlobalKey<FormState>();
 
@@ -633,6 +635,48 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                   borderRadius: BorderRadius.circular(10)),
                             ),
                           ),
+                          SizedBox(height: 22,),
+                          Column(
+                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                children: [
+                                  Radio<String>(
+                                    activeColor: Color(0xFFF23F44),
+                                    value: 'Cash On Service',
+                                    groupValue: _value,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _value = value;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text('Cash On Service'),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Radio<String>(
+                                    activeColor: Color(0xFFF23F44),
+                                    value: 'Online Payment',
+                                    groupValue: _value,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _value = value;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text('Online Payment'),
+                                ],
+                              ),
+                            ],
+                          ),
                           SizedBox(
                             height: 22,
                           ),
@@ -847,6 +891,50 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                   borderSide: BorderSide(color: Colors.black12),
                                   borderRadius: BorderRadius.circular(10)),
                             ),
+                          ),
+                          SizedBox(
+                            height: 22,
+                          ),
+                          Column(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Radio<String>(
+                                    activeColor: Color(0xFFF23F44),
+                                    value: 'Cash On Service',
+                                    groupValue: _value,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _value = value;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text('Cash On Service'),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Radio<String>(
+                                    activeColor: Color(0xFFF23F44),
+                                    value: 'Online Payment',
+                                    groupValue: _value,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _value = value;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text('Online Payment'),
+                                ],
+                              ),
+                            ],
                           ),
                           SizedBox(
                             height: 22,
