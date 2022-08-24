@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +25,19 @@ class _ProfileState extends State<Profile> {
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
   String? path;
+
+  final formKey = GlobalKey<FormState>();
+  final formKey2 = GlobalKey<FormState>();
+
+  final emailValidator = MultiValidator([
+    EmailValidator(errorText: 'Please Enter a valid Email ID'),
+    RequiredValidator(errorText: 'Please Enter a valid Email ID')
+  ]);
+
+  final mobileValidator = MultiValidator([
+    RequiredValidator(errorText: 'Please enter a mobile number!!'),
+    PatternValidator(r'^[6-9]\d{9}$', errorText: 'Please Enter a valid 10 digit Mobile Number')
+  ]);
 
   getData() async {
     final databaseReference = FirebaseDatabase.instance.ref();
@@ -69,25 +83,27 @@ class _ProfileState extends State<Profile> {
     );
     Widget saveButton = ElevatedButton(
       onPressed: () async {
-        final databaseReference = FirebaseDatabase.instance.ref();
-        final FirebaseAuth auth = FirebaseAuth.instance;
-        final User user = await auth.currentUser!;
-        final uid = user.uid;
-        databaseReference.child('users').child(uid).update({
-          'email': userEmail,
-        });
-        Navigator.pop(context);
-        final snackBar = SnackBar(
-          content: const Text(
-            'Your email ID has been updated successfully!',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 16,
+        if(formKey.currentState!.validate()) {
+          final databaseReference = FirebaseDatabase.instance.ref();
+          final FirebaseAuth auth = FirebaseAuth.instance;
+          final User user = await auth.currentUser!;
+          final uid = user.uid;
+          databaseReference.child('users').child(uid).update({
+            'email': userEmail,
+          });
+          Navigator.pop(context);
+          final snackBar = SnackBar(
+            content: const Text(
+              'Your email ID has been updated successfully!',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+              ),
             ),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        setState(() {});
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          setState(() {});
+        }
       },
       child: Text('Save'),
       style: ElevatedButton.styleFrom(
@@ -97,13 +113,31 @@ class _ProfileState extends State<Profile> {
     AlertDialog alert = AlertDialog(
       title: const Text("Change Email",
           style: TextStyle(fontFamily: 'Poppins', fontSize: 18)),
-      content: TextField(
-        decoration: InputDecoration(
-          hintText: 'New Email',
+      content: Form(
+        key: formKey,
+        child: TextFormField(
+          keyboardType: TextInputType.emailAddress,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          decoration: InputDecoration(
+            hintText: 'New Email',
+            errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(10)),
+            focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(10)),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black12),
+                borderRadius: BorderRadius.circular(10)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black12),
+                borderRadius: BorderRadius.circular(10)),
+          ),
+          onChanged: (value) {
+            userEmail = value;
+          },
+          validator: emailValidator,
         ),
-        onChanged: (value) {
-          userEmail = value;
-        },
       ),
       actions: [
         cancelButton,
@@ -127,25 +161,27 @@ class _ProfileState extends State<Profile> {
     );
     Widget saveButton = ElevatedButton(
       onPressed: () async {
-        final databaseReference = FirebaseDatabase.instance.ref();
-        final FirebaseAuth auth = FirebaseAuth.instance;
-        final User user = await auth.currentUser!;
-        final uid = user.uid;
-        databaseReference.child('users').child(uid).update({
-          'phoneNumber': userEmail,
-        });
-        Navigator.pop(context);
-        final snackBar = SnackBar(
-          content: const Text(
-            'Your phone number has been updated successfully!',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 16,
+        if(formKey2.currentState!.validate()) {
+          final databaseReference = FirebaseDatabase.instance.ref();
+          final FirebaseAuth auth = FirebaseAuth.instance;
+          final User user = await auth.currentUser!;
+          final uid = user.uid;
+          databaseReference.child('users').child(uid).update({
+            'phoneNumber': userEmail,
+          });
+          Navigator.pop(context);
+          final snackBar = SnackBar(
+            content: const Text(
+              'Your phone number has been updated successfully!',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+              ),
             ),
-          ),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        setState(() {});
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          setState(() {});
+        }
       },
       child: Text('Save'),
       style: ElevatedButton.styleFrom(
@@ -155,13 +191,32 @@ class _ProfileState extends State<Profile> {
     AlertDialog alert = AlertDialog(
       title: const Text("Change Phone",
           style: TextStyle(fontFamily: 'Poppins', fontSize: 18)),
-      content: TextField(
-        decoration: InputDecoration(
-          hintText: 'New Phone Number',
+      content: Form(
+        key: formKey2,
+        child: TextFormField(
+          maxLength: 10,
+          keyboardType: TextInputType.phone,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          decoration: InputDecoration(
+            hintText: 'New Phone Number',
+            errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(10)),
+            focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(10)),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black12),
+                borderRadius: BorderRadius.circular(10)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black12),
+                borderRadius: BorderRadius.circular(10)),
+          ),
+          onChanged: (value) {
+            userPhone = value;
+          },
+          validator: mobileValidator,
         ),
-        onChanged: (value) {
-          userPhone = value;
-        },
       ),
       actions: [
         cancelButton,
