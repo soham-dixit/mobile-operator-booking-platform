@@ -132,18 +132,18 @@ class _HomePageState extends State<HomePage> {
             .add(Duration(days: 1))
             .toString();
         print('Day 1 day- $day');
+        print('Day 1 ${DateFormat('EEEE').format(DateTime.parse(day))}');
 
-        if (DateTime.parse(day).day == 'Sunday') {
+        if (DateFormat('EEEE').format(DateTime.parse(day)) == 'Sunday') {
           print('sunday');
-          day = _currentDate.add(Duration(days: 1)).toString();
-        } else if (DateTime.parse(day).day == 'Saturday') {
+          day = DateTime.parse(day).add(Duration(days: 2)).toString();
+        } else if (DateFormat('EEEE').format(DateTime.parse(day)) ==
+            'Saturday') {
           print('sat');
-          day = _currentDate.add(Duration(days: 2)).toString();
+          day = DateTime.parse(day).add(Duration(days: 2)).toString();
         }
         String? final_day =
             _dayFormatter.format(DateTime.parse(day)).toString();
-
-        print('Day 1 final $final_day');
 
         databaseReference.child("operators").child(uid).child("slots").update({
           final_day: {
