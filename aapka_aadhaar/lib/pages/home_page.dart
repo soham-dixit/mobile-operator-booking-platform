@@ -261,11 +261,12 @@ class _HomePageState extends State<HomePage> {
       keys_list.sort((a, b) {
         return a.compareTo(b);
       });
-      print(keys_list);
+      print('Day 1$keys_list');
       var _currentDate = DateTime.now();
       final _dayFormatter = DateFormat('dd-MM-yyyy');
 
       if (_dayFormatter.format(_currentDate) == keys_list[1]) {
+        print('executed');
         databaseReference
             .child("operators")
             .child(key.toString())
@@ -280,13 +281,15 @@ class _HomePageState extends State<HomePage> {
             .add(Duration(days: 1))
             .toString();
         print('Day 1 day- $day');
+        print('Day 1 ${DateFormat('EEEE').format(DateTime.parse(day))}');
 
-        if (DateTime.parse(day).day == 'Sunday') {
+        if (DateFormat('EEEE').format(DateTime.parse(day)) == 'Sunday') {
           print('sunday');
-          day = _currentDate.add(Duration(days: 1)).toString();
-        } else if (DateTime.parse(day).day == 'Saturday') {
+          day = DateTime.parse(day).add(Duration(days: 2)).toString();
+        } else if (DateFormat('EEEE').format(DateTime.parse(day)) ==
+            'Saturday') {
           print('sat');
-          day = _currentDate.add(Duration(days: 2)).toString();
+          day = DateTime.parse(day).add(Duration(days: 2)).toString();
         }
         String? final_day =
             _dayFormatter.format(DateTime.parse(day)).toString();
@@ -346,8 +349,8 @@ class _HomePageState extends State<HomePage> {
         print('slot $slotData');
         List keys_list1 = slotData.keys.toList();
         keys_list1.sort((a, b) {
-        return a.compareTo(b);
-      });
+          return a.compareTo(b);
+        });
         print('slot $keys_list1');
         for (int j = 0; j < slot.length; j++) {
           print(
@@ -415,8 +418,8 @@ class _HomePageState extends State<HomePage> {
     Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
     List keys_list1 = slotData.keys.toList();
     keys_list1.sort((a, b) {
-        return a.compareTo(b);
-      });
+      return a.compareTo(b);
+    });
     if (databaseData['operators'] != null) {
       for (int i = 0; i < slot.length; i++) {
         if (databaseData['operators'][key]['slots'][keys_list1[0]][slot[i]] !=
