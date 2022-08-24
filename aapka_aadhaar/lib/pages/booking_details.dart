@@ -1,5 +1,6 @@
 import 'package:aapka_aadhaar/pages/book_slots.dart';
 import 'package:aapka_aadhaar/pages/feedback_form.dart';
+import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:aapka_aadhaar/pages/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -196,7 +197,7 @@ class _BookingDetailsState extends State<BookingDetails> {
           .child('slots')
           .child(cancelBookingDate)
           .update({slot[cancelBookingSlot - 1]: false});
-      redirectBookSlots(context);
+      redirectHomePage(context);
     } else {
       databaseReference
           .child('operators')
@@ -204,11 +205,11 @@ class _BookingDetailsState extends State<BookingDetails> {
           .child('slots')
           .child(cancelBookingDate)
           .update({slot[cancelBookingSlot]: false});
-      redirectBookSlots(context);
+      redirectHomePage(context);
     }
   }
 
-  redirectBookSlots(BuildContext context) {
+  redirectHomePage(BuildContext context) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -220,7 +221,7 @@ class _BookingDetailsState extends State<BookingDetails> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => BookSlots(),
+          builder: (context) => HomePage(),
         ));
     showSnack();
   }
