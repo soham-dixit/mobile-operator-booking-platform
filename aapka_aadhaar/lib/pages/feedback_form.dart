@@ -160,6 +160,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           ),
                           TextFormField(
                             controller: phone,
+                            maxLength: 10,
                             keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
