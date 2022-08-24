@@ -55,6 +55,7 @@ class _HomePageState extends State<HomePage> {
     '4_5',
     '5_6',
   ];
+  late String profileUrl;
 
   addDates() {
     print('addDates');
@@ -227,6 +228,8 @@ class _HomePageState extends State<HomePage> {
 
       name = databaseData['operators'][key]['fullname'];
       operatorRating = databaseData['operators'][key]['avgRating'] ?? 0;
+      profileUrl = databaseData['operators'][key]['profileImage'];
+      print('profile url $profileUrl');
 
       if (slotData[keys_list[0]].containsValue(false)) {
         firstDay = true;
@@ -396,14 +399,14 @@ class _HomePageState extends State<HomePage> {
     timer = Timer.periodic(
         Duration(seconds: 3), (Timer t) => getOperatorLocation());
     addDates();
-    checkOperatorPhoto();
+    // checkOperatorPhoto();
   }
 
-  checkOperatorPhoto() async {
-    final pref = await SharedPreferences.getInstance();
-    path = pref.getString('profile-img');
-    print('profile ${path}');
-  }
+  // checkOperatorPhoto() async {
+  //   final pref = await SharedPreferences.getInstance();
+  //   path = pref.getString('profile-img');
+  //   print('profile ${path}');
+  // }
 
   int? index;
   String? day;
@@ -627,8 +630,11 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       CircleAvatar(
                                         radius: 30.0,
-                                        backgroundImage: AssetImage(
-                                            'assets/logo/profile.png'),
+                                        backgroundImage: profileUrl != null
+                                            ? NetworkImage(profileUrl)
+                                            : AssetImage(
+                                                    'assets/logo/profile.png')
+                                                as ImageProvider,
                                       ),
                                     ],
                                   );
