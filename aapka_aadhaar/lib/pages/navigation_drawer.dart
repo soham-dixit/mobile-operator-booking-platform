@@ -268,7 +268,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               text: 'About Us',
               icon: Icons.person,
               onTap: () {
-                Navigator.pushReplacement(context,
+                Navigator.push(context,
                     MaterialPageRoute(builder: (context) => AboutUs()));
               },
             ),
