@@ -264,8 +264,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
     );
 
     AlertDialog alert = AlertDialog(
-      title: const Text("Change Email",
-          style: TextStyle(fontFamily: 'Poppins', fontSize: 18)),
+      // title: const Text("",
+      //     style: TextStyle(fontFamily: 'Poppins', fontSize: 18)),
       content: Text(
         'Please select atleast one checkbox',
         style:
@@ -748,7 +748,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
                           TextFormField(
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.name,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             controller: _name,
                             style: TextStyle(
                               fontFamily: 'Poppins',
@@ -784,7 +785,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             maxLength: 10,
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.phone,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 16,
@@ -817,7 +819,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
                           TextFormField(
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.streetAddress,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             controller: _address,
                             style: TextStyle(
                               fontFamily: 'Poppins',
@@ -890,7 +893,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     //     .then((value) {
                                     //   showSnack();
                                     // });
-                                    if(enrollmentFormKey.currentState!.validate()) {
+                                    if (enrollmentFormKey.currentState!
+                                        .validate()) {
                                       final pref =
                                           await SharedPreferences.getInstance();
                                       pref.setString(
