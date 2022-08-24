@@ -6,6 +6,7 @@ import 'package:aapka_aadhaar/widgets/progress_dialog.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:form_field_validator/form_field_validator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -15,6 +16,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final mobileValidator = MultiValidator([
+    RequiredValidator(errorText: 'Please enter a mobile number!!'),
+    PatternValidator(r'^[6-9]\d{9}$', errorText: 'Please Enter a valid 10 digit Mobile Number')
+  ]);
+
   void navigateToRegister() {
     Navigator.push(
       context,
@@ -135,7 +141,8 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: [
                         TextFormField(
-                          keyboardType: TextInputType.number,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          keyboardType: TextInputType.phone,
                           maxLength: 10,
                           style: TextStyle(
                             fontFamily: 'Poppins',
@@ -178,16 +185,7 @@ class _LoginPageState extends State<LoginPage> {
                             //   size: 32,
                             // ),
                           ),
-                          validator: (value) {
-                            try {
-                              if (value!.isEmpty ||
-                                  !RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
-                                return 'Please Enter a valid 10 digit Mobile Number';
-                              } else {
-                                return null;
-                              }
-                            } catch (e) {}
-                          },
+                          validator: mobileValidator
                         ),
                         SizedBox(
                           height: 22,
