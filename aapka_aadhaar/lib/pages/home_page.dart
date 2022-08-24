@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   GoogleMapController? _controller;
   Location currentLocation = Location();
   Set<Marker> _markers = {};
-  late BitmapDescriptor mapMarker, femaleMarker, maleMarker;
+  late BitmapDescriptor mapMarker, femaleMarker, maleMarker, transgenderMarker;
   final FirebaseAuth auth = FirebaseAuth.instance;
   List latitudes = [];
   List longitudes = [];
@@ -121,6 +121,16 @@ class _HomePageState extends State<HomePage> {
       }
       int count = 0;
       for (int i = 0; i < latitudes.length; i++) {
+        checkMarker() {
+          if (genders[i] == 'Male') {
+            return maleMarker;
+          } else if (genders[i] == 'Female') {
+            return femaleMarker;
+          } else {
+            return transgenderMarker;
+          }
+        }
+
         //computer distance between two markers
         //get current user location
         geolocator.Position position =
@@ -137,7 +147,7 @@ class _HomePageState extends State<HomePage> {
             Marker(
               markerId: MarkerId(operatorNames[i]),
               position: LatLng(latitudes[i], longitudes[i]),
-              icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
+              icon: checkMarker(),
               onTap: () async {
                 final pref = await SharedPreferences.getInstance();
                 pref.setString('operator-key', keys_list[i].toString());
@@ -149,11 +159,21 @@ class _HomePageState extends State<HomePage> {
       }
       if (count == 0) {
         for (int i = 0; i < latitudes.length; i++) {
+          checkMarker() {
+            if (genders[i] == 'Male') {
+              return maleMarker;
+            } else if (genders[i] == 'Female') {
+              return femaleMarker;
+            } else {
+              return transgenderMarker;
+            }
+          }
+
           _markers.add(
             Marker(
               markerId: MarkerId(operatorNames[i]),
               position: LatLng(latitudes[i], longitudes[i]),
-              icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
+              icon: checkMarker(),
               onTap: () async {
                 final pref = await SharedPreferences.getInstance();
                 pref.setString('operator-key', keys_list[i].toString());
@@ -207,6 +227,8 @@ class _HomePageState extends State<HomePage> {
         ImageConfiguration(), 'assets/Female-Operator.png');
     maleMarker = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(), 'assets/Male-Operator.png');
+    transgenderMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), 'assets/Others-Operator.png');
   }
 
   getAvailablity() async {
