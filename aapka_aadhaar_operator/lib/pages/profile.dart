@@ -26,7 +26,7 @@ class _ProfileState extends State<Profile> {
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
   String? path;
-  late String url;
+  late String url = '';
 
   getData() async {
     final databaseReference = FirebaseDatabase.instance.ref();
@@ -42,6 +42,9 @@ class _ProfileState extends State<Profile> {
       operatorName = databaseData['operators'][uid]['fullname'];
       operatorPhone = databaseData['operators'][uid]['phoneNumber'];
       operatorEmail = databaseData['operators'][uid]['email'];
+      if (databaseData['operators'][uid]['profileImage'] != null) {
+        url = databaseData['operators'][uid]['profileImage'];
+      }
     });
   }
 
@@ -86,6 +89,7 @@ class _ProfileState extends State<Profile> {
         .child("operators")
         .child(uid)
         .update({"profileImage": url});
+    setState(() {});
   }
 
   // checkPreviousPhoto() async {
@@ -134,14 +138,13 @@ class _ProfileState extends State<Profile> {
                         child: InkWell(
                           child: CircleAvatar(
                             backgroundImage: url != null
-                                ? FileImage(_imageFile!)
-                                : path == null
-                                    ? AssetImage('assets/profile.png')
-                                        as ImageProvider
-                                    : FileImage(File(path.toString())),
+                                ? NetworkImage(url)
+                                : AssetImage('assets/logo/profile.png')
+                                    as ImageProvider,
                             // : AssetImage('assets/profile.png')
                             //     as ImageProvider  ,
                             // backgroundImage: AssetImage('assets/profile.png'),
+                            backgroundColor: Color(0xFFF23F44),
                             radius: 80,
                           ),
                           onTap: () {

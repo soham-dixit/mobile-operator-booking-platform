@@ -25,6 +25,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   List info = [];
   late Future data;
   String? path;
+  late String url = '';
 
   @override
   void initState() {
@@ -36,7 +37,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       print("Not logged in");
     }
     data = fetchDetails();
-    checkPreviousPhoto();
+    // checkPreviousPhoto();
   }
 
   fetchDetails() async {
@@ -49,6 +50,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     if (databaseData['operators'] != null) {
       info.add(databaseData['operators'][uid]['fullname']);
       print(info);
+      if (databaseData['operators'][uid]['profileImage'] != null) {
+        url = databaseData['operators'][uid]['profileImage'];
+      }
     }
     return info;
   }
@@ -61,11 +65,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     databaseReference.child("operators").child(uid).update({"loggedin": false});
   }
 
-  checkPreviousPhoto() async {
-    final pref = await SharedPreferences.getInstance();
-    path = pref.getString('profile-img');
-    print('profile ${path}');
-  }
+  // checkPreviousPhoto() async {
+  //   final pref = await SharedPreferences.getInstance();
+  //   path = pref.getString('profile-img');
+  //   print('profile ${path}');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -101,10 +105,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CircleAvatar(
-                                backgroundImage: path == null
-                                    ? AssetImage('assets/profile.png')
-                                        as ImageProvider
-                                    : FileImage(File(path.toString())),
+                                backgroundImage: url != null
+                                    ? NetworkImage(url)
+                                    : AssetImage('assets/logo/profile.png')
+                                        as ImageProvider,
                                 backgroundColor: Color(0xFFF23F44),
                                 radius: 45,
                               ),
