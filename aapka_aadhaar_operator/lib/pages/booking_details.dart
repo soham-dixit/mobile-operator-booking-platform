@@ -22,6 +22,8 @@ class _BookingDetailsState extends State<BookingDetails> {
   late int cancelBookingSlot;
   late int serviceOtp;
   final list = [];
+
+  String? _reason;
   // late Future data;
   List slot = [
     '10_11',
@@ -634,26 +636,135 @@ class _BookingDetailsState extends State<BookingDetails> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              Widget noButton = TextButton(
-                                child: Text("No"),
+                              Widget noButton = ElevatedButton(
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
+                                child: Text('Discard'),
+                                style: ElevatedButton.styleFrom(
+                                    shape: StadiumBorder(),
+                                    primary: Color(0xFFFFFFFF),
+                                    onPrimary: Colors.black),
                               );
                               Widget yesButton = ElevatedButton(
                                 onPressed: () {
                                   cancelBooking(context);
                                 },
-                                child: Text('Yes'),
+                                child: Text('Confirm'),
                                 style: ElevatedButton.styleFrom(
                                     shape: StadiumBorder(),
                                     primary: Color(0xFFF23F44)),
                               );
                               AlertDialog alert = AlertDialog(
                                 title: const Text(
-                                    "Are you sure you want cancel the booking?",
+                                    "Please select a reason for cancellation",
                                     style: TextStyle(
                                         fontFamily: 'Poppins', fontSize: 18)),
+                                content: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Radio<String>(
+                                          activeColor: Color(0xFFF23F44),
+                                          value: 'Unable To Reach',
+                                          groupValue: _reason,
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              _reason = value;
+                                            });
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text('Unable To Reach'),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Radio<String>(
+                                          activeColor: Color(0xFFF23F44),
+                                          value: 'Health Issues',
+                                          groupValue: _reason,
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              _reason = value;
+                                            });
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text('Health Issues'),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Radio<String>(
+                                          activeColor: Color(0xFFF23F44),
+                                          value: 'Server Down',
+                                          groupValue: _reason,
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              _reason = value;
+                                            });
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text('Server Down'),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Radio<String>(
+                                          activeColor: Color(0xFFF23F44),
+                                          value: 'Other',
+                                          groupValue: _reason,
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              _reason = value;
+                                            });
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text('Other'),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    TextFormField(
+                                      maxLines: null,
+                                      minLines: 2,
+                                      // validator: descriptionValidator,
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
+                                      keyboardType: TextInputType.text,
+                                      // controller: description,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        labelText: 'Other Reason',
+                                        labelStyle: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                        ),
+                                        isDense: true,
+                                      ),
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 actions: [
                                   noButton,
                                   yesButton,
