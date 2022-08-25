@@ -61,17 +61,30 @@ class _BookingDetailsState extends State<BookingDetails> {
     '5:00 - 6:00 PM'
   ];
 
-  bool invalid_booking=false;
+  bool invalid_booking = false;
 
   List timingsCheck = [11, 12, 13, 15, 16, 17, 18];
 
-  checkTime() {
+  checkTime(int slot) {
     final _currentDate = DateTime.now();
+    print('chup ${_currentDate.add(Duration(hours: 11)).hour}');
     for (int i = 0; i < timingsCheck.length; i++) {
-      if (_currentDate.hour > timingsCheck[i]) {
+      if (_currentDate.hour > timingsCheck[slot]) {
         invalid_booking = true;
       }
     }
+  }
+
+  showInvalidTimeSnack() async {
+    final SnackBar snackBar = SnackBar(
+      content: Text('Too late to cancel!',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 16,
+          )),
+      duration: Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   getData(int i, String date) async {
@@ -1166,8 +1179,12 @@ class _BookingDetailsState extends State<BookingDetails> {
                             onPressed: () {
                               Widget noButton = ElevatedButton(
                                 onPressed: () {
-                                  checkTime();
-                                  cancelBooking(context, "res");
+                                  checkTime(index);
+                                  invalid_booking
+                                      ? showInvalidTimeSnack()
+                                      : cancelBooking(context, "res");
+
+                                  // cancelBooking(context, "res");
                                 },
                                 child: Text('Reschedule'),
                                 style: ElevatedButton.styleFrom(
@@ -1177,7 +1194,10 @@ class _BookingDetailsState extends State<BookingDetails> {
                               );
                               Widget yesButton = ElevatedButton(
                                 onPressed: () {
-                                  cancelBooking(context, 'cancel');
+                                  checkTime(index);
+                                  invalid_booking
+                                      ? showInvalidTimeSnack()
+                                      : cancelBooking(context, "cancel");
                                 },
                                 child: Text('Cancel'),
                                 style: ElevatedButton.styleFrom(
