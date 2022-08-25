@@ -1083,6 +1083,37 @@ class _BookingDetailsState extends State<BookingDetails> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
+                            onPressed: () {},
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Color(0xFFF23F44)),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24.0),
+                                ),
+                              ),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.all(14.0),
+                              child: Text(
+                                'Reschedule Booking',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Poppins',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
                             onPressed: () {
                               Widget noButton = TextButton(
                                 child: Text("No"),
