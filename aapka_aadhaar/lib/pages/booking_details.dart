@@ -1083,56 +1083,29 @@ class _BookingDetailsState extends State<BookingDetails> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFFF23F44)),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
-                                ),
-                              ),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(14.0),
-                              child: Text(
-                                'Reschedule Booking',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
                             onPressed: () {
-                              Widget noButton = TextButton(
-                                child: Text("No"),
+                              Widget noButton = ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+
                                 },
+                                child: Text('Reschedule'),
+                                style: ElevatedButton.styleFrom(
+                                    shape: StadiumBorder(),
+                                    primary: Color(0xFFFFFFFF),
+                                    onPrimary: Color(0xFF000000)),
                               );
                               Widget yesButton = ElevatedButton(
                                 onPressed: () {
                                   cancelBooking(context);
                                 },
-                                child: Text('Yes'),
+                                child: Text('Cancel'),
                                 style: ElevatedButton.styleFrom(
                                     shape: StadiumBorder(),
                                     primary: Color(0xFFF23F44)),
                               );
                               AlertDialog alert = AlertDialog(
                                 title: const Text(
-                                    "Are you sure you want cancel the booking?",
+                                    "Would you like to cancel or reschedule the booking?",
                                     style: TextStyle(
                                         fontFamily: 'Poppins', fontSize: 18)),
                                 actions: [
@@ -1162,7 +1135,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                             child: const Padding(
                               padding: EdgeInsets.all(14.0),
                               child: Text(
-                                'Cancel Booking',
+                                'Cancel / Reschedule Booking',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Poppins',
