@@ -146,399 +146,394 @@ class _OperatorRegisterState extends State<OperatorRegister> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Color(0xFFFBF9F6),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 18,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Color(0xFFFBF9F6),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 18,
+              ),
+              // Container(
+              //   width: 200,
+              //   height: 200,
+              //   decoration: BoxDecoration(
+              //     color: Colors.deepPurple.shade50,
+              //     shape: BoxShape.circle,
+              //   ),
+              //   child: Image.asset(
+              //     'assets/user_app_logo.png',
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 24,
+              // ),
+              const Text(
+                'Register',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                 ),
-                // Container(
-                //   width: 200,
-                //   height: 200,
-                //   decoration: BoxDecoration(
-                //     color: Colors.deepPurple.shade50,
-                //     shape: BoxShape.circle,
-                //   ),
-                //   child: Image.asset(
-                //     'assets/user_app_logo.png',
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 24,
-                // ),
-                const Text(
-                  'Register',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                "Enter your credentials, we will send you OTP to verify",
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black38,
                 ),
-                const SizedBox(
-                  height: 10,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 28,
+              ),
+              Container(
+                padding: EdgeInsets.all(28),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                const Text(
-                  "Enter your credentials, we will send you OTP to verify",
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black38,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 28,
-                ),
-                Container(
-                  padding: EdgeInsets.all(28),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: _nameController,
-                          textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.name,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          validator: nameValidator,
-                          cursorColor: Colors.black,
-                          decoration: InputDecoration(
-                            label: Text('Full Name'),
-                            labelStyle: TextStyle(
-                              color: Colors.grey.shade700,
-                            ),
-                            errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            // prefix: Padding(
-                            //   padding: EdgeInsets.symmetric(horizontal: 8),
-                            //   child: Text(
-                            //     '(+91)',
-                            //     style: TextStyle(
-                            //       fontFamily: 'Poppins',
-                            //       fontSize: 18,
-                            //       fontWeight: FontWeight.bold,
-                            //     ),
-                            //   ),
-                            // ),
-                            // suffixIcon: Icon(
-                            //   Icons.check_circle,
-                            //   color: Colors.green,
-                            //   size: 32,
-                            // ),
-                          ),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _nameController,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.name,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(
-                          height: 22,
-                        ),
-                        TextFormField(
-                          controller: _emailController,
-                          textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.emailAddress,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        validator: nameValidator,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          label: Text('Full Name'),
+                          labelStyle: TextStyle(
+                            color: Colors.grey.shade700,
                           ),
-                          validator: emailValidator,
-                          cursorColor: Colors.black,
-                          decoration: InputDecoration(
-                            label: Text('Email'),
-                            labelStyle: TextStyle(
-                              color: Colors.grey.shade700,
-                            ),
-                            errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            // prefix: Padding(
-                            //   padding: EdgeInsets.symmetric(horizontal: 8),
-                            //   child: Text(
-                            //     '(+91)',
-                            //     style: TextStyle(
-                            //       fontFamily: 'Poppins',
-                            //       fontSize: 18,
-                            //       fontWeight: FontWeight.bold,
-                            //     ),
-                            //   ),
-                            // ),
-                            // suffixIcon: Icon(
-                            //   Icons.check_circle,
-                            //   color: Colors.green,
-                            //   size: 32,
-                            // ),
-                          ),
+                          errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          // prefix: Padding(
+                          //   padding: EdgeInsets.symmetric(horizontal: 8),
+                          //   child: Text(
+                          //     '(+91)',
+                          //     style: TextStyle(
+                          //       fontFamily: 'Poppins',
+                          //       fontSize: 18,
+                          //       fontWeight: FontWeight.bold,
+                          //     ),
+                          //   ),
+                          // ),
+                          // suffixIcon: Icon(
+                          //   Icons.check_circle,
+                          //   color: Colors.green,
+                          //   size: 32,
+                          // ),
                         ),
-                        SizedBox(
-                          height: 22,
+                      ),
+                      const SizedBox(
+                        height: 22,
+                      ),
+                      TextFormField(
+                        controller: _emailController,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.emailAddress,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                        TextFormField(
-                          textInputAction: TextInputAction.done,
-                          controller: _phoneController,
-                          keyboardType: TextInputType.phone,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          maxLength: 10,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        validator: emailValidator,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          label: Text('Email'),
+                          labelStyle: TextStyle(
+                            color: Colors.grey.shade700,
                           ),
-                          validator: mobileValidator,
-                          cursorColor: Colors.black,
-                          decoration: InputDecoration(
-                            errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            label: Text('Mobile'),
-                            labelStyle: TextStyle(
-                              color: Colors.grey.shade700,
-                            ),
+                          errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          // prefix: Padding(
+                          //   padding: EdgeInsets.symmetric(horizontal: 8),
+                          //   child: Text(
+                          //     '(+91)',
+                          //     style: TextStyle(
+                          //       fontFamily: 'Poppins',
+                          //       fontSize: 18,
+                          //       fontWeight: FontWeight.bold,
+                          //     ),
+                          //   ),
+                          // ),
+                          // suffixIcon: Icon(
+                          //   Icons.check_circle,
+                          //   color: Colors.green,
+                          //   size: 32,
+                          // ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 22,
+                      ),
+                      TextFormField(
+                        textInputAction: TextInputAction.done,
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        maxLength: 10,
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        validator: mobileValidator,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
+                          label: Text('Mobile'),
+                          labelStyle: TextStyle(
+                            color: Colors.grey.shade700,
+                          ),
     
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            prefix: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              child: Text(
-                                '(+91)',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          prefix: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: Text(
+                              '(+91)',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            // suffixIcon: Icon(
-                            //   Icons.check_circle,
-                            //   color: Colors.green,
-                            //   size: 32,
-                            // ),
+                          ),
+                          // suffixIcon: Icon(
+                          //   Icons.check_circle,
+                          //   color: Colors.green,
+                          //   size: 32,
+                          // ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 14,
+                      ),
+                      DropdownButtonFormField2(
+                        decoration: InputDecoration(
+                          //Add isDense true and zero Padding.
+                          //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(horizontal: -8),
+                          errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(10)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          //Add more decoration as you want here
+                          //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                        ),
+                        isExpanded: true,
+                        hint: const Text(
+                          'Gender',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color(0xFF616161),
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(
-                          height: 14,
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black45,
                         ),
-                        DropdownButtonFormField2(
-                          decoration: InputDecoration(
-                            //Add isDense true and zero Padding.
-                            //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                            isDense: true,
-                            contentPadding: EdgeInsets.symmetric(horizontal: -8),
-                            errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            //Add more decoration as you want here
-                            //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
-                          ),
-                          isExpanded: true,
-                          hint: const Text(
-                            'Gender',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Color(0xFF616161),
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          icon: const Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black45,
-                          ),
-                          iconSize: 30,
-                          buttonHeight: 60,
-                          buttonPadding:
-                              const EdgeInsets.only(left: 20, right: 10),
-                          dropdownDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          items: genderItems
-                              .map((item) => DropdownMenuItem<String>(
-                                    value: item,
-                                    child: Text(
-                                      item,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                        iconSize: 30,
+                        buttonHeight: 60,
+                        buttonPadding:
+                            const EdgeInsets.only(left: 20, right: 10),
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        items: genderItems
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ))
-                              .toList(),
-                          validator: genderValidator,
-                          onChanged: (value) {
-                            //Do something when changing the item if you want.
-                            selectedValue = value.toString();
-                          },
-                          onSaved: (value) {
-                            selectedValue = value.toString();
-                            controller:
-                            _genderController;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 22,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                inputs = [
-                                  _nameController.text,
-                                  _emailController.text,
-                                  _phoneController.text,
-                                  selectedValue
-                                ];
-                                check_if_already_exists().whenComplete(() {
-                                  already_registered().whenComplete(() {
-                                    already_exists
-                                        ? showSnack()
-                                        : already_exists_phone &&
-                                                already_exists_email
-                                            ? otpVerification
-                                                .verifyPhone(
-                                                    _phoneController.text)
-                                                .whenComplete(() {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Otp(),
-                                                        settings: RouteSettings(
-                                                          arguments: inputs,
-                                                        )));
-                                              })
-                                            : showSnackBar();
-                                  });
+                                  ),
+                                ))
+                            .toList(),
+                        validator: genderValidator,
+                        onChanged: (value) {
+                          //Do something when changing the item if you want.
+                          selectedValue = value.toString();
+                        },
+                        onSaved: (value) {
+                          selectedValue = value.toString();
+                          controller:
+                          _genderController;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 22,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              inputs = [
+                                _nameController.text,
+                                _emailController.text,
+                                _phoneController.text,
+                                selectedValue
+                              ];
+                              check_if_already_exists().whenComplete(() {
+                                already_registered().whenComplete(() {
+                                  already_exists
+                                      ? showSnack()
+                                      : already_exists_phone &&
+                                              already_exists_email
+                                          ? otpVerification
+                                              .verifyPhone(
+                                                  _phoneController.text)
+                                              .whenComplete(() {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Otp(),
+                                                      settings: RouteSettings(
+                                                        arguments: inputs,
+                                                      )));
+                                            })
+                                          : showSnackBar();
                                 });
-                                // check_if_already_exists().whenComplete(() {
-                                //   already_exists
-                                //       ? null
-                                //       : otpVerification.verifyPhone(_phoneController.text)
-                                //           .whenComplete(() {
-                                //           Navigator.of(context).push(
-                                //             MaterialPageRoute(
-                                //                 builder: (context) => Otp(),
-                                //                 settings: RouteSettings(
-                                //                   arguments: inputs,
-                                //                 )),
-                                //           );
-                                //         });
-                                // });
-                              }
-                            },
-                            style: ButtonStyle(
-                              foregroundColor:
-                                  MaterialStateProperty.all<Color>(Colors.white),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFFF23F44)),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
-                                ),
+                              });
+                              // check_if_already_exists().whenComplete(() {
+                              //   already_exists
+                              //       ? null
+                              //       : otpVerification.verifyPhone(_phoneController.text)
+                              //           .whenComplete(() {
+                              //           Navigator.of(context).push(
+                              //             MaterialPageRoute(
+                              //                 builder: (context) => Otp(),
+                              //                 settings: RouteSettings(
+                              //                   arguments: inputs,
+                              //                 )),
+                              //           );
+                              //         });
+                              // });
+                            }
+                          },
+                          style: ButtonStyle(
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0xFFF23F44)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24.0),
                               ),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(14.0),
-                              child: Text(
-                                'Register',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Poppins',
-                                ),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(14.0),
+                            child: Text(
+                              'Register',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'Poppins',
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 18,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Already operator? ',
+                      ),
+                      const SizedBox(
+                        height: 18,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Already operator? ',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16.7,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF000000),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          GestureDetector(
+                            onTap: navigateToLogin,
+                            child: const Text(
+                              'Login now',
                               style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 16.7,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF000000),
+                                color: Color(0xFFF23F44),
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            GestureDetector(
-                              onTap: navigateToLogin,
-                              child: const Text(
-                                'Login now',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 16.7,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFF23F44),
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

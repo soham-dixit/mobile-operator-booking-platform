@@ -194,95 +194,90 @@ class _NavigateToUserState extends State<NavigateToUser> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
-      child: Scaffold(
-        drawer: NavigationDrawer(),
-        appBar: AppBar(
-          backgroundColor: Color(0xFFF23F44),
-          foregroundColor: Color(0xFFFFFFFF),
-          title: Text(
-            'Aapka Aadhaar Operator',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              // fontSize: 16
+    return Scaffold(
+      drawer: NavigationDrawer(),
+      appBar: AppBar(
+        backgroundColor: Color(0xFFF23F44),
+        foregroundColor: Color(0xFFFFFFFF),
+        title: Text(
+          'Aapka Aadhaar Operator',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            // fontSize: 16
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/logo/logo.png'),
             ),
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-              child: CircleAvatar(
-                backgroundImage: AssetImage('assets/logo/logo.png'),
-              ),
+        ],
+      ),
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          GoogleMap(
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            zoomControlsEnabled: true,
+            mapToolbarEnabled: false,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(19.0760, 72.8777),
+              zoom: 11.5,
             ),
-          ],
-        ),
-        body: Stack(
-          alignment: Alignment.center,
-          children: [
-            GoogleMap(
-              mapType: MapType.normal,
-              myLocationEnabled: true,
-              zoomControlsEnabled: true,
-              mapToolbarEnabled: false,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(19.0760, 72.8777),
-                zoom: 11.5,
-              ),
-              onMapCreated: (GoogleMapController controller) {
-                mapController.complete(controller);
-              },
-              polylines: polyLines,
-              markers: markers,
-              // Marker(
-              //   infoWindow: InfoWindow(title: 'Your location'),
-              //   markerId: MarkerId('Operator'),
-              //   position: LatLng(op_lat, op_lng),
-              //   icon: BitmapDescriptor.defaultMarkerWithHue(
-              //       BitmapDescriptor.hueGreen),
-              //   onTap: () async {},
-              // ),
-              // Marker(
-              //   infoWindow: InfoWindow(title: 'Destination'),
-              //   markerId: MarkerId('User'),
-              //   position: LatLng(u_lat, u_lng),
-              //   icon: BitmapDescriptor.defaultMarkerWithHue(
-              //       BitmapDescriptor.hueRed),
-              //   onTap: () async {},
-              // )
-            ),
-            if (duration != null)
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 6.0,
-                    horizontal: 12.0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF23F44),
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        offset: Offset(0, 2),
-                        blurRadius: 50.0,
-                      )
-                    ],
-                  ),
-                  child: Text(
-                    "${distance.toStringAsFixed(2)} KM, ${duration.toStringAsFixed(2)} Mins",
-                    style: const TextStyle(
-                        fontSize: 18.0,
-                        color: Colors.black,
-                        fontFamily: 'Poppins'),
-                  ),
+            onMapCreated: (GoogleMapController controller) {
+              mapController.complete(controller);
+            },
+            polylines: polyLines,
+            markers: markers,
+            // Marker(
+            //   infoWindow: InfoWindow(title: 'Your location'),
+            //   markerId: MarkerId('Operator'),
+            //   position: LatLng(op_lat, op_lng),
+            //   icon: BitmapDescriptor.defaultMarkerWithHue(
+            //       BitmapDescriptor.hueGreen),
+            //   onTap: () async {},
+            // ),
+            // Marker(
+            //   infoWindow: InfoWindow(title: 'Destination'),
+            //   markerId: MarkerId('User'),
+            //   position: LatLng(u_lat, u_lng),
+            //   icon: BitmapDescriptor.defaultMarkerWithHue(
+            //       BitmapDescriptor.hueRed),
+            //   onTap: () async {},
+            // )
+          ),
+          if (duration != null)
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 6.0,
+                  horizontal: 12.0,
                 ),
-              )
-          ],
-        ),
+                decoration: BoxDecoration(
+                  color: Color(0xFFF23F44),
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      offset: Offset(0, 2),
+                      blurRadius: 50.0,
+                    )
+                  ],
+                ),
+                child: Text(
+                  "${distance.toStringAsFixed(2)} KM, ${duration.toStringAsFixed(2)} Mins",
+                  style: const TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.black,
+                      fontFamily: 'Poppins'),
+                ),
+              ),
+            )
+        ],
       ),
     );
   }
