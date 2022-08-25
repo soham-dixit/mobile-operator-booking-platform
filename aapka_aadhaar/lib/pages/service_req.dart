@@ -143,7 +143,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
             child: CupertinoActivityIndicator(),
           );
         });
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => BookSlots(),
@@ -160,7 +160,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
             child: CupertinoActivityIndicator(),
           );
         });
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => BookSlots(),
@@ -181,7 +181,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
   }
 
   navigate() {
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => BookSlots(),

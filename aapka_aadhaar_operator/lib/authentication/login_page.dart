@@ -36,9 +36,10 @@ class _OperatorLoginState extends State<OperatorLogin> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
       dynamic keys_list = databaseData['operators'].keys.toList();
-      
+
       for (int i = 0; i < keys_list.length; i++) {
-        if (databaseData['operators'][keys_list[i]].containsValue(phoneNumber)) {
+        if (databaseData['operators'][keys_list[i]]
+            .containsValue(phoneNumber)) {
           phone_exists = true;
         }
       }
@@ -268,7 +269,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                         ),
                         // GestureDetector(
                         //   onTap: () {
-                        //     Navigator.of(context).pushReplacement(
+                        //     Navigator.of(context).push(
                         //         MaterialPageRoute(
                         //             builder: ((context) => HomePage())));
                         //   },

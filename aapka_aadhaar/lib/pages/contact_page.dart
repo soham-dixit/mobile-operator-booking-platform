@@ -88,7 +88,7 @@ class _ContactPageState extends State<ContactPage> {
           ),
           ElevatedButton.icon(
             onPressed: () {
-              Navigator.pushReplacement(context,
+              Navigator.push(context,
                   MaterialPageRoute(builder: (context) => FeedbackForm()));
             },
             label: Text('Feedback | Suggestion | Complaint'),

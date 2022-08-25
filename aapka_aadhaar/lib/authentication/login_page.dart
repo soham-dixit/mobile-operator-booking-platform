@@ -18,7 +18,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final mobileValidator = MultiValidator([
     RequiredValidator(errorText: 'Please enter a mobile number!!'),
-    PatternValidator(r'^[6-9]\d{9}$', errorText: 'Please Enter a valid 10 digit Mobile Number')
+    PatternValidator(r'^[6-9]\d{9}$',
+        errorText: 'Please Enter a valid 10 digit Mobile Number')
   ]);
 
   void navigateToRegister() {
@@ -141,52 +142,52 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: [
                         TextFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          keyboardType: TextInputType.phone,
-                          maxLength: 10,
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          cursorColor: Colors.black,
-                          controller: phone,
-                          decoration: InputDecoration(
-                            label: Text('Mobile'),
-                            labelStyle: TextStyle(
-                              color: Colors.grey.shade700,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            keyboardType: TextInputType.phone,
+                            maxLength: 10,
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                            errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            prefix: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              child: Text(
-                                '(+91)',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                            cursorColor: Colors.black,
+                            controller: phone,
+                            decoration: InputDecoration(
+                              label: Text('Mobile'),
+                              labelStyle: TextStyle(
+                                color: Colors.grey.shade700,
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(10)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
+                              prefix: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(
+                                  '(+91)',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
+                              // suffixIcon: Icon(
+                              //   Icons.check_circle,
+                              //   color: Colors.green,
+                              //   size: 32,
+                              // ),
                             ),
-                            // suffixIcon: Icon(
-                            //   Icons.check_circle,
-                            //   color: Colors.green,
-                            //   size: 32,
-                            // ),
-                          ),
-                          validator: mobileValidator
-                        ),
+                            validator: mobileValidator),
                         SizedBox(
                           height: 22,
                         ),
@@ -276,7 +277,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         // GestureDetector(
                         //   onTap: () {
-                        //     Navigator.of(context).pushReplacement(
+                        //     Navigator.of(context).push(
                         //         MaterialPageRoute(
                         //             builder: ((context) => HomePage())));
                         //   },

@@ -218,7 +218,7 @@ class _BookingDetailsState extends State<BookingDetails> {
             child: CupertinoActivityIndicator(),
           );
         });
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => HomePage(),
@@ -344,7 +344,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                   );
                 });
             Future.delayed(Duration(seconds: 1), () {
-              Navigator.pushReplacement(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => FeedbackForm(),

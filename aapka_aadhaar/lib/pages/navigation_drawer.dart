@@ -52,7 +52,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           );
         });
     Future.delayed(Duration(seconds: 1), () {
-      Navigator.pushReplacement(
+      Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ContactPage(),
@@ -70,7 +70,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           );
         });
     Future.delayed(Duration(seconds: 1), () {
-      Navigator.pushReplacement(
+      Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => PressReleases(),
@@ -88,7 +88,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           );
         });
     Future.delayed(Duration(seconds: 1), () {
-      Navigator.pushReplacement(
+      Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => PreviousBookings(),
@@ -110,8 +110,8 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('uid-user');
       print("logged out");
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginPage()));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => LoginPage()));
     });
   }
 
@@ -172,7 +172,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                                     ? AssetImage('assets/logo/profile.png')
                                         as ImageProvider
                                     : FileImage(File(path.toString())),
-                                
                                 radius: 45,
                               ),
                               SizedBox(
