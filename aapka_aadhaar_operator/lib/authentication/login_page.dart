@@ -7,6 +7,7 @@ import 'package:aapka_aadhaar_operator/services/otp_verification.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 // import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 
 class OperatorLogin extends StatefulWidget {
@@ -25,6 +26,12 @@ class _OperatorLoginState extends State<OperatorLogin> {
       ),
     );
   }
+
+  final mobileValidator = MultiValidator([
+    RequiredValidator(errorText: 'Please enter a mobile number!!'),
+    PatternValidator(r'^[6-9]\d{9}$',
+        errorText: 'Please Enter a valid 10 digit Mobile Number')
+  ]);
 
   OTPVerification otpVerification = OTPVerification();
   TextEditingController phone = TextEditingController();
@@ -125,7 +132,8 @@ class _OperatorLoginState extends State<OperatorLogin> {
                     child: Column(
                       children: [
                         TextFormField(
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.phone,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           maxLength: 10,
                           style: const TextStyle(
                             fontFamily: 'Poppins',
@@ -168,16 +176,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                             //   size: 32,
                             // ),
                           ),
-                          validator: (value) {
-                            try {
-                              if (value!.isEmpty ||
-                                  !RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
-                                return 'Please Enter a valid 10 digit Mobile Number';
-                              } else {
-                                return null;
-                              }
-                            } catch (e) {}
-                          },
+                          validator: mobileValidator,
                         ),
                         const SizedBox(
                           height: 22,

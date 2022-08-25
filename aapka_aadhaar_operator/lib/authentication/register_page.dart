@@ -5,6 +5,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class OperatorRegister extends StatefulWidget {
   const OperatorRegister({Key? key}) : super(key: key);
@@ -34,6 +35,27 @@ class _OperatorRegisterState extends State<OperatorRegister> {
   OTPVerification otpVerification = OTPVerification();
 
   final formKey = GlobalKey<FormState>();
+
+  final nameValidator = MultiValidator([
+    PatternValidator(r'^[a-zA-Z ]*$',
+        errorText: 'Please Enter a valid Full Name'),
+    RequiredValidator(errorText: 'Please Enter a valid Full Name')
+  ]);
+
+  final emailValidator = MultiValidator([
+    EmailValidator(errorText: 'Please Enter a valid Email ID'),
+    RequiredValidator(errorText: 'Please Enter a valid Email ID')
+  ]);
+
+  final mobileValidator = MultiValidator([
+    RequiredValidator(errorText: 'Please enter a mobile number!!'),
+    PatternValidator(r'^[6-9]\d{9}$',
+        errorText: 'Please Enter a valid 10 digit Mobile Number')
+  ]);
+
+  final genderValidator = MultiValidator([
+    RequiredValidator(errorText: 'Please Select a Gender!!'),
+  ]);
 
   // saveUserInfo() async {
   //   showDialog(
@@ -186,21 +208,13 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                         controller: _nameController,
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.name,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         style: const TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        validator: (value) {
-                          try {
-                            if (value!.isEmpty ||
-                                !RegExp(r'^[a-zA-Z ]*$').hasMatch(value)) {
-                              return 'Please enter a valid Full Name';
-                            } else {
-                              return null;
-                            }
-                          } catch (e) {}
-                        },
+                        validator: nameValidator,
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                           label: Text('Full Name'),
@@ -244,22 +258,13 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                         controller: _emailController,
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.emailAddress,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         style: const TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        validator: (value) {
-                          try {
-                            if (value!.isEmpty ||
-                                !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                    .hasMatch(value)) {
-                              return 'Please enter a valid Email ID';
-                            } else {
-                              return null;
-                            }
-                          } catch (e) {}
-                        },
+                        validator: emailValidator,
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                           label: Text('Email'),
@@ -302,23 +307,15 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                       TextFormField(
                         textInputAction: TextInputAction.done,
                         controller: _phoneController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.phone,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         maxLength: 10,
                         style: const TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        validator: (value) {
-                          try {
-                            if (value!.isEmpty ||
-                                !RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
-                              return 'Please enter a valid Mobile Number';
-                            } else {
-                              return null;
-                            }
-                          } catch (e) {}
-                        },
+                        validator: mobileValidator,
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                           errorBorder: OutlineInputBorder(
@@ -414,11 +411,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
                                   ),
                                 ))
                             .toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return '\t\t\t\t\t\t\tPlease select Gender';
-                          }
-                        },
+                        validator: genderValidator,
                         onChanged: (value) {
                           //Do something when changing the item if you want.
                           selectedValue = value.toString();
