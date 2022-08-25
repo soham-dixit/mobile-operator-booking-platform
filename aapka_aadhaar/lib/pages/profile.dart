@@ -167,7 +167,7 @@ class _ProfileState extends State<Profile> {
           final User user = await auth.currentUser!;
           final uid = user.uid;
           databaseReference.child('users').child(uid).update({
-            'phoneNumber': userEmail,
+            'phoneNumber': userPhone,
           });
           Navigator.pop(context);
           final snackBar = SnackBar(
