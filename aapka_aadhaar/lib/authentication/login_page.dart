@@ -201,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                                       ? otpVerification
                                           .verifyPhone(phone.text)
                                           .whenComplete(() {
-                                          Navigator.of(context).push(
+                                          Navigator.of(context).pushReplacement(
                                             MaterialPageRoute(
                                               builder: (context) => Otp(),
                                               settings:

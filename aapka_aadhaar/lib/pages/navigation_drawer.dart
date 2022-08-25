@@ -52,7 +52,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           );
         });
     Future.delayed(Duration(seconds: 1), () {
-      Navigator.push(
+      Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => ContactPage(),
@@ -70,7 +70,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           );
         });
     Future.delayed(Duration(seconds: 1), () {
-      Navigator.push(
+      Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => PressReleases(),
@@ -88,7 +88,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           );
         });
     Future.delayed(Duration(seconds: 1), () {
-      Navigator.push(
+      Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => PreviousBookings(),
@@ -110,6 +110,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('uid-user');
       print("logged out");
+      while (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => LoginPage()));
     });

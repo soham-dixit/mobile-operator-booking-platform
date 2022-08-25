@@ -322,7 +322,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     : otpVerification
                                         .verifyPhone(_phoneController.text)
                                         .whenComplete(() {
-                                        Navigator.of(context).push(
+                                        Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                               builder: (context) => Otp(),
                                               settings: RouteSettings(
