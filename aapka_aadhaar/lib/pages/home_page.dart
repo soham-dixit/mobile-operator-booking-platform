@@ -250,7 +250,9 @@ class _HomePageState extends State<HomePage> {
 
       name = databaseData['operators'][key]['fullname'];
       operatorRating = databaseData['operators'][key]['avgRating'] ?? 0;
-      profileUrl = databaseData['operators'][key]['profileImage'];
+      if(databaseData['operators'][key]['profileImage']!=null){
+        profileUrl= databaseData['operators'][key]['profileImage'];
+      }
       print('profile url $profileUrl');
 
       if (slotData[keys_list[0]].containsValue(false)) {
