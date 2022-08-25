@@ -4,6 +4,7 @@ import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:aapka_aadhaar/pages/about_us.dart';
 import 'package:aapka_aadhaar/pages/booking_details.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
+import 'package:aapka_aadhaar/pages/intro_carousel.dart';
 import 'package:aapka_aadhaar/pages/press-releases.dart';
 import 'package:aapka_aadhaar/pages/contact_page.dart';
 import 'package:aapka_aadhaar/pages/previous_bookings.dart';
@@ -282,6 +283,17 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               icon: Icons.chat,
               onTap: () {
                 pressReleaseRedirect(context);
+              },
+            ),
+            SizedBox(
+              height: 11,
+            ),
+            buildMenuItem(
+              text: 'Carousel',
+              icon: Icons.chat,
+              onTap: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => IntroCarousel()));
               },
             ),
             SizedBox(
