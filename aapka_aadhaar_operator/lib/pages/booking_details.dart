@@ -70,6 +70,9 @@ class _BookingDetailsState extends State<BookingDetails> {
     final serviceOtp = i > 3
         ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['otp']
         : databaseData['operators'][uid]['slots'][date][slot[i]]['otp'];
+    final mode = i > 3
+        ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['mode']
+        : databaseData['operators'][uid]['slots'][date][slot[i]]['mode'];
 
     if (service == 'update') {
       final aadhaar = i > 3
@@ -78,7 +81,7 @@ class _BookingDetailsState extends State<BookingDetails> {
           : databaseData['operators'][uid]['slots'][date][slot[i]]
               ['aadhaar_num'];
       list.addAll(
-          [name, phone, address, service, i, date, serviceOtp, aadhaar]);
+          [name, phone, address, service, i, date, serviceOtp, aadhaar, mode]);
       final pref = await SharedPreferences.getInstance();
       pref.setString('date', date);
       i > 3
@@ -510,6 +513,36 @@ class _BookingDetailsState extends State<BookingDetails> {
                               ),
                               Text(
                                 snapshot.data[6].toString(),
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFFF23F44)),
+                              ),
+                              SizedBox(
+                                height: 90,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Mode of Payment ',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                snapshot.data[8].toString(),
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontSize: 16,

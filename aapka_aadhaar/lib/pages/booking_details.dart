@@ -23,6 +23,7 @@ class _BookingDetailsState extends State<BookingDetails> {
   int currentRating = 0;
   final list = [];
   String opName = '';
+  String mode = '';
   String opPhone = '';
   String purpose = '';
   late int serviceOtp;
@@ -168,6 +169,9 @@ class _BookingDetailsState extends State<BookingDetails> {
     final service = i > 3
         ? databaseData['operators'][key]['slots'][date][slot[i - 1]]['service']
         : databaseData['operators'][key]['slots'][date][slot[i]]['service'];
+    mode = i > 3
+        ? databaseData['operators'][key]['slots'][date][slot[i - 1]]['mode']
+        : databaseData['operators'][key]['slots'][date][slot[i]]['mode'];
     if (service == 'update') {
       final aadhaar = i > 3
           ? databaseData['operators'][key]['slots'][date][slot[i - 1]]
@@ -926,6 +930,21 @@ class _BookingDetailsState extends State<BookingDetails> {
                           padding: const EdgeInsets.all(5.0),
                           child: TextFormField(
                             initialValue: 'Contact No. of operator: ' + opPhone,
+                            maxLines: null,
+                            readOnly: true,
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: TextFormField(
+                            initialValue: 'Mode of payment: ',
                             maxLines: null,
                             readOnly: true,
                             style: TextStyle(

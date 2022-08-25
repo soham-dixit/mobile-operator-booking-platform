@@ -23,8 +23,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
 
   String? _value = 'Cash On Service';
 
-  final updationFormKey = GlobalKey<FormState>();
-  final enrollmentFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> updationFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> enrollmentFormKey = GlobalKey<FormState>();
 
   final nameValidator = MultiValidator([
     PatternValidator(r'^[a-zA-Z ]*$',
@@ -101,7 +101,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'status': 'pending',
               'ratingSubmitted': false,
               'user': uid,
-              'args': [i, day]
+              'args': [i, day],
+              'mode': 'online'
             })
           : databaseReference
               .child('operators')
@@ -120,7 +121,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'status': 'pending',
               'ratingSubmitted': false,
               'user': uid,
-              'args': [i, day]
+              'args': [i, day],
+              'mode': 'online'
             });
     });
     databaseReference
@@ -253,6 +255,70 @@ class _ServiceRequestState extends State<ServiceRequest> {
 
   void handlerExternalWallet(ExternalWalletResponse response) {
     print('external wallet');
+  }
+
+  cosBook(int i, String day, String uORe) async {
+    var location = await currentLocation.getLocation();
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    var rng = new Random();
+    var serviceOtp = rng.nextInt(9000) + 1000;
+
+    setState(() {
+      uORe == 'update'
+          ? databaseReference
+              .child('operators')
+              .child(key.toString())
+              .child('slots')
+              .child(day)
+              .child(
+                i > 3 ? slot[i - 1] : slot[i],
+              )
+              .update({
+              'name': name.text,
+              'address': add.text,
+              'aadhaar_num': a_num.text.replaceRange(0, 8, 'XXXXXXXX'),
+              'phone': phone.text,
+              'req': selectedValues,
+              'service': uORe,
+              'otp': serviceOtp,
+              'status': 'pending',
+              'ratingSubmitted': false,
+              'user': uid,
+              'args': [i, day],
+              'mode': 'cos'
+            })
+          : databaseReference
+              .child('operators')
+              .child(key.toString())
+              .child('slots')
+              .child(day)
+              .child(
+                i > 3 ? slot[i - 1] : slot[i],
+              )
+              .update({
+              'name': _name.text,
+              'address': _address.text,
+              'phone': _phone.text,
+              'service': uORe,
+              'otp': serviceOtp,
+              'status': 'pending',
+              'ratingSubmitted': false,
+              'user': uid,
+              'args': [i, day],
+              'mode': 'cos'
+            });
+    });
+    databaseReference
+        .child('users')
+        .child(uid)
+        .child('location')
+        .set({"latitude": location.latitude, "longitude": location.longitude});
+    buildShowDialog(context);
   }
 
   showError() {
@@ -635,7 +701,9 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                   borderRadius: BorderRadius.circular(10)),
                             ),
                           ),
-                          SizedBox(height: 22,),
+                          SizedBox(
+                            height: 22,
+                          ),
                           Column(
                             // mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -723,7 +791,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     if (updationFormKey.currentState!
                                         .validate()) {
                                       if (selectedValues.isNotEmpty) {
-                                        if(_value == 'Online Payment') {
+                                        if (_value == 'Online Payment') {
                                           final pref = await SharedPreferences
                                               .getInstance();
                                           pref.setString(
@@ -731,8 +799,9 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                           pref.setString('arg1', args[1]);
                                           pref.setString('arg2', 'update');
                                           openCheckout();
-                                        } else if(_value == 'Cash On Service') {
-                                          
+                                        } else if (_value ==
+                                            'Cash On Service') {
+                                          cosBook(args[0], args[1], 'update');
                                         }
                                       } else {
                                         showError();
@@ -987,13 +1056,17 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     // });
                                     if (enrollmentFormKey.currentState!
                                         .validate()) {
-                                      final pref =
-                                          await SharedPreferences.getInstance();
-                                      pref.setString(
-                                          'arg0', args[0].toString());
-                                      pref.setString('arg1', args[1]);
-                                      pref.setString('arg2', 'enrollment');
-                                      openCheckout();
+                                      if (_value == 'Online Payment') {
+                                        final pref = await SharedPreferences
+                                            .getInstance();
+                                        pref.setString(
+                                            'arg0', args[0].toString());
+                                        pref.setString('arg1', args[1]);
+                                        pref.setString('arg2', 'enrollment');
+                                        openCheckout();
+                                      } else if (_value == 'Cash On Service') {
+                                        cosBook(args[0], args[1], 'enrollment');
+                                      }
                                     }
                                   },
                                   style: ButtonStyle(
