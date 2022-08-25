@@ -100,137 +100,142 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: NavigationDrawer(),
-        appBar: AppBar(
-          backgroundColor: Color(0xFFF23F44),
-          foregroundColor: Color(0xFFFFFFFF),
-          title: const Text(
-            'Aapka Aadhaar Operator',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              // fontSize: 16
-            ),
-          ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-              child: CircleAvatar(
-                backgroundImage: AssetImage('assets/logo/logo.png'),
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+          drawer: NavigationDrawer(),
+          appBar: AppBar(
+            backgroundColor: Color(0xFFF23F44),
+            foregroundColor: Color(0xFFFFFFFF),
+            title: const Text(
+              'Aapka Aadhaar Operator',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                // fontSize: 16
               ),
             ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: operatorName == ''
-              ? Container(
-                  padding: EdgeInsets.only(top: 300),
-                  child: Center(
-                    child: CupertinoActivityIndicator(),
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 40, 30, 50),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Center(
-                        child: InkWell(
-                          child: CircleAvatar(
-                            backgroundImage: url != null
-                                ? NetworkImage(url)
-                                : AssetImage('assets/logo/profile.png')
-                                    as ImageProvider,
-                            // : AssetImage('assets/profile.png')
-                            //     as ImageProvider  ,
-                            // backgroundImage: AssetImage('assets/profile.png'),
-                            backgroundColor: Color(0xFFF23F44),
-                            radius: 80,
-                          ),
-                          onTap: () {
-                            takePhoto(ImageSource.gallery);
-                          },
-                        ),
-                        // child: InkWell(
-                        //   onTap: () {},
-                        // )),
-                      ),
-                      Divider(
-                        height: 60,
-                        color: Colors.grey.shade400,
-                        thickness: 1,
-                      ),
-                      Text(
-                        'NAME',
-                        style: TextStyle(
-                            color: Colors.black,
-                            letterSpacing: 2,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      AutoSizeText(
-                        operatorName,
-                        style: TextStyle(
-                            color: Color(0xFFF23F44),
-                            letterSpacing: 2,
-                            fontSize: 18),
-                        maxLines: 1,
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Text(
-                        'EMAIL ID',
-                        style: TextStyle(
-                            color: Colors.black,
-                            letterSpacing: 2,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      AutoSizeText(
-                        operatorEmail,
-                        style: TextStyle(
-                            color: Color(0xFFF23F44),
-                            letterSpacing: 2,
-                            fontSize: 18),
-                        maxLines: 1,
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Text(
-                        'MOBILE NUMBER',
-                        style: TextStyle(
-                            color: Colors.black,
-                            letterSpacing: 2,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      AutoSizeText(
-                        operatorPhone,
-                        style: TextStyle(
-                            color: Color(0xFFF23F44),
-                            letterSpacing: 2,
-                            fontSize: 18),
-                        maxLines: 1,
-                      ),
-                      Divider(
-                        height: 40,
-                        color: Colors.grey[400],
-                        thickness: 1,
-                      ),
-                    ],
-                  ),
+            actions: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                child: CircleAvatar(
+                  backgroundImage: AssetImage('assets/logo/logo.png'),
                 ),
-        ));
+              ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: operatorName == ''
+                ? Container(
+                    padding: EdgeInsets.only(top: 300),
+                    child: Center(
+                      child: CupertinoActivityIndicator(),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 40, 30, 50),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Center(
+                          child: InkWell(
+                            child: CircleAvatar(
+                              backgroundImage: url != null
+                                  ? NetworkImage(url)
+                                  : AssetImage('assets/logo/profile.png')
+                                      as ImageProvider,
+                              // : AssetImage('assets/profile.png')
+                              //     as ImageProvider  ,
+                              // backgroundImage: AssetImage('assets/profile.png'),
+                              backgroundColor: Color(0xFFF23F44),
+                              radius: 80,
+                            ),
+                            onTap: () {
+                              takePhoto(ImageSource.gallery);
+                            },
+                          ),
+                          // child: InkWell(
+                          //   onTap: () {},
+                          // )),
+                        ),
+                        Divider(
+                          height: 60,
+                          color: Colors.grey.shade400,
+                          thickness: 1,
+                        ),
+                        Text(
+                          'NAME',
+                          style: TextStyle(
+                              color: Colors.black,
+                              letterSpacing: 2,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        AutoSizeText(
+                          operatorName,
+                          style: TextStyle(
+                              color: Color(0xFFF23F44),
+                              letterSpacing: 2,
+                              fontSize: 18),
+                          maxLines: 1,
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Text(
+                          'EMAIL ID',
+                          style: TextStyle(
+                              color: Colors.black,
+                              letterSpacing: 2,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        AutoSizeText(
+                          operatorEmail,
+                          style: TextStyle(
+                              color: Color(0xFFF23F44),
+                              letterSpacing: 2,
+                              fontSize: 18),
+                          maxLines: 1,
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Text(
+                          'MOBILE NUMBER',
+                          style: TextStyle(
+                              color: Colors.black,
+                              letterSpacing: 2,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        AutoSizeText(
+                          operatorPhone,
+                          style: TextStyle(
+                              color: Color(0xFFF23F44),
+                              letterSpacing: 2,
+                              fontSize: 18),
+                          maxLines: 1,
+                        ),
+                        Divider(
+                          height: 40,
+                          color: Colors.grey[400],
+                          thickness: 1,
+                        ),
+                      ],
+                    ),
+                  ),
+          )),
+    );
   }
 }
