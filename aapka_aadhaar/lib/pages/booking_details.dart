@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar/pages/book_slots.dart';
+import 'package:aapka_aadhaar/pages/book_slots_reschedule.dart';
 import 'package:aapka_aadhaar/pages/feedback_form.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:aapka_aadhaar/pages/navigation.dart';
@@ -28,6 +29,7 @@ class _BookingDetailsState extends State<BookingDetails> {
   late int serviceOtp;
   String status = '';
   int count = 1;
+  String? cancelledTime;
   // late Future data;
   List slot = [
     '10_11',
@@ -58,6 +60,32 @@ class _BookingDetailsState extends State<BookingDetails> {
     '4:00 - 5:00 PM',
     '5:00 - 6:00 PM'
   ];
+
+  bool invalid_booking = false;
+
+  List timingsCheck = [11, 12, 13, 15, 16, 17, 18];
+
+  checkTime(int slot) {
+    final _currentDate = DateTime.now();
+    print('chup ${_currentDate.add(Duration(hours: 11)).hour}');
+    for (int i = 0; i < timingsCheck.length; i++) {
+      if (_currentDate.hour > timingsCheck[slot]) {
+        invalid_booking = true;
+      }
+    }
+  }
+
+  showInvalidTimeSnack() async {
+    final SnackBar snackBar = SnackBar(
+      content: Text('Too late to cancel!',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 16,
+          )),
+      duration: Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   getData(int i, String date) async {
     list.clear();
@@ -184,29 +212,86 @@ class _BookingDetailsState extends State<BookingDetails> {
     }
   }
 
-  void cancelBooking(BuildContext context) async {
+  void cancelBooking(BuildContext context, String cancelOrRes) async {
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     final pref = await SharedPreferences.getInstance();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
     final key = pref.getString('operator-key');
+    var data;
     if (cancelBookingSlot > 3) {
-      databaseReference
-          .child('operators')
-          .child(key!)
-          .child('slots')
-          .child(cancelBookingDate)
-          .update({slot[cancelBookingSlot - 1]: false});
-      redirectHomePage(context);
+      if (cancelOrRes == 'cancel') {
+        databaseReference
+            .child('operators')
+            .child(key!)
+            .child('slots')
+            .child(cancelBookingDate)
+            .update({slot[cancelBookingSlot - 1]: false});
+      } else {
+        data = databaseData['operators'][key]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot - 1]];
+        print('Data $data');
+        databaseReference
+            .child('operators')
+            .child(key!)
+            .child('slots')
+            .child(cancelBookingDate)
+            .update({slot[cancelBookingSlot - 1]: false});
+      }
+
+      // redirectHomePage(context);
+      cancelledTime = timingsForPB[cancelBookingSlot - 1].toString();
     } else {
-      databaseReference
-          .child('operators')
-          .child(key!)
-          .child('slots')
-          .child(cancelBookingDate)
-          .update({slot[cancelBookingSlot]: false});
-      redirectHomePage(context);
+      if (cancelOrRes == 'cancel') {
+        databaseReference
+            .child('operators')
+            .child(key!)
+            .child('slots')
+            .child(cancelBookingDate)
+            .update({slot[cancelBookingSlot]: false});
+      } else {
+        data = databaseData['operators'][key]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot]];
+        print('Data $data');
+        databaseReference
+            .child('operators')
+            .child(key!)
+            .child('slots')
+            .child(cancelBookingDate)
+            .update({slot[cancelBookingSlot]: false});
+      }
+      // var data = databaseData['operators'][key]['slots'][cancelBookingDate]
+      //     [slot[cancelBookingSlot]];
+      // print('Data $data');
+
+      cancelledTime = timingsForPB[cancelBookingSlot].toString();
+      // redirectHomePage(context);
     }
+    cancelOrRes == 'cancel'
+        ? redirectHomePage(context)
+        : redirectBookSlots(context, data);
+  }
+
+  redirectBookSlots(BuildContext context, var data) {
+    final SnackBar snackBar = SnackBar(
+      content: Text('Your booking for $cancelledTime has been cancelled.',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 16,
+          )),
+      duration: Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookSlotsReschedule(),
+        settings: RouteSettings(arguments: data),
+      ),
+    );
   }
 
   redirectHomePage(BuildContext context) {
@@ -937,6 +1022,14 @@ class _BookingDetailsState extends State<BookingDetails> {
                         SizedBox(
                           height: 10,
                         ),
+                        // Text(
+                        //   'Note: Reschedule/Cancellation would be invalid after $cancelBookingSlot',
+                        //   textAlign: TextAlign.left,
+                        //   style: TextStyle(
+                        //       fontFamily: 'Poppins',
+                        //       fontSize: 16,
+                        //       fontWeight: FontWeight.bold),
+                        // ),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -1084,24 +1177,36 @@ class _BookingDetailsState extends State<BookingDetails> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              Widget noButton = TextButton(
-                                child: Text("No"),
+                              Widget noButton = ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  checkTime(index);
+                                  invalid_booking
+                                      ? showInvalidTimeSnack()
+                                      : cancelBooking(context, "res");
+
+                                  // cancelBooking(context, "res");
                                 },
+                                child: Text('Reschedule'),
+                                style: ElevatedButton.styleFrom(
+                                    shape: StadiumBorder(),
+                                    primary: Color(0xFFFFFFFF),
+                                    onPrimary: Color(0xFF000000)),
                               );
                               Widget yesButton = ElevatedButton(
                                 onPressed: () {
-                                  cancelBooking(context);
+                                  checkTime(index);
+                                  invalid_booking
+                                      ? showInvalidTimeSnack()
+                                      : cancelBooking(context, "cancel");
                                 },
-                                child: Text('Yes'),
+                                child: Text('Cancel'),
                                 style: ElevatedButton.styleFrom(
                                     shape: StadiumBorder(),
                                     primary: Color(0xFFF23F44)),
                               );
                               AlertDialog alert = AlertDialog(
                                 title: const Text(
-                                    "Are you sure you want cancel the booking?",
+                                    "Would you like to cancel or reschedule the booking?",
                                     style: TextStyle(
                                         fontFamily: 'Poppins', fontSize: 18)),
                                 actions: [
@@ -1131,7 +1236,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                             child: const Padding(
                               padding: EdgeInsets.all(14.0),
                               child: Text(
-                                'Cancel Booking',
+                                'Cancel / Reschedule Booking',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Poppins',

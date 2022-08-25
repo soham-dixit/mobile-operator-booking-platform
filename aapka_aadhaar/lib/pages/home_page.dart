@@ -470,6 +470,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  checkTime(){
+    if(DateTime.now().hour > 12){
+      return 'pm';
+    }else{
+      return 'am';
+    }
+  }
+
   @override
   void dispose() {
     timer?.cancel();
