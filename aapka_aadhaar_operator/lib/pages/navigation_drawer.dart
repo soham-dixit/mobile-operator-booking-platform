@@ -270,7 +270,7 @@ contactRedirect(BuildContext context) {
         );
       });
   Future.delayed(Duration(seconds: 1), () {
-    Navigator.push(
+    Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => ContactPage(),
