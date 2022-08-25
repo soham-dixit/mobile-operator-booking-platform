@@ -346,8 +346,8 @@ class _HomePageState extends State<HomePage> {
         print('slot $slotData');
         List keys_list1 = slotData.keys.toList();
         keys_list1.sort((a, b) {
-        return a.compareTo(b);
-      });
+          return a.compareTo(b);
+        });
         print('slot $keys_list1');
         for (int j = 0; j < slot.length; j++) {
           print(
@@ -415,8 +415,8 @@ class _HomePageState extends State<HomePage> {
     Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
     List keys_list1 = slotData.keys.toList();
     keys_list1.sort((a, b) {
-        return a.compareTo(b);
-      });
+      return a.compareTo(b);
+    });
     if (databaseData['operators'] != null) {
       for (int i = 0; i < slot.length; i++) {
         if (databaseData['operators'][key]['slots'][keys_list1[0]][slot[i]] !=
@@ -442,88 +442,93 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     // getLocation();
-    return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     null;
-      //   },
-      //   child: Icon(
-      //     Icons.history,
-      //   ),
-      // ),
-      bottomNavigationBar: showActive
-          ? InkWell(
-              onTap: () async {
-                getArgs().whenComplete(() {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BookingDetails(),
-                        settings: RouteSettings(arguments: [index, day])),
-                  );
-                });
-              },
-              child: Container(
-                width: double.infinity,
-                color: Color(0xFFF23F44),
-                height: 50,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 12),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Check your appointment status here',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 16,
-                            color: Colors.black),
-                      ),
-                      SizedBox(width: 10),
-                      Icon(Icons.navigate_next)
-                    ],
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     null;
+        //   },
+        //   child: Icon(
+        //     Icons.history,
+        //   ),
+        // ),
+        bottomNavigationBar: showActive
+            ? InkWell(
+                onTap: () async {
+                  getArgs().whenComplete(() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BookingDetails(),
+                          settings: RouteSettings(arguments: [index, day])),
+                    );
+                  });
+                },
+                child: Container(
+                  width: double.infinity,
+                  color: Color(0xFFF23F44),
+                  height: 50,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 12),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Check your appointment status here',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                              color: Colors.black),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(Icons.navigate_next)
+                      ],
+                    ),
                   ),
                 ),
+              )
+            : null,
+        drawer: NavigationDrawer(),
+        appBar: AppBar(
+          backgroundColor: Color(0xFFF23F44),
+          foregroundColor: Color(0xFFFFFFFF),
+          title: Text(
+            'Aapka Aadhaar',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              // fontSize: 16
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/logo/logo.png'),
               ),
-            )
-          : null,
-      drawer: NavigationDrawer(),
-      appBar: AppBar(
-        backgroundColor: Color(0xFFF23F44),
-        foregroundColor: Color(0xFFFFFFFF),
-        title: Text(
-          'Aapka Aadhaar',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            // fontSize: 16
-          ),
+            ),
+          ],
         ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-            child: CircleAvatar(
-              backgroundImage: AssetImage('assets/logo/logo.png'),
+        body: Stack(
+          children: [
+            GoogleMap(
+              mapType: MapType.normal,
+              myLocationEnabled: false,
+              zoomControlsEnabled: false,
+              mapToolbarEnabled: false,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(19.0760, 72.8777),
+                zoom: 16.0,
+              ),
+              onMapCreated: (GoogleMapController controller) {
+                _controller = controller;
+              },
+              markers: _markers,
+              circles: _circles,
             ),
-          ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          GoogleMap(
-            mapType: MapType.normal,
-            myLocationEnabled: false,
-            zoomControlsEnabled: false,
-            mapToolbarEnabled: false,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(19.0760, 72.8777),
-              zoom: 16.0,
-            ),
-            onMapCreated: (GoogleMapController controller) {
-              _controller = controller;
-            },
-            markers: _markers,
-            circles: _circles,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

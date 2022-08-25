@@ -13,99 +13,104 @@ class ContactPage extends StatefulWidget {
 class _ContactPageState extends State<ContactPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavigationDrawer(),
-      backgroundColor: Color(0xFFFBF9F6),
-      appBar: AppBar(
-        title: Text(
-          'Contact Us',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            // fontSize: 16
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        drawer: NavigationDrawer(),
+        backgroundColor: Color(0xFFFBF9F6),
+        appBar: AppBar(
+          title: Text(
+            'Contact Us',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              // fontSize: 16
+            ),
           ),
+          backgroundColor: Color(0xFFF23F44),
+          foregroundColor: Colors.white,
+          actions: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/logo/logo.png'),
+              ),
+            ),
+          ],
         ),
-        backgroundColor: Color(0xFFF23F44),
-        foregroundColor: Colors.white,
-        actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-            child: CircleAvatar(
-              backgroundImage: AssetImage('assets/logo/logo.png'),
-            ),
-          ),
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(28.0),
-            child: Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: Icon(
-                      Icons.phone,
-                      color: Colors.black,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(28.0),
+              child: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: Icon(
+                        Icons.phone,
+                        color: Colors.black,
+                      ),
+                      title: Text('Toll Free: 1947'),
+                      onTap: contact,
                     ),
-                    title: Text('Toll Free: 1947'),
-                    onTap: contact,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.link,
-                      color: Colors.black,
+                    ListTile(
+                      leading: Icon(
+                        Icons.link,
+                        color: Colors.black,
+                      ),
+                      title: Text(
+                          'https://uidai.gov.in/contact-support/have-any-questions.html'),
+                      onTap: contactURL,
                     ),
-                    title: Text(
-                        'https://uidai.gov.in/contact-support/have-any-questions.html'),
-                    onTap: contactURL,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.mail_outline_rounded,
-                      color: Colors.black,
+                    ListTile(
+                      leading: Icon(
+                        Icons.mail_outline_rounded,
+                        color: Colors.black,
+                      ),
+                      title: Text('help@uidai.gov.in'),
+                      onTap: sendEmail,
                     ),
-                    title: Text('help@uidai.gov.in'),
-                    onTap: sendEmail,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.location_on,
-                      color: Colors.black,
+                    ListTile(
+                      leading: Icon(
+                        Icons.location_on,
+                        color: Colors.black,
+                      ),
+                      title: Text(
+                          'Government of India Bangla Sahib Rd, Behind Kali Mandir, Gole Market, New Delhi - 110001'),
+                      onTap: () => openMap(28.6300847403869, 77.20806041278784),
                     ),
-                    title: Text(
-                        'Government of India Bangla Sahib Rd, Behind Kali Mandir, Gole Market, New Delhi - 110001'),
-                    onTap: () => openMap(28.6300847403869, 77.20806041278784),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => FeedbackForm()));
-            },
-            label: Text('Feedback | Suggestion | Complaint'),
-            icon: Icon(
-              Icons.gpp_bad,
-            ),
-            style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-              backgroundColor: MaterialStateProperty.all(Color(0xFFF23F44)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.0),
+                  ],
                 ),
               ),
             ),
-          ),
-        ],
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => FeedbackForm()));
+              },
+              label: Text('Feedback | Suggestion | Complaint'),
+              icon: Icon(
+                Icons.gpp_bad,
+              ),
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                backgroundColor: MaterialStateProperty.all(Color(0xFFF23F44)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.0),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

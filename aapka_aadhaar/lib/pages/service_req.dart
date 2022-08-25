@@ -289,654 +289,659 @@ class _ServiceRequestState extends State<ServiceRequest> {
     print('Args : $args');
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-        drawer: NavigationDrawer(),
-        appBar: AppBar(
-          actions: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-              child: CircleAvatar(
-                backgroundImage: AssetImage('assets/logo/logo.png'),
+      child: WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: Scaffold(
+          drawer: NavigationDrawer(),
+          appBar: AppBar(
+            actions: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                child: CircleAvatar(
+                  backgroundImage: AssetImage('assets/logo/logo.png'),
+                ),
+              ),
+            ],
+            title: Text(
+              "Book Appointment",
+              style: TextStyle(fontFamily: 'Poppins'),
+            ),
+            backgroundColor: Color(0xFFF23F44),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'Updation'),
+                Tab(text: 'Enrollment'),
+              ],
+              indicatorColor: Colors.white,
+              indicatorWeight: 3,
+              labelStyle: TextStyle(fontFamily: 'Poppins', fontSize: 16),
+            ),
+          ),
+          body: TabBarView(children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 18,
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(28),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Form(
+                        key: updationFormKey,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: name,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.name,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              validator: nameValidator,
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                label: Text('Full Name'),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade700,
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 22,
+                            ),
+                            TextFormField(
+                              controller: a_num,
+                              maxLength: 12,
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.number,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              validator: aadhaarValidator,
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                label: Text('Aadhaar Number'),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade700,
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 22,
+                            ),
+                            TextFormField(
+                              controller: phone,
+                              maxLength: 10,
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.phone,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              validator: mobileValidator,
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                label: Text('Mobile Number'),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade700,
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 22,
+                            ),
+                            Container(
+                              child: Theme(
+                                data: ThemeData(
+                                    unselectedWidgetColor: Color(0xFFF23F44)),
+                                child: CheckboxListTile(
+                                  title: Text(
+                                    'Address',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  value: checkedValue[0],
+                                  activeColor: Colors.white,
+                                  checkColor: Color(0xFFF23F44),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      checkedValue[0] = value!;
+                                    });
+                                    value!
+                                        ? selectedValues.add('Address')
+                                        : selectedValues.remove('Address');
+                                  },
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Theme(
+                                data: ThemeData(
+                                    unselectedWidgetColor: Color(0xFFF23F44)),
+                                child: CheckboxListTile(
+                                  title: Text(
+                                    'Mobile/Email',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  value: checkedValue[1],
+                                  activeColor: Colors.white,
+                                  checkColor: Color(0xFFF23F44),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      checkedValue[1] = value!;
+                                    });
+                                    value!
+                                        ? selectedValues.add('Mobile/Email')
+                                        : selectedValues.remove('Mobile/Email');
+                                  },
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Theme(
+                                data: ThemeData(
+                                    unselectedWidgetColor: Color(0xFFF23F44)),
+                                child: CheckboxListTile(
+                                  title: Text(
+                                    'Biometric',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  value: checkedValue[2],
+                                  activeColor: Colors.white,
+                                  checkColor: Color(0xFFF23F44),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      checkedValue[2] = value!;
+                                    });
+                                    value!
+                                        ? selectedValues.add('Biometric')
+                                        : selectedValues.remove('Biometric');
+                                  },
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Theme(
+                                data: ThemeData(
+                                    unselectedWidgetColor: Color(0xFFF23F44)),
+                                child: CheckboxListTile(
+                                  title: Text(
+                                    'Date of birth',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  value: checkedValue[3],
+                                  activeColor: Colors.white,
+                                  checkColor: Color(0xFFF23F44),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      checkedValue[3] = value!;
+                                    });
+                                    value!
+                                        ? selectedValues.add('Date of birth')
+                                        : selectedValues.remove('Date of birth');
+                                  },
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Theme(
+                                data: ThemeData(
+                                    unselectedWidgetColor: Color(0xFFF23F44)),
+                                child: CheckboxListTile(
+                                  title: Text(
+                                    'Name',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  value: checkedValue[4],
+                                  activeColor: Colors.white,
+                                  checkColor: Color(0xFFF23F44),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      checkedValue[4] = value!;
+                                    });
+                                    value!
+                                        ? selectedValues.add('Name')
+                                        : selectedValues.remove('Name');
+                                  },
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Theme(
+                                data: ThemeData(
+                                    unselectedWidgetColor: Color(0xFFF23F44)),
+                                child: CheckboxListTile(
+                                  title: Text(
+                                    'Gender',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  value: checkedValue[5],
+                                  activeColor: Colors.white,
+                                  checkColor: Color(0xFFF23F44),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      checkedValue[5] = value!;
+                                    });
+                                    value!
+                                        ? selectedValues.add('Gender')
+                                        : selectedValues.remove('Gender');
+                                  },
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 22,
+                            ),
+                            TextFormField(
+                              controller: add,
+                              maxLength: null,
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.streetAddress,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              validator: addressValidator,
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                label: Text('Address'),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade700,
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 22,
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      cancelAppt(context);
+                                    },
+                                    style: ButtonStyle(
+                                      foregroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.black),
+                                      backgroundColor: MaterialStateProperty.all(
+                                          Color(0xFFFFFFFF)),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(24.0),
+                                        ),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(14.0),
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontFamily: 'Poppins',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      // bookAppointment(args[0], args[1], 'update')
+                                      //     .then((value) {
+                                      //   showSnack();
+                                      // });
+                                      if (updationFormKey.currentState!
+                                          .validate()) {
+                                        if (selectedValues.isNotEmpty) {
+                                          final pref = await SharedPreferences
+                                              .getInstance();
+                                          pref.setString(
+                                              'arg0', args[0].toString());
+                                          pref.setString('arg1', args[1]);
+                                          pref.setString('arg2', 'update');
+                                          openCheckout();
+                                        } else {
+                                          showError();
+                                        }
+                                      }
+                                    },
+                                    style: ButtonStyle(
+                                      foregroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.white),
+                                      backgroundColor: MaterialStateProperty.all(
+                                          Color(0xFFF23F44)),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(24.0),
+                                        ),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(14.0),
+                                      child: Text(
+                                        'Book',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontFamily: 'Poppins',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-          title: Text(
-            "Book Appointment",
-            style: TextStyle(fontFamily: 'Poppins'),
-          ),
-          backgroundColor: Color(0xFFF23F44),
-          bottom: TabBar(
-            tabs: [
-              Tab(text: 'Updation'),
-              Tab(text: 'Enrollment'),
-            ],
-            indicatorColor: Colors.white,
-            indicatorWeight: 3,
-            labelStyle: TextStyle(fontFamily: 'Poppins', fontSize: 16),
-          ),
-        ),
-        body: TabBarView(children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 18,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(28),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 18,
                     ),
-                    child: Form(
-                      key: updationFormKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: name,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.name,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            validator: nameValidator,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              label: Text('Full Name'),
-                              labelStyle: TextStyle(
-                                color: Colors.grey.shade700,
+                    Container(
+                      padding: EdgeInsets.all(28),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Form(
+                        key: enrollmentFormKey,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.name,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              controller: _name,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 22,
-                          ),
-                          TextFormField(
-                            controller: a_num,
-                            maxLength: 12,
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            validator: aadhaarValidator,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              label: Text('Aadhaar Number'),
-                              labelStyle: TextStyle(
-                                color: Colors.grey.shade700,
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 22,
-                          ),
-                          TextFormField(
-                            controller: phone,
-                            maxLength: 10,
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.phone,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            validator: mobileValidator,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              label: Text('Mobile Number'),
-                              labelStyle: TextStyle(
-                                color: Colors.grey.shade700,
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 22,
-                          ),
-                          Container(
-                            child: Theme(
-                              data: ThemeData(
-                                  unselectedWidgetColor: Color(0xFFF23F44)),
-                              child: CheckboxListTile(
-                                title: Text(
-                                  'Address',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14,
-                                  ),
+                              validator: nameValidator,
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                label: Text('Full Name'),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade700,
                                 ),
-                                value: checkedValue[0],
-                                activeColor: Colors.white,
-                                checkColor: Color(0xFFF23F44),
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    checkedValue[0] = value!;
-                                  });
-                                  value!
-                                      ? selectedValues.add('Address')
-                                      : selectedValues.remove('Address');
-                                },
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
                               ),
                             ),
-                          ),
-                          Container(
-                            child: Theme(
-                              data: ThemeData(
-                                  unselectedWidgetColor: Color(0xFFF23F44)),
-                              child: CheckboxListTile(
-                                title: Text(
-                                  'Mobile/Email',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14,
-                                  ),
+                            SizedBox(
+                              height: 22,
+                            ),
+                            TextFormField(
+                              controller: _phone,
+                              maxLength: 10,
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.phone,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              validator: mobileValidator,
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                label: Text('Mobile Number'),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade700,
                                 ),
-                                value: checkedValue[1],
-                                activeColor: Colors.white,
-                                checkColor: Color(0xFFF23F44),
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    checkedValue[1] = value!;
-                                  });
-                                  value!
-                                      ? selectedValues.add('Mobile/Email')
-                                      : selectedValues.remove('Mobile/Email');
-                                },
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
                               ),
                             ),
-                          ),
-                          Container(
-                            child: Theme(
-                              data: ThemeData(
-                                  unselectedWidgetColor: Color(0xFFF23F44)),
-                              child: CheckboxListTile(
-                                title: Text(
-                                  'Biometric',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14,
-                                  ),
+                            SizedBox(
+                              height: 22,
+                            ),
+                            TextFormField(
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.streetAddress,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              controller: _address,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              validator: addressValidator,
+                              cursorColor: Colors.black,
+                              decoration: InputDecoration(
+                                label: Text('Address'),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade700,
                                 ),
-                                value: checkedValue[2],
-                                activeColor: Colors.white,
-                                checkColor: Color(0xFFF23F44),
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    checkedValue[2] = value!;
-                                  });
-                                  value!
-                                      ? selectedValues.add('Biometric')
-                                      : selectedValues.remove('Biometric');
-                                },
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.red),
+                                    borderRadius: BorderRadius.circular(10)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black12),
+                                    borderRadius: BorderRadius.circular(10)),
                               ),
                             ),
-                          ),
-                          Container(
-                            child: Theme(
-                              data: ThemeData(
-                                  unselectedWidgetColor: Color(0xFFF23F44)),
-                              child: CheckboxListTile(
-                                title: Text(
-                                  'Date of birth',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                value: checkedValue[3],
-                                activeColor: Colors.white,
-                                checkColor: Color(0xFFF23F44),
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    checkedValue[3] = value!;
-                                  });
-                                  value!
-                                      ? selectedValues.add('Date of birth')
-                                      : selectedValues.remove('Date of birth');
-                                },
-                              ),
+                            SizedBox(
+                              height: 22,
                             ),
-                          ),
-                          Container(
-                            child: Theme(
-                              data: ThemeData(
-                                  unselectedWidgetColor: Color(0xFFF23F44)),
-                              child: CheckboxListTile(
-                                title: Text(
-                                  'Name',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                value: checkedValue[4],
-                                activeColor: Colors.white,
-                                checkColor: Color(0xFFF23F44),
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    checkedValue[4] = value!;
-                                  });
-                                  value!
-                                      ? selectedValues.add('Name')
-                                      : selectedValues.remove('Name');
-                                },
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Theme(
-                              data: ThemeData(
-                                  unselectedWidgetColor: Color(0xFFF23F44)),
-                              child: CheckboxListTile(
-                                title: Text(
-                                  'Gender',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                value: checkedValue[5],
-                                activeColor: Colors.white,
-                                checkColor: Color(0xFFF23F44),
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    checkedValue[5] = value!;
-                                  });
-                                  value!
-                                      ? selectedValues.add('Gender')
-                                      : selectedValues.remove('Gender');
-                                },
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 22,
-                          ),
-                          TextFormField(
-                            controller: add,
-                            maxLength: null,
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.streetAddress,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            validator: addressValidator,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              label: Text('Address'),
-                              labelStyle: TextStyle(
-                                color: Colors.grey.shade700,
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 22,
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    cancelAppt(context);
-                                  },
-                                  style: ButtonStyle(
-                                    foregroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.black),
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFFFFFFF)),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(24.0),
+                            SizedBox(
+                              width: double.infinity,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      cancelAppt(context);
+                                    },
+                                    style: ButtonStyle(
+                                      foregroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.black),
+                                      backgroundColor: MaterialStateProperty.all(
+                                          Color(0xFFFFFFFF)),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(24.0),
+                                        ),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(14.0),
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontFamily: 'Poppins',
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(14.0),
-                                    child: Text(
-                                      'Cancel',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'Poppins',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    // bookAppointment(args[0], args[1], 'update')
-                                    //     .then((value) {
-                                    //   showSnack();
-                                    // });
-                                    if (updationFormKey.currentState!
-                                        .validate()) {
-                                      if (selectedValues.isNotEmpty) {
-                                        final pref = await SharedPreferences
-                                            .getInstance();
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      // buildShowDialog(context);
+                                      // bookAppointment(
+                                      //         args[0], args[1], 'enrollment')
+                                      //     .then((value) {
+                                      //   showSnack();
+                                      // });
+                                      if(enrollmentFormKey.currentState!.validate()) {
+                                        final pref =
+                                            await SharedPreferences.getInstance();
                                         pref.setString(
                                             'arg0', args[0].toString());
                                         pref.setString('arg1', args[1]);
-                                        pref.setString('arg2', 'update');
+                                        pref.setString('arg2', 'enrollment');
                                         openCheckout();
-                                      } else {
-                                        showError();
                                       }
-                                    }
-                                  },
-                                  style: ButtonStyle(
-                                    foregroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.white),
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFF23F44)),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(24.0),
+                                    },
+                                    style: ButtonStyle(
+                                      foregroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.white),
+                                      backgroundColor: MaterialStateProperty.all(
+                                          Color(0xFFF23F44)),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(24.0),
+                                        ),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(14.0),
+                                      child: Text(
+                                        'Book',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontFamily: 'Poppins',
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(14.0),
-                                    child: Text(
-                                      'Book',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'Poppins',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 18,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(28),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Form(
-                      key: enrollmentFormKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.name,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            controller: _name,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            validator: nameValidator,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              label: Text('Full Name'),
-                              labelStyle: TextStyle(
-                                color: Colors.grey.shade700,
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 22,
-                          ),
-                          TextFormField(
-                            controller: _phone,
-                            maxLength: 10,
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.phone,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            validator: mobileValidator,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              label: Text('Mobile Number'),
-                              labelStyle: TextStyle(
-                                color: Colors.grey.shade700,
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 22,
-                          ),
-                          TextFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.streetAddress,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            controller: _address,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            validator: addressValidator,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              label: Text('Address'),
-                              labelStyle: TextStyle(
-                                color: Colors.grey.shade700,
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black12),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 22,
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    cancelAppt(context);
-                                  },
-                                  style: ButtonStyle(
-                                    foregroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.black),
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFFFFFFF)),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(24.0),
-                                      ),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(14.0),
-                                    child: Text(
-                                      'Cancel',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'Poppins',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    // buildShowDialog(context);
-                                    // bookAppointment(
-                                    //         args[0], args[1], 'enrollment')
-                                    //     .then((value) {
-                                    //   showSnack();
-                                    // });
-                                    if(enrollmentFormKey.currentState!.validate()) {
-                                      final pref =
-                                          await SharedPreferences.getInstance();
-                                      pref.setString(
-                                          'arg0', args[0].toString());
-                                      pref.setString('arg1', args[1]);
-                                      pref.setString('arg2', 'enrollment');
-                                      openCheckout();
-                                    }
-                                  },
-                                  style: ButtonStyle(
-                                    foregroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.white),
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFF23F44)),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(24.0),
-                                      ),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(14.0),
-                                    child: Text(
-                                      'Book',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'Poppins',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }

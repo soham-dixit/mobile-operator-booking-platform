@@ -626,253 +626,197 @@ class _BookingDetailsState extends State<BookingDetails> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as List;
     print('Args : $args');
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFF23F44),
-        foregroundColor: Color(0xFFFFFFFF),
-        title: const Text(
-          'Booking Details',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            // fontSize: 16
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-            child: CircleAvatar(
-              backgroundImage: AssetImage('assets/logo/logo.png'),
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFFF23F44),
+          foregroundColor: Color(0xFFFFFFFF),
+          title: const Text(
+            'Booking Details',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              // fontSize: 16
             ),
           ),
-        ],
-      ),
-      body: FutureBuilder(
-          future: getData(args[0], args[1]),
-          builder: (context, AsyncSnapshot snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Center(
-                      child: CupertinoActivityIndicator(),
-                    ));
-              case ConnectionState.none:
-                return Text('none');
-              case ConnectionState.active:
-                return Text('active');
-              case ConnectionState.done:
-                int index = snapshot.data[4];
+          actions: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/logo/logo.png'),
+              ),
+            ),
+          ],
+        ),
+        body: FutureBuilder(
+            future: getData(args[0], args[1]),
+            builder: (context, AsyncSnapshot snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Center(
+                        child: CupertinoActivityIndicator(),
+                      ));
+                case ConnectionState.none:
+                  return Text('none');
+                case ConnectionState.active:
+                  return Text('active');
+                case ConnectionState.done:
+                  int index = snapshot.data[4];
 
-                // var date = DateFormat('EEEE, d MMM, yyyy')
-                //     .format(DateTime.parse(snapshot.data[5]));
-                // print('null ${DateTime.parse(snapshot.data[5] + ' 00:00:00.000')}');
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            // ListTile(
-                            //   leading: Icon(
-                            //     Icons.calendar_month
-                            //   ),
-                            //   title: Text('21st July, Thursday'),
-                            // ),
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.calendar_month,
-                                        size: 12,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(snapshot.data[5],
-                                          style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontSize: 12,
-                                          )),
-                                    ],
+                  // var date = DateFormat('EEEE, d MMM, yyyy')
+                  //     .format(DateTime.parse(snapshot.data[5]));
+                  // print('null ${DateTime.parse(snapshot.data[5] + ' 00:00:00.000')}');
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              // ListTile(
+                              //   leading: Icon(
+                              //     Icons.calendar_month
+                              //   ),
+                              //   title: Text('21st July, Thursday'),
+                              // ),
+                              Expanded(
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.calendar_month,
+                                          size: 12,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(snapshot.data[5],
+                                            style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12,
+                                            )),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.access_time, size: 12),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      index > 3
-                                          ? Text(timings[index - 1],
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontSize: 12,
-                                              ))
-                                          : Text(timings[index],
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontSize: 12,
-                                              )),
-                                    ],
+                              Expanded(
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.access_time, size: 12),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        index > 3
+                                            ? Text(timings[index - 1],
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12,
+                                                ))
+                                            : Text(timings[index],
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12,
+                                                )),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        // Text(
-                        //   'Name',
-                        //   textAlign: TextAlign.left,
-                        //   style: TextStyle(
-                        //       fontFamily: 'Poppins',
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.bold),
-                        // ),
-                        TextFormField(
-                          initialValue: snapshot.data[0],
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            labelText: 'Name',
-                            labelStyle: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                            isDense: true,
+                              )
+                            ],
                           ),
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 16,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        // Text(
-                        //   'Contact Number',
-                        //   textAlign: TextAlign.left,
-                        //   style: TextStyle(
-                        //       fontFamily: 'Poppins',
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.bold),
-                        // ),
-                        TextFormField(
-                          initialValue: snapshot.data[1],
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            labelText: 'Contact Number',
-                            labelStyle: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            isDense: true,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        // Text(
-                        //   'Address',
-                        //   textAlign: TextAlign.left,
-                        //   style: TextStyle(
-                        //       fontFamily: 'Poppins',
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.bold),
-                        // ),
-                        TextFormField(
-                          initialValue: snapshot.data[2],
-                          maxLines: null,
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            labelText: 'Address',
-                            labelStyle: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            isDense: true,
-                          ),
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 16,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        // Text(
-                        //   'Purpose',
-                        //   textAlign: TextAlign.left,
-                        //   style: TextStyle(
-                        //       fontFamily: 'Poppins',
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.bold),
-                        // ),
-                        TextFormField(
-                          initialValue: snapshot.data[3],
-                          maxLines: null,
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            labelText: 'Purpose',
-                            labelStyle: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            isDense: true,
-                          ),
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 16,
-                          ),
-                        ),
-                        if (snapshot.data[6] != null)
                           SizedBox(
                             height: 30,
                           ),
-                        if (snapshot.data[6] != null)
+                          // Text(
+                          //   'Name',
+                          //   textAlign: TextAlign.left,
+                          //   style: TextStyle(
+                          //       fontFamily: 'Poppins',
+                          //       fontSize: 16,
+                          //       fontWeight: FontWeight.bold),
+                          // ),
                           TextFormField(
-                            initialValue: snapshot.data[6],
+                            initialValue: snapshot.data[0],
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              labelText: 'Name',
+                              labelStyle: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                              isDense: true,
+                            ),
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          // Text(
+                          //   'Contact Number',
+                          //   textAlign: TextAlign.left,
+                          //   style: TextStyle(
+                          //       fontFamily: 'Poppins',
+                          //       fontSize: 16,
+                          //       fontWeight: FontWeight.bold),
+                          // ),
+                          TextFormField(
+                            initialValue: snapshot.data[1],
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              labelText: 'Contact Number',
+                              labelStyle: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              isDense: true,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          // Text(
+                          //   'Address',
+                          //   textAlign: TextAlign.left,
+                          //   style: TextStyle(
+                          //       fontFamily: 'Poppins',
+                          //       fontSize: 16,
+                          //       fontWeight: FontWeight.bold),
+                          // ),
+                          TextFormField(
+                            initialValue: snapshot.data[2],
                             maxLines: null,
                             readOnly: true,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              labelText: 'Aadhaar Number',
+                              labelText: 'Address',
                               labelStyle: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 20,
@@ -886,248 +830,313 @@ class _BookingDetailsState extends State<BookingDetails> {
                               fontSize: 16,
                             ),
                           ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: TextFormField(
-                            initialValue: 'Name of operator: ' + opName,
+                          SizedBox(
+                            height: 30,
+                          ),
+                          // Text(
+                          //   'Purpose',
+                          //   textAlign: TextAlign.left,
+                          //   style: TextStyle(
+                          //       fontFamily: 'Poppins',
+                          //       fontSize: 16,
+                          //       fontWeight: FontWeight.bold),
+                          // ),
+                          TextFormField(
+                            initialValue: snapshot.data[3],
                             maxLines: null,
                             readOnly: true,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 0,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: TextFormField(
-                            initialValue: 'Contact No. of operator: ' + opPhone,
-                            maxLines: null,
-                            readOnly: true,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              final pref =
-                                  await SharedPreferences.getInstance();
-                              pref.setInt('index', args[0]);
-                              pref.setString('slot_date', args[1]);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => NavigateToUser(),
-                                ),
-                              );
-                            },
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.black),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFFFFFFFF)),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
-                                ),
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
+                              labelText: 'Purpose',
+                              labelStyle: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              isDense: true,
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(14.0),
-                              child: Text(
-                                'Navigate To Operator',
-                                style: TextStyle(
-                                  fontSize: 16,
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                            ),
+                          ),
+                          if (snapshot.data[6] != null)
+                            SizedBox(
+                              height: 30,
+                            ),
+                          if (snapshot.data[6] != null)
+                            TextFormField(
+                              initialValue: snapshot.data[6],
+                              maxLines: null,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                labelText: 'Aadhaar Number',
+                                labelStyle: TextStyle(
                                   fontFamily: 'Poppins',
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                isDense: true,
+                              ),
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                              ),
+                            ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: TextFormField(
+                              initialValue: 'Name of operator: ' + opName,
+                              maxLines: null,
+                              readOnly: true,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 0,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: TextFormField(
+                              initialValue:
+                                  'Contact No. of operator: ' + opPhone,
+                              maxLines: null,
+                              readOnly: true,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                final pref =
+                                    await SharedPreferences.getInstance();
+                                pref.setInt('index', args[0]);
+                                pref.setString('slot_date', args[1]);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NavigateToUser(),
+                                  ),
+                                );
+                              },
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.black),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Color(0xFFFFFFFF)),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                ),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.all(14.0),
+                                child: Text(
+                                  'Navigate To Operator',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: 'Poppins',
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Widget cancelButton = TextButton(
-                                child: Text("Cancel"),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              );
-                              Widget verifyButton = ElevatedButton(
-                                onPressed: () {
-                                  verifyServiceOtp();
-                                },
-                                child: Text('Verify'),
-                                style: ElevatedButton.styleFrom(
-                                    shape: StadiumBorder(),
-                                    primary: Color(0xFFF23F44)),
-                              );
+                          SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Widget cancelButton = TextButton(
+                                  child: Text("Cancel"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                                Widget verifyButton = ElevatedButton(
+                                  onPressed: () {
+                                    verifyServiceOtp();
+                                  },
+                                  child: Text('Verify'),
+                                  style: ElevatedButton.styleFrom(
+                                      shape: StadiumBorder(),
+                                      primary: Color(0xFFF23F44)),
+                                );
 
-                              AlertDialog alert = AlertDialog(
-                                title: Column(
-                                  children: [
-                                    Text(
-                                      'Operator Verification',
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
+                                AlertDialog alert = AlertDialog(
+                                  title: Column(
+                                    children: [
+                                      Text(
+                                        'Operator Verification',
+                                        style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      "Please ask the operator for verification PIN, and allow them in your premise only if they're authenticate",
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black38,
+                                      SizedBox(
+                                        height: 10,
                                       ),
-                                      textAlign: TextAlign.center,
-                                    ),
+                                      Text(
+                                        "Please ask the operator for verification PIN, and allow them in your premise only if they're authenticate",
+                                        style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black38,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                  content: OtpTextField(
+                                    autoFocus: true,
+                                    numberOfFields: 4,
+                                    focusedBorderColor: Color(0xFFF23F44),
+                                    //set to true to show as box or false to show as dash
+                                    showFieldAsBox: true,
+                                    //runs when a code is typed in
+                                    onCodeChanged: (String code) {
+                                      //handle validation or checks here
+                                    },
+                                    onSubmit: (String code) {
+                                      serviceOtp = int.parse(code);
+                                      print("printed service otp: $serviceOtp");
+                                    },
+                                    //runs when every textfield is filled
+                                  ),
+                                  actions: [
+                                    cancelButton,
+                                    verifyButton,
                                   ],
-                                ),
-                                content: OtpTextField(
-                                  autoFocus: true,
-                                  numberOfFields: 4,
-                                  focusedBorderColor: Color(0xFFF23F44),
-                                  //set to true to show as box or false to show as dash
-                                  showFieldAsBox: true,
-                                  //runs when a code is typed in
-                                  onCodeChanged: (String code) {
-                                    //handle validation or checks here
+                                );
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return alert;
                                   },
-                                  onSubmit: (String code) {
-                                    serviceOtp = int.parse(code);
-                                    print("printed service otp: $serviceOtp");
-                                  },
-                                  //runs when every textfield is filled
-                                ),
-                                actions: [
-                                  cancelButton,
-                                  verifyButton,
-                                ],
-                              );
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return alert;
-                                },
-                              );
-                            },
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.black),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFFFFFFFF)),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
+                                );
+                              },
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.black),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Color(0xFFFFFFFF)),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
                                 ),
                               ),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(14.0),
-                              child: Text(
-                                'Verify Operator',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Poppins',
+                              child: const Padding(
+                                padding: EdgeInsets.all(14.0),
+                                child: Text(
+                                  'Verify Operator',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: 'Poppins',
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Widget noButton = TextButton(
-                                child: Text("No"),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              );
-                              Widget yesButton = ElevatedButton(
-                                onPressed: () {
-                                  cancelBooking(context);
-                                },
-                                child: Text('Yes'),
-                                style: ElevatedButton.styleFrom(
-                                    shape: StadiumBorder(),
-                                    primary: Color(0xFFF23F44)),
-                              );
-                              AlertDialog alert = AlertDialog(
-                                title: const Text(
-                                    "Are you sure you want cancel the booking?",
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins', fontSize: 18)),
-                                actions: [
-                                  noButton,
-                                  yesButton,
-                                ],
-                              );
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return alert;
-                                },
-                              );
-                            },
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFFF23F44)),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
-                                ),
-                              ),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(14.0),
-                              child: Text(
-                                'Cancel Booking',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                            ),
+                          SizedBox(
+                            height: 10,
                           ),
-                        )
-                      ],
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Widget noButton = TextButton(
+                                  child: Text("No"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                                Widget yesButton = ElevatedButton(
+                                  onPressed: () {
+                                    cancelBooking(context);
+                                  },
+                                  child: Text('Yes'),
+                                  style: ElevatedButton.styleFrom(
+                                      shape: StadiumBorder(),
+                                      primary: Color(0xFFF23F44)),
+                                );
+                                AlertDialog alert = AlertDialog(
+                                  title: const Text(
+                                      "Are you sure you want cancel the booking?",
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins', fontSize: 18)),
+                                  actions: [
+                                    noButton,
+                                    yesButton,
+                                  ],
+                                );
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return alert;
+                                  },
+                                );
+                              },
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Color(0xFFF23F44)),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.0),
+                                  ),
+                                ),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.all(14.0),
+                                child: Text(
+                                  'Cancel Booking',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                );
-            }
-          }),
+                  );
+              }
+            }),
+      ),
     );
   }
 }
