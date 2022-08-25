@@ -110,8 +110,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('uid-user');
       print("logged out");
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginPage()));
+      while (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => LoginPage()));
     });
   }
 
@@ -172,7 +175,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                                     ? AssetImage('assets/logo/profile.png')
                                         as ImageProvider
                                     : FileImage(File(path.toString())),
-                                
                                 radius: 45,
                               ),
                               SizedBox(

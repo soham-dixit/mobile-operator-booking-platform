@@ -47,7 +47,7 @@ class _OtpState extends State<Otp> {
     //   "phoneNumber": phoneNumber,
     //   "gender" : gender
     // }).whenComplete(() {
-    //   Navigator.of(context).pushReplacement(
+    //   Navigator.of(context).push(
     //     MaterialPageRoute(
     //       builder: (context) => HomePage(),
     //     ),
@@ -158,7 +158,7 @@ class _OtpState extends State<Otp> {
       "4_5": false,
       "5_6": false,
     }).whenComplete(() {
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => HomePage(),
         ),

@@ -218,12 +218,28 @@ class _BookingDetailsState extends State<BookingDetails> {
             child: CupertinoActivityIndicator(),
           );
         });
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => HomePage(),
         ));
     showSnack();
+  }
+
+  redirectHomePageAfter(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        });
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ));
   }
 
   verifyServiceOtp() async {
@@ -344,7 +360,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                   );
                 });
             Future.delayed(Duration(seconds: 1), () {
-              Navigator.pushReplacement(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => FeedbackForm(),
@@ -615,6 +631,7 @@ class _BookingDetailsState extends State<BookingDetails> {
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    redirectHomePage(context);
   }
 
   // @override
