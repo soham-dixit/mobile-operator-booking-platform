@@ -723,13 +723,17 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     if (updationFormKey.currentState!
                                         .validate()) {
                                       if (selectedValues.isNotEmpty) {
-                                        final pref = await SharedPreferences
-                                            .getInstance();
-                                        pref.setString(
-                                            'arg0', args[0].toString());
-                                        pref.setString('arg1', args[1]);
-                                        pref.setString('arg2', 'update');
-                                        openCheckout();
+                                        if(_value == 'Online Payment') {
+                                          final pref = await SharedPreferences
+                                              .getInstance();
+                                          pref.setString(
+                                              'arg0', args[0].toString());
+                                          pref.setString('arg1', args[1]);
+                                          pref.setString('arg2', 'update');
+                                          openCheckout();
+                                        } else if(_value == 'Cash On Service') {
+                                          
+                                        }
                                       } else {
                                         showError();
                                       }
