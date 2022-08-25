@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
     '4_5',
     '5_6',
   ];
-  late String profileUrl;
+  String? profileUrl;
 
   addDates() {
     print('addDates');
@@ -250,8 +250,8 @@ class _HomePageState extends State<HomePage> {
 
       name = databaseData['operators'][key]['fullname'];
       operatorRating = databaseData['operators'][key]['avgRating'] ?? 0;
-      if(databaseData['operators'][key]['profileImage']!=null){
-        profileUrl= databaseData['operators'][key]['profileImage'];
+      if (databaseData['operators'][key]['profileImage'] != null) {
+        profileUrl = databaseData['operators'][key]['profileImage'];
       }
       print('profile url $profileUrl');
 
@@ -655,7 +655,7 @@ class _HomePageState extends State<HomePage> {
                                       CircleAvatar(
                                         radius: 30.0,
                                         backgroundImage: profileUrl != null
-                                            ? NetworkImage(profileUrl)
+                                            ? NetworkImage(profileUrl.toString())
                                             : AssetImage(
                                                     'assets/logo/profile.png')
                                                 as ImageProvider,
