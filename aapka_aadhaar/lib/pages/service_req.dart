@@ -812,7 +812,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     if (updationFormKey.currentState!
                                         .validate()) {
                                       if (selectedValues.isNotEmpty) {
-                                        print('Updation - ${_value2}');
+                                        // print('Updation - ${_value2}');
                                         if (_value == 'Online Payment') {
                                           final pref = await SharedPreferences
                                               .getInstance();
@@ -1082,7 +1082,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     // });
                                     if (enrollmentFormKey.currentState!
                                         .validate()) {
-                                      print('Enrollment - ${_value2}');
+                                      // print('Enrollment - ${_value2}');
                                       if (_value2 == 'Online Payment') {
                                         final pref = await SharedPreferences
                                             .getInstance();
