@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:location/location.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,33 @@ class ServiceRequest extends StatefulWidget {
 
 class _ServiceRequestState extends State<ServiceRequest> {
   late Razorpay razorpay;
+
+  final updationFormKey = GlobalKey<FormState>();
+  final enrollmentFormKey = GlobalKey<FormState>();
+
+  final nameValidator = MultiValidator([
+    PatternValidator(r'^[a-zA-Z ]*$',
+        errorText: 'Please Enter a valid Full Name'),
+    RequiredValidator(errorText: 'Please Enter a valid Full Name')
+  ]);
+
+  final addressValidator = MultiValidator([
+    // EmailValidator(errorText: 'Please Enter a valid Email ID'),
+    RequiredValidator(errorText: 'Please Enter an Address')
+  ]);
+
+  final mobileValidator = MultiValidator([
+    RequiredValidator(errorText: 'Please enter a mobile number!!'),
+    PatternValidator(r'^[6-9]\d{9}$',
+        errorText: 'Please Enter a valid 10 digit Mobile Number')
+  ]);
+
+  final aadhaarValidator = MultiValidator([
+    RequiredValidator(errorText: 'Please enter a aadhaar number!!'),
+    PatternValidator(r'^\d{12}$',
+        errorText: 'Please Enter a valid 12 digit Aadhaar Number')
+  ]);
+
   List<bool?> checkedValue = [false, false, false, false, false, false];
   List selectedValues = [];
   Location currentLocation = Location();
@@ -51,7 +79,6 @@ class _ServiceRequestState extends State<ServiceRequest> {
     var serviceOtp = rng.nextInt(9000) + 1000;
 
     setState(() {
-      
       uORe == 'update'
           ? databaseReference
               .child('operators')
@@ -226,6 +253,36 @@ class _ServiceRequestState extends State<ServiceRequest> {
     print('external wallet');
   }
 
+  showError() {
+    Widget saveButton = ElevatedButton(
+      onPressed: () async {
+        Navigator.pop(context);
+      },
+      child: Text('OK'),
+      style: ElevatedButton.styleFrom(
+          shape: StadiumBorder(), primary: Color(0xFFF23F44)),
+    );
+
+    AlertDialog alert = AlertDialog(
+      // title: const Text("",
+      //     style: TextStyle(fontFamily: 'Poppins', fontSize: 18)),
+      content: Text(
+        'Please select atleast one checkbox',
+        style:
+            TextStyle(fontSize: 18, fontFamily: 'Poppins', color: Colors.black),
+      ),
+      actions: [
+        saveButton,
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as List;
@@ -274,10 +331,13 @@ class _ServiceRequestState extends State<ServiceRequest> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Form(
+                      key: updationFormKey,
                       child: Column(
                         children: [
                           TextFormField(
                             controller: name,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.name,
                             style: TextStyle(
@@ -285,16 +345,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
-                            validator: (value) {
-                              try {
-                                if (value!.isEmpty ||
-                                    !RegExp(r'^[a-zA-Z ]*$').hasMatch(value)) {
-                                  return 'Please Enter a valid Full Name';
-                                } else {
-                                  return null;
-                                }
-                              } catch (e) {}
-                            },
+                            validator: nameValidator,
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
                               label: Text('Full Name'),
@@ -322,23 +373,15 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             controller: a_num,
                             maxLength: 12,
                             textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.number,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
-                            validator: (value) {
-                              try {
-                                // if (value!.isEmpty ||
-                                //     !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                //         .hasMatch(value)) {
-                                //   return 'Please Enter a valid Email ID';
-                                // } else {
-                                //   return null;
-                                // }
-                              } catch (e) {}
-                            },
+                            validator: aadhaarValidator,
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
                               label: Text('Aadhaar Number'),
@@ -367,14 +410,14 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             maxLength: 10,
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.phone,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
-                            validator: (value) {
-                              try {} catch (e) {}
-                            },
+                            validator: mobileValidator,
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
                               label: Text('Mobile Number'),
@@ -561,15 +604,15 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             controller: add,
                             maxLength: null,
                             textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.streetAddress,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
-                            validator: (value) {
-                              try {} catch (e) {}
-                            },
+                            validator: addressValidator,
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
                               label: Text('Address'),
@@ -633,12 +676,20 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     //     .then((value) {
                                     //   showSnack();
                                     // });
-                                    final pref =
-                                        await SharedPreferences.getInstance();
-                                    pref.setString('arg0', args[0].toString());
-                                    pref.setString('arg1', args[1]);
-                                    pref.setString('arg2', 'update');
-                                    openCheckout();
+                                    if (updationFormKey.currentState!
+                                        .validate()) {
+                                      if (selectedValues.isNotEmpty) {
+                                        final pref = await SharedPreferences
+                                            .getInstance();
+                                        pref.setString(
+                                            'arg0', args[0].toString());
+                                        pref.setString('arg1', args[1]);
+                                        pref.setString('arg2', 'update');
+                                        openCheckout();
+                                      } else {
+                                        showError();
+                                      }
+                                    }
                                   },
                                   style: ButtonStyle(
                                     foregroundColor:
@@ -691,27 +742,21 @@ class _ServiceRequestState extends State<ServiceRequest> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Form(
+                      key: enrollmentFormKey,
                       child: Column(
                         children: [
                           TextFormField(
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.name,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             controller: _name,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
-                            validator: (value) {
-                              try {
-                                if (value!.isEmpty ||
-                                    !RegExp(r'^[a-zA-Z ]*$').hasMatch(value)) {
-                                  return 'Please Enter a valid Full Name';
-                                } else {
-                                  return null;
-                                }
-                              } catch (e) {}
-                            },
+                            validator: nameValidator,
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
                               label: Text('Full Name'),
@@ -739,15 +784,15 @@ class _ServiceRequestState extends State<ServiceRequest> {
                             controller: _phone,
                             maxLength: 10,
                             textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.phone,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
-                            validator: (value) {
-                              try {} catch (e) {}
-                            },
+                            validator: mobileValidator,
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
                               label: Text('Mobile Number'),
@@ -773,16 +818,16 @@ class _ServiceRequestState extends State<ServiceRequest> {
                           ),
                           TextFormField(
                             textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.streetAddress,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             controller: _address,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
-                            validator: (value) {
-                              try {} catch (e) {}
-                            },
+                            validator: addressValidator,
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
                               label: Text('Address'),
@@ -848,12 +893,16 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     //     .then((value) {
                                     //   showSnack();
                                     // });
-                                    final pref =
-                                        await SharedPreferences.getInstance();
-                                    pref.setString('arg0', args[0].toString());
-                                    pref.setString('arg1', args[1]);
-                                    pref.setString('arg2', 'enrollment');
-                                    openCheckout();
+                                    if (enrollmentFormKey.currentState!
+                                        .validate()) {
+                                      final pref =
+                                          await SharedPreferences.getInstance();
+                                      pref.setString(
+                                          'arg0', args[0].toString());
+                                      pref.setString('arg1', args[1]);
+                                      pref.setString('arg2', 'enrollment');
+                                      openCheckout();
+                                    }
                                   },
                                   style: ButtonStyle(
                                     foregroundColor:

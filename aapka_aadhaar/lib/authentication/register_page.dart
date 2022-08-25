@@ -4,6 +4,7 @@ import 'package:aapka_aadhaar/services/otp_verification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -23,16 +24,12 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   bool already_exists = false;
   OTPVerification otpVerification = OTPVerification();
-
-  
 
   final formKey = GlobalKey<FormState>();
 
@@ -80,6 +77,21 @@ class _RegisterPageState extends State<RegisterPage> {
         ? ScaffoldMessenger.of(context).showSnackBar(snackBar)
         : null;
   }
+
+  final nameValidator = MultiValidator([
+    PatternValidator(r'^[a-zA-Z ]*$', errorText: 'Please Enter a valid Full Name'),
+    RequiredValidator(errorText: 'Please Enter a valid Full Name')
+  ]);
+
+  final emailValidator = MultiValidator([
+    EmailValidator(errorText: 'Please Enter a valid Email ID'),
+    RequiredValidator(errorText: 'Please Enter a valid Email ID')
+  ]);
+
+  final mobileValidator = MultiValidator([
+    RequiredValidator(errorText: 'Please enter a mobile number!!'),
+    PatternValidator(r'^[6-9]\d{9}$', errorText: 'Please Enter a valid 10 digit Mobile Number')
+  ]);
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +155,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Column(
                     children: [
                       TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _nameController,
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.name,
@@ -151,16 +164,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        validator: (value) {
-                          try {
-                            if (value!.isEmpty ||
-                                !RegExp(r'^[a-zA-Z ]*$').hasMatch(value)) {
-                              return 'Please Enter a valid Full Name';
-                            } else {
-                              return null;
-                            }
-                          } catch (e) {}
-                        },
+                        validator: nameValidator,
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                           label: Text('Full Name'),
@@ -202,6 +206,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       TextFormField(
                         controller: _emailController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(
@@ -209,17 +214,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        validator: (value) {
-                          try {
-                            if (value!.isEmpty ||
-                                !RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                    .hasMatch(value)) {
-                              return 'Please Enter a valid Email ID';
-                            } else {
-                              return null;
-                            }
-                          } catch (e) {}
-                        },
+                        validator: emailValidator,
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                           label: Text('Email'),
@@ -261,24 +256,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       TextFormField(
                         textInputAction: TextInputAction.done,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _phoneController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.phone,
                         maxLength: 10,
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        validator: (value) {
-                          try {
-                            if (value!.isEmpty ||
-                                !RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
-                              return 'Please Enter a valid Mobile Number';
-                            } else {
-                              return null;
-                            }
-                          } catch (e) {}
-                        },
+                        validator: mobileValidator,
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                           errorBorder: OutlineInputBorder(
@@ -332,7 +319,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               check_if_already_exists().whenComplete(() {
                                 already_exists
                                     ? null
-                                    : otpVerification.verifyPhone(_phoneController.text)
+                                    : otpVerification
+                                        .verifyPhone(_phoneController.text)
                                         .whenComplete(() {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(

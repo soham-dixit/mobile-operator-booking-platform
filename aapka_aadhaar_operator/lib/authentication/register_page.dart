@@ -117,6 +117,7 @@ class _OperatorRegisterState extends State<OperatorRegister> {
   final List<String> genderItems = [
     'Male',
     'Female',
+    'Transgender',
   ];
 
   String? selectedValue;

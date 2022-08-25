@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   GoogleMapController? _controller;
   Location currentLocation = Location();
   Set<Marker> _markers = {};
-  late BitmapDescriptor mapMarker, femaleMarker, maleMarker;
+  late BitmapDescriptor mapMarker, femaleMarker, maleMarker, transgenderMarker;
   final FirebaseAuth auth = FirebaseAuth.instance;
   List latitudes = [];
   List longitudes = [];
@@ -55,6 +55,7 @@ class _HomePageState extends State<HomePage> {
     '4_5',
     '5_6',
   ];
+  late String profileUrl;
 
   addDates() {
     print('addDates');
@@ -120,6 +121,16 @@ class _HomePageState extends State<HomePage> {
       }
       int count = 0;
       for (int i = 0; i < latitudes.length; i++) {
+        checkMarker() {
+          if (genders[i] == 'Male') {
+            return maleMarker;
+          } else if (genders[i] == 'Female') {
+            return femaleMarker;
+          } else {
+            return transgenderMarker;
+          }
+        }
+
         //computer distance between two markers
         //get current user location
         geolocator.Position position =
@@ -136,7 +147,7 @@ class _HomePageState extends State<HomePage> {
             Marker(
               markerId: MarkerId(operatorNames[i]),
               position: LatLng(latitudes[i], longitudes[i]),
-              icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
+              icon: checkMarker(),
               onTap: () async {
                 final pref = await SharedPreferences.getInstance();
                 pref.setString('operator-key', keys_list[i].toString());
@@ -148,11 +159,21 @@ class _HomePageState extends State<HomePage> {
       }
       if (count == 0) {
         for (int i = 0; i < latitudes.length; i++) {
+          checkMarker() {
+            if (genders[i] == 'Male') {
+              return maleMarker;
+            } else if (genders[i] == 'Female') {
+              return femaleMarker;
+            } else {
+              return transgenderMarker;
+            }
+          }
+
           _markers.add(
             Marker(
               markerId: MarkerId(operatorNames[i]),
               position: LatLng(latitudes[i], longitudes[i]),
-              icon: genders[i] == 'Male' ? maleMarker : femaleMarker,
+              icon: checkMarker(),
               onTap: () async {
                 final pref = await SharedPreferences.getInstance();
                 pref.setString('operator-key', keys_list[i].toString());
@@ -206,6 +227,8 @@ class _HomePageState extends State<HomePage> {
         ImageConfiguration(), 'assets/Female-Operator.png');
     maleMarker = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(), 'assets/Male-Operator.png');
+    transgenderMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), 'assets/Others-Operator.png');
   }
 
   getAvailablity() async {
@@ -227,6 +250,8 @@ class _HomePageState extends State<HomePage> {
 
       name = databaseData['operators'][key]['fullname'];
       operatorRating = databaseData['operators'][key]['avgRating'] ?? 0;
+      profileUrl = databaseData['operators'][key]['profileImage'];
+      print('profile url $profileUrl');
 
       if (slotData[keys_list[0]].containsValue(false)) {
         firstDay = true;
@@ -396,14 +421,14 @@ class _HomePageState extends State<HomePage> {
     timer = Timer.periodic(
         Duration(seconds: 3), (Timer t) => getOperatorLocation());
     addDates();
-    checkOperatorPhoto();
+    // checkOperatorPhoto();
   }
 
-  checkOperatorPhoto() async {
-    final pref = await SharedPreferences.getInstance();
-    path = pref.getString('profile-img');
-    print('profile ${path}');
-  }
+  // checkOperatorPhoto() async {
+  //   final pref = await SharedPreferences.getInstance();
+  //   path = pref.getString('profile-img');
+  //   print('profile ${path}');
+  // }
 
   int? index;
   String? day;
@@ -627,8 +652,11 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       CircleAvatar(
                                         radius: 30.0,
-                                        backgroundImage: AssetImage(
-                                            'assets/logo/profile.png'),
+                                        backgroundImage: profileUrl != null
+                                            ? NetworkImage(profileUrl)
+                                            : AssetImage(
+                                                    'assets/logo/profile.png')
+                                                as ImageProvider,
                                       ),
                                     ],
                                   );

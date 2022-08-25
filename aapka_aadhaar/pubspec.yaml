@@ -48,6 +48,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   image_picker: ^0.8.5+3
   permission_handler: ^10.0.0
+  form_field_validator: ^1.1.0
 
 dev_dependencies:
   flutter_test:
