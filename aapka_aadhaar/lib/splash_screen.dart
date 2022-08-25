@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
       navigateToLogin();
     }
   }
-  
+
   navigateToLogin() async {
     await Future.delayed(Duration(milliseconds: 2800), () {});
     Navigator.pushReplacement(

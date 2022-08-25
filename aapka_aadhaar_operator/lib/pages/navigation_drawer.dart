@@ -93,7 +93,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     case ConnectionState.done:
                       return GestureDetector(
                         onTap: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Profile()));
@@ -153,7 +153,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               text: 'Previous Bookings',
               icon: Icons.history,
               onTap: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => PreviousBookings()));
@@ -270,7 +270,7 @@ contactRedirect(BuildContext context) {
         );
       });
   Future.delayed(Duration(seconds: 1), () {
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ContactPage(),
