@@ -205,307 +205,312 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavigationDrawer(),
-      appBar: AppBar(
-        backgroundColor: Color(0xFFF23F44),
-        foregroundColor: Color(0xFFFFFFFF),
-        title: const Text(
-          'Aapka Aadhaar Operator',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            // fontSize: 16
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-            child: CircleAvatar(
-              backgroundImage: AssetImage('assets/logo/logo.png'),
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        drawer: NavigationDrawer(),
+        appBar: AppBar(
+          backgroundColor: Color(0xFFF23F44),
+          foregroundColor: Color(0xFFFFFFFF),
+          title: const Text(
+            'Aapka Aadhaar Operator',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              // fontSize: 16
             ),
           ),
-        ],
-      ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              Icons.circle,
-              color: Colors.red,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('Booked',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 14,
-                )),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              Icons.circle,
-              color: Colors.green,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('Vacant',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 14,
-                )),
-          )
-        ],
-      ),
-      body: Column(
-        children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        dayG = dates[0];
-                        activeColor = [true, false, false, false];
-                      });
-                    },
-                    child: Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          dates[0],
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14,
-                              color: activeColor[0]
-                                  ? Color(0xFFF23F44)
-                                  : Colors.black),
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        dayG = dates[1];
-                        activeColor = [false, true, false, false];
-                      });
-                    },
-                    child: Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          dates[1],
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14,
-                              color: activeColor[1]
-                                  ? Color(0xFFF23F44)
-                                  : Colors.black),
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        dayG = dates[2];
-                        activeColor = [false, false, true, false];
-                      });
-                    },
-                    child: Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          dates[2],
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14,
-                              color: activeColor[2]
-                                  ? Color(0xFFF23F44)
-                                  : Colors.black),
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        dayG = dates[3];
-                        activeColor = [false, false, false, true];
-                      });
-                    },
-                    child: Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          dates[3],
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14,
-                              color: activeColor[3]
-                                  ? Color(0xFFF23F44)
-                                  : Colors.black),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+          actions: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/logo/logo.png'),
               ),
             ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: [
-                FutureBuilder(
-                    future: getData(dayG.toString()),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return Padding(
-                              padding: EdgeInsets.only(top: 300),
-                              child: CupertinoActivityIndicator());
-                        case ConnectionState.none:
-                          return Text('none');
-                        case ConnectionState.active:
-                          return Text('active');
-                        case ConnectionState.done:
-                          return ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: status.length,
-                              itemBuilder: (context, i) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Column(
-                                    children: [
-                                      timings[i] == '1:00 PM to 2:00 PM'
-                                          ? Card(
-                                              child: ListTile(
-                                                  title: Center(
-                                                child: Text(
-                                                  'LUNCH BREAK',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Poppins',
-                                                      fontSize: 14),
-                                                ),
-                                              )),
-                                            )
-                                          : Card(
-                                              child: ListTile(
-                                                title: Text(timings[i]),
-                                                trailing: ElevatedButton(
-                                                  child: snapshot.data[i] ==
-                                                          false
-                                                      ? Text(
-                                                          'Vacant',
-                                                          style: TextStyle(
-                                                              // fontFamily:
-                                                              //     'Poppins',
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 14),
-                                                        )
-                                                      : Text(
-                                                          'Details',
-                                                          style: TextStyle(
+          ],
+        ),
+        bottomNavigationBar: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.circle,
+                color: Colors.red,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Booked',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 14,
+                  )),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.circle,
+                color: Colors.green,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Vacant',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 14,
+                  )),
+            )
+          ],
+        ),
+        body: Column(
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          dayG = dates[0];
+                          activeColor = [true, false, false, false];
+                        });
+                      },
+                      child: Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            dates[0],
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 14,
+                                color: activeColor[0]
+                                    ? Color(0xFFF23F44)
+                                    : Colors.black),
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          dayG = dates[1];
+                          activeColor = [false, true, false, false];
+                        });
+                      },
+                      child: Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            dates[1],
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 14,
+                                color: activeColor[1]
+                                    ? Color(0xFFF23F44)
+                                    : Colors.black),
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          dayG = dates[2];
+                          activeColor = [false, false, true, false];
+                        });
+                      },
+                      child: Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            dates[2],
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 14,
+                                color: activeColor[2]
+                                    ? Color(0xFFF23F44)
+                                    : Colors.black),
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          dayG = dates[3];
+                          activeColor = [false, false, false, true];
+                        });
+                      },
+                      child: Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            dates[3],
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 14,
+                                color: activeColor[3]
+                                    ? Color(0xFFF23F44)
+                                    : Colors.black),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  FutureBuilder(
+                      future: getData(dayG.toString()),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            return Padding(
+                                padding: EdgeInsets.only(top: 300),
+                                child: CupertinoActivityIndicator());
+                          case ConnectionState.none:
+                            return Text('none');
+                          case ConnectionState.active:
+                            return Text('active');
+                          case ConnectionState.done:
+                            return ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: status.length,
+                                itemBuilder: (context, i) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Column(
+                                      children: [
+                                        timings[i] == '1:00 PM to 2:00 PM'
+                                            ? Card(
+                                                child: ListTile(
+                                                    title: Center(
+                                                  child: Text(
+                                                    'LUNCH BREAK',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 14),
+                                                  ),
+                                                )),
+                                              )
+                                            : Card(
+                                                child: ListTile(
+                                                  title: Text(timings[i]),
+                                                  trailing: ElevatedButton(
+                                                    child: snapshot.data[i] ==
+                                                            false
+                                                        ? Text(
+                                                            'Vacant',
+                                                            style: TextStyle(
+                                                                // fontFamily:
+                                                                //     'Poppins',
+                                                                color:
+                                                                    Colors.black,
+                                                                fontSize: 14),
+                                                          )
+                                                        : Text(
+                                                            'Details',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Poppins',
+                                                                fontSize: 14),
+                                                          ),
+                                                    onPressed: () {
+                                                      if (snapshot.data[i] !=
+                                                          false) {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    BookingDetails(),
+                                                                settings:
+                                                                    RouteSettings(
+                                                                        arguments: [
+                                                                      i,
+                                                                      dayG
+                                                                    ])));
+                                                      } else {
+                                                        //show snackbar
+                                                        final snackBar = SnackBar(
+                                                          content: Text(
+                                                            'Vacant slot',
+                                                            style: TextStyle(
                                                               fontFamily:
                                                                   'Poppins',
-                                                              fontSize: 14),
-                                                        ),
-                                                  onPressed: () {
-                                                    if (snapshot.data[i] !=
-                                                        false) {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  BookingDetails(),
-                                                              settings:
-                                                                  RouteSettings(
-                                                                      arguments: [
-                                                                    i,
-                                                                    dayG
-                                                                  ])));
-                                                    } else {
-                                                      //show snackbar
-                                                      final snackBar = SnackBar(
-                                                        content: Text(
-                                                          'Vacant slot',
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'Poppins',
-                                                            fontSize: 16,
+                                                              fontSize: 16,
+                                                            ),
                                                           ),
+                                                        );
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                snackBar);
+                                                      }
+                                                    },
+                                                    style: ButtonStyle(
+                                                      foregroundColor:
+                                                          MaterialStateProperty
+                                                              .all<Color>(
+                                                                  Colors.white),
+                                                      backgroundColor: snapshot
+                                                                  .data[i] ==
+                                                              false
+                                                          ? MaterialStateProperty
+                                                              .all(Colors
+                                                                  .grey.shade300)
+                                                          : MaterialStateProperty
+                                                              .all(Color(
+                                                                  0xFFF23F44)),
+                                                      shape: MaterialStateProperty
+                                                          .all<
+                                                              RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(24.0),
                                                         ),
-                                                      );
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                              snackBar);
-                                                    }
-                                                  },
-                                                  style: ButtonStyle(
-                                                    foregroundColor:
-                                                        MaterialStateProperty
-                                                            .all<Color>(
-                                                                Colors.white),
-                                                    backgroundColor: snapshot
-                                                                .data[i] ==
-                                                            false
-                                                        ? MaterialStateProperty
-                                                            .all(Colors
-                                                                .grey.shade300)
-                                                        : MaterialStateProperty
-                                                            .all(Color(
-                                                                0xFFF23F44)),
-                                                    shape: MaterialStateProperty
-                                                        .all<
-                                                            RoundedRectangleBorder>(
-                                                      RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(24.0),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                tileColor: Color(0xffffffff),
-                                                leading: Icon(
-                                                  Icons.circle,
-                                                  color:
-                                                      snapshot.data[i] == false
-                                                          ? Colors.green
-                                                          : Colors.red,
+                                                  tileColor: Color(0xffffffff),
+                                                  leading: Icon(
+                                                    Icons.circle,
+                                                    color:
+                                                        snapshot.data[i] == false
+                                                            ? Colors.green
+                                                            : Colors.red,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                    ],
-                                  ),
-                                );
-                                ;
-                              });
-                      }
-                    })
-              ],
+                                      ],
+                                    ),
+                                  );
+                                  ;
+                                });
+                        }
+                      })
+                ],
+              ),
             ),
-          ),
-
-          // TableCalendar(
-          //   firstDay: DateTime.parse(dates[0]),
-          //   lastDay: DateTime.parse(dates[3]),
-          //   focusedDay: DateTime.parse(dates[0]),
-          // ),
-          // MyCardWidget(time: '10AM - 11AM'),
-        ],
+    
+            // TableCalendar(
+            //   firstDay: DateTime.parse(dates[0]),
+            //   lastDay: DateTime.parse(dates[3]),
+            //   focusedDay: DateTime.parse(dates[0]),
+            // ),
+            // MyCardWidget(time: '10AM - 11AM'),
+          ],
+        ),
       ),
     );
   }
