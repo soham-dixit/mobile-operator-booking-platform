@@ -388,14 +388,21 @@ class _HomePageState extends State<HomePage> {
             if (databaseData['operators'][keys_list[i]]['slots'][keys_list1[0]]
                     [slot[j]]
                 .containsValue(uid)) {
-              print(
-                  'slot ${databaseData['operators'][keys_list[i]]['slots'][keys_list1[0]][slot[j]]}');
-              showActive = true;
+              if (databaseData['operators'][keys_list[i]]['slots']
+                      [keys_list1[0]][slot[j]]['status'] ==
+                  'pending') {
+                print(
+                    'slot ${databaseData['operators'][keys_list[i]]['slots'][keys_list1[0]][slot[j]]}');
+                showActive = true;
+              } else {
+                showActive = false;
+              }
             }
           }
         }
       }
     }
+    print('show active $showActive');
   }
 
   saveUid() async {
@@ -655,7 +662,8 @@ class _HomePageState extends State<HomePage> {
                                       CircleAvatar(
                                         radius: 30.0,
                                         backgroundImage: profileUrl != null
-                                            ? NetworkImage(profileUrl.toString())
+                                            ? NetworkImage(
+                                                profileUrl.toString())
                                             : AssetImage(
                                                     'assets/logo/profile.png')
                                                 as ImageProvider,

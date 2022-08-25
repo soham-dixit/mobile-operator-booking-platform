@@ -226,6 +226,22 @@ class _BookingDetailsState extends State<BookingDetails> {
     showSnack();
   }
 
+  redirectHomePageAfter(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        });
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ));
+  }
+
   verifyServiceOtp() async {
     final databaseReference = FirebaseDatabase.instance.ref();
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -615,6 +631,7 @@ class _BookingDetailsState extends State<BookingDetails> {
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    redirectHomePage(context);
   }
 
   // @override
