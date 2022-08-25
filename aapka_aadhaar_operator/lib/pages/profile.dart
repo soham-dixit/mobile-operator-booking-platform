@@ -135,21 +135,37 @@ class _ProfileState extends State<Profile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Center(
-                        child: InkWell(
-                          child: CircleAvatar(
-                            backgroundImage: url != null
-                                ? NetworkImage(url)
-                                : AssetImage('assets/logo/profile.png')
-                                    as ImageProvider,
-                            // : AssetImage('assets/profile.png')
-                            //     as ImageProvider  ,
-                            // backgroundImage: AssetImage('assets/profile.png'),
-                            backgroundColor: Color(0xFFF23F44),
-                            radius: 80,
+                        child: CircleAvatar(
+                          backgroundImage: url != null
+                              ? NetworkImage(url)
+                              : AssetImage('assets/logo/profile.png')
+                                  as ImageProvider,
+                          // : AssetImage('assets/profile.png')
+                          //     as ImageProvider  ,
+                          // backgroundImage: AssetImage('assets/profile.png'),
+                          backgroundColor: Color(0xFFF23F44),
+                          radius: 80,
+
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: CircleAvatar(
+                                  radius: 23,
+                                  backgroundColor: Color(0xFFF23F44),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      takePhoto(ImageSource.gallery);
+                                    },
+                                  )
+                                ),
+                              )
+                            ],
                           ),
-                          onTap: () {
-                            takePhoto(ImageSource.gallery);
-                          },
                         ),
                         // child: InkWell(
                         //   onTap: () {},

@@ -274,22 +274,37 @@ class _ProfileState extends State<Profile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Center(
-                        child: InkWell(
-                          child: CircleAvatar(
-                            backgroundImage: _imageFile != null
-                                ? FileImage(_imageFile!)
-                                : path == null
-                                    ? AssetImage('assets/logo/profile.png')
-                                        as ImageProvider
-                                    : FileImage(File(path.toString())),
-                            // : AssetImage('assets/profile.png')
-                            //     as ImageProvider  ,
-                            // backgroundImage: AssetImage('assets/profile.png'),
-                            radius: 80,
+                        child: CircleAvatar(
+                          backgroundImage: _imageFile != null
+                              ? FileImage(_imageFile!)
+                              : path == null
+                                  ? AssetImage('assets/logo/profile.png')
+                                      as ImageProvider
+                                  : FileImage(File(path.toString())),
+                          // : AssetImage('assets/profile.png')
+                          //     as ImageProvider  ,
+                          // backgroundImage: AssetImage('assets/profile.png'),
+                          radius: 80,
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: CircleAvatar(
+                                  radius: 23,
+                                  backgroundColor: Color(0xFFF23F44),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      takePhoto(ImageSource.gallery);
+                                    },
+                                  )
+                                ),
+                              ),
+                            ],
                           ),
-                          onTap: () {
-                            takePhoto(ImageSource.gallery);
-                          },
                         ),
                       ),
                       Divider(
