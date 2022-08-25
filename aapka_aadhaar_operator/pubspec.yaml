@@ -47,6 +47,7 @@ dependencies:
   image_picker: ^0.8.5+3
   flutter_rating_bar: ^4.0.1
   firebase_storage: ^10.3.6
+  form_field_validator: ^1.1.0
 
 dev_dependencies:
   flutter_test:
