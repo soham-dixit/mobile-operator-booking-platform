@@ -216,9 +216,9 @@ class _BookSlotsRescheduleState extends State<BookSlotsReschedule> {
               : databaseData['operators'][key]['slots'][dayG.toString()]
                   [slot[i]]['args'][0];
           day = i > 3
-              ? databaseData['operators'][key]['slots'][keys_list1[0]]
+              ? databaseData['operators'][key]['slots'][dayG.toString()]
                   [slot[i - 1]]['args'][1]
-              : databaseData['operators'][key]['slots'][keys_list1[0]][slot[i]]
+              : databaseData['operators'][key]['slots'][dayG.toString()][slot[i]]
                   ['args'][1];
         }
       }
