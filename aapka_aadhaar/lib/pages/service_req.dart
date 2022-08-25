@@ -66,6 +66,19 @@ class _ServiceRequestState extends State<ServiceRequest> {
     '4_5',
     '5_6',
   ];
+  List timingsForPB = [
+    '9:00 AM',
+    '10:00 AM',
+    '11:00 AM',
+    '12:00 PM',
+    '1:00 PM',
+    '2:00 PM',
+    '3:00 PM',
+    '4:00 PM',
+    '5:00 PM'
+  ];
+  String? index;
+  String? dayG;
 
   bookAppointment(int i, String day, String uORe) async {
     var location = await currentLocation.getLocation();
@@ -120,6 +133,9 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'user': uid,
               'args': [i, day]
             });
+
+      index = i > 3 ? slot[i - 1] : slot[i];
+      dayG = day;
     });
     databaseReference
         .child('users')
@@ -636,6 +652,10 @@ class _ServiceRequestState extends State<ServiceRequest> {
                           SizedBox(
                             height: 22,
                           ),
+                          Text(
+                            'Note: You cannot reschedule/cancel this booking after ${timingsForPB[args[0]]} on ${args[1]}',
+                          ),
+                          SizedBox(height: 20),
                           SizedBox(
                             width: double.infinity,
                             child: Row(
@@ -851,6 +871,10 @@ class _ServiceRequestState extends State<ServiceRequest> {
                           SizedBox(
                             height: 22,
                           ),
+                          Text(
+                            'Note: You cannot reschedule/cancel this booking after ${timingsForPB[args[0]]} on ${args[1]}',
+                          ),
+                          SizedBox(height: 20),
                           SizedBox(
                             width: double.infinity,
                             child: Row(
