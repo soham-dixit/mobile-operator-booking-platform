@@ -697,14 +697,14 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(
-                                snapshot.data[8].toString(),
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFFF23F44)),
-                              ),
+                              // Text(
+                              //   snapshot.data[8].toString(),
+                              //   style: TextStyle(
+                              //       fontFamily: 'Poppins',
+                              //       fontSize: 16,
+                              //       fontWeight: FontWeight.bold,
+                              //       color: Color(0xFFF23F44)),
+                              // ),
                               SizedBox(
                                 height: 90,
                               ),
