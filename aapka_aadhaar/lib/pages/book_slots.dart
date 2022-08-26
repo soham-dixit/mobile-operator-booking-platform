@@ -43,9 +43,12 @@ class _BookSlotsState extends State<BookSlots> {
     '4_5',
     '5_6',
   ];
+
+  List invalid_timings = [11, 12, 13, 14, 15, 16, 17, 18];
   List activeColor = [true, false, false, false];
   bool booked = false;
-  dynamic keys_list1;
+  bool invalid_booking = false;
+  List keys_list1 = [];
 
   getData(String day) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -124,6 +127,47 @@ class _BookSlotsState extends State<BookSlots> {
         }
       }
     }
+  }
+
+  invalidBooking(String day, int index) async {
+    print('invalid called');
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    Map<dynamic, dynamic> slotData = databaseData['operators'][key]['slots'];
+    keys_list1 = slotData.keys.toList();
+    // day = dayG.toString();
+    keys_list1.sort((a, b) {
+      return a.compareTo(b);
+    });
+    if (_dayFormatter.format(_currentDate) == day) {
+      for (int j = 0; j < slot.length; j++) {
+        if (databaseData['operators'][key]['slots'][keys_list1[0]][slot[j]] ==
+            false) {
+          for (int i = 0; i < invalid_timings.length; i++) {
+            if (_currentDate.hour > invalid_timings[index]) {
+              invalid_booking = true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  invalidBookingSnack() {
+    invalid_booking = false;
+    final snackBar = SnackBar(
+      content: const Text(
+        'Slot exhausted for today!',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   navigate(i) {
@@ -387,65 +431,90 @@ class _BookSlotsState extends State<BookSlots> {
                                                                   fontSize: 14),
                                                             ),
                                                   onPressed: () async {
-                                                    oneBookingPerDay(
-                                                            dayG.toString())
-                                                        .whenComplete(() {
-                                                      if (snapshot.data[i] !=
-                                                          false) {
-                                                        if (snapshot.data[i]
-                                                                ['user'] ==
-                                                            uid) {
-                                                          // addArgs(
-                                                          //     i, dayG.toString());
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  BookingDetails(),
-                                                              settings:
-                                                                  RouteSettings(
-                                                                arguments: [
-                                                                  i,
-                                                                  dayG
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          );
-                                                        } else {
-                                                          alreadyBooked();
-                                                        }
-                                                      } else {
-                                                        if (dayG ==
-                                                            keys_list1[0]) {
-                                                          if (booked) {
-                                                            oneBookingSnack();
-                                                          } else {
-                                                            navigate(i);
-                                                          }
-                                                        } else if (dayG ==
-                                                            keys_list1[1]) {
-                                                          if (booked) {
-                                                            oneBookingSnack();
-                                                          } else {
-                                                            navigate(i);
-                                                          }
-                                                        } else if (dayG ==
-                                                            keys_list1[2]) {
-                                                          if (booked) {
-                                                            oneBookingSnack();
-                                                          } else {
-                                                            navigate(i);
-                                                          }
-                                                        } else if (dayG ==
-                                                            keys_list1[3]) {
-                                                          if (booked) {
-                                                            oneBookingSnack();
-                                                          } else {
-                                                            navigate(i);
-                                                          }
-                                                        }
-                                                      }
-                                                    });
+                                                    if (_dayFormatter.format(
+                                                            _currentDate) ==
+                                                        dates[0]) {
+                                                      invalidBooking(
+                                                              dayG.toString(),
+                                                              i)
+                                                          .whenComplete(() {
+                                                        invalid_booking == false
+                                                            ? oneBookingPerDay(dayG
+                                                                    .toString())
+                                                                .whenComplete(
+                                                                    () {
+                                                                if (snapshot.data[
+                                                                        i] !=
+                                                                    false) {
+                                                                  if (snapshot.data[
+                                                                              i]
+                                                                          [
+                                                                          'user'] ==
+                                                                      uid) {
+                                                                    // addArgs(
+                                                                    //     i, dayG.toString());
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                BookingDetails(),
+                                                                        settings:
+                                                                            RouteSettings(
+                                                                          arguments: [
+                                                                            i,
+                                                                            dayG
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  } else {
+                                                                    alreadyBooked();
+                                                                  }
+                                                                } else {
+                                                                  if (dayG ==
+                                                                      keys_list1[
+                                                                          0]) {
+                                                                    if (booked) {
+                                                                      oneBookingSnack();
+                                                                    } else {
+                                                                      navigate(
+                                                                          i);
+                                                                    }
+                                                                  } else if (dayG ==
+                                                                      keys_list1[
+                                                                          1]) {
+                                                                    if (booked) {
+                                                                      oneBookingSnack();
+                                                                    } else {
+                                                                      navigate(
+                                                                          i);
+                                                                    }
+                                                                  } else if (dayG ==
+                                                                      keys_list1[
+                                                                          2]) {
+                                                                    if (booked) {
+                                                                      oneBookingSnack();
+                                                                    } else {
+                                                                      navigate(
+                                                                          i);
+                                                                    }
+                                                                  } else if (dayG ==
+                                                                      keys_list1[
+                                                                          3]) {
+                                                                    if (booked) {
+                                                                      oneBookingSnack();
+                                                                    } else {
+                                                                      navigate(
+                                                                          i);
+                                                                    }
+                                                                  }
+                                                                }
+                                                              })
+                                                            : invalidBookingSnack();
+                                                      });
+                                                    }
                                                   },
                                                   style: ButtonStyle(
                                                     foregroundColor:
