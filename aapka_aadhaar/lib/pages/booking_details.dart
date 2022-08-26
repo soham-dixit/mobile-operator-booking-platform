@@ -70,7 +70,7 @@ class _BookingDetailsState extends State<BookingDetails> {
 
   checkTime(int slot) {
     final _currentDate = DateTime.now();
-    print('chup ${_currentDate.add(Duration(hours: 11)).hour}');
+    // print('${_currentDate.hour}');
     for (int i = 0; i < timingsCheck.length; i++) {
       if (_currentDate.hour > timingsCheck[slot]) {
         invalid_booking = true;
