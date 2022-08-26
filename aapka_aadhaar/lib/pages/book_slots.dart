@@ -44,7 +44,7 @@ class _BookSlotsState extends State<BookSlots> {
     '5_6',
   ];
 
-  List invalid_timings = [11, 12, 13, 15, 16, 17, 18];
+  List invalid_timings = [11, 12, 13, 14, 15, 16, 17, 18];
   List activeColor = [true, false, false, false];
   bool booked = false;
   bool invalid_booking = false;
@@ -129,7 +129,7 @@ class _BookSlotsState extends State<BookSlots> {
     }
   }
 
-  invalidBooking() async {
+  invalidBooking(String day, int index) async {
     print('invalid called');
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
@@ -142,12 +142,14 @@ class _BookSlotsState extends State<BookSlots> {
     keys_list1.sort((a, b) {
       return a.compareTo(b);
     });
-    for (int j = 0; j < slot.length; j++) {
-      if (databaseData['operators'][key]['slots'][keys_list1[0]][slot[j]] ==
-          false) {
-        for (int i = 0; i < invalid_timings.length; i++) {
-          if (_currentDate.hour > invalid_timings[i]) {
-            invalid_booking = true;
+    if (_dayFormatter.format(_currentDate) == day) {
+      for (int j = 0; j < slot.length; j++) {
+        if (databaseData['operators'][key]['slots'][keys_list1[0]][slot[j]] ==
+            false) {
+          for (int i = 0; i < invalid_timings.length; i++) {
+            if (_currentDate.hour > invalid_timings[index]) {
+              invalid_booking = true;
+            }
           }
         }
       }
@@ -432,7 +434,9 @@ class _BookSlotsState extends State<BookSlots> {
                                                     if (_dayFormatter.format(
                                                             _currentDate) ==
                                                         dates[0]) {
-                                                      invalidBooking()
+                                                      invalidBooking(
+                                                              dayG.toString(),
+                                                              i)
                                                           .whenComplete(() {
                                                         invalid_booking == false
                                                             ? oneBookingPerDay(dayG
