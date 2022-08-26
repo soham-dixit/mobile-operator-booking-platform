@@ -171,127 +171,140 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         color: Color(0xFFFBF9F6),
         child: ListView(
           children: [
- FutureBuilder(
-                    future: data,
-                    builder: (context, AsyncSnapshot snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return Padding(
-                              padding: EdgeInsets.all(10),
-                              child: CupertinoActivityIndicator());
-                        case ConnectionState.none:
-                          return Text('none');
-                        case ConnectionState.active:
-                          return Text('active');
-                        case ConnectionState.done:
-                          if (snapshot.data[0] == 'null') {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Profile()));
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      snapshot.data[0],
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
+            FutureBuilder(
+                future: data,
+                builder: (context, AsyncSnapshot snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return Padding(
+                          padding: EdgeInsets.all(10),
+                          child: CupertinoActivityIndicator());
+                    case ConnectionState.none:
+                      return Text('none');
+                    case ConnectionState.active:
+                      return Text('active');
+                    case ConnectionState.done:
+                      return GestureDetector(
+                        onTap: () {
+                          snapshot.data[0] == 'Guest, Please Register'
+                              ? Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()))
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Profile()));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: path == null
+                                    ? AssetImage('assets/logo/profile.png')
+                                        as ImageProvider
+                                    : FileImage(File(path.toString())),
+                                radius: 45,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                snapshot.data[0],
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 18,
                                 ),
                               ),
-                            );
-                          } else {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Profile()));
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundImage: path == null
-                                          ? AssetImage(
-                                                  'assets/logo/profile.png')
-                                              as ImageProvider
-                                          : FileImage(File(path.toString())),
-                                      radius: 45,
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      snapshot.data[0],
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }
-                      }
-                    })
-                : Text(
-                    'Guest, Please Register',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 18,
-                    ),
-                  ),
-
-            // GestureDetector(
-            //   onTap: () {},
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(20.0),
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.start,
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         CircleAvatar(
-            //           backgroundColor: Color(0xFFF23F44),
-            //           radius: 45,
-            //         ),
-            //         SizedBox(
-            //           height: 10,
-            //         ),
-            //         Text(
-            //           'userName',
-            //           style: TextStyle(
-            //             fontFamily: 'Poppins',
-            //             fontSize: 18,
-            //           ),
-            //         ),
-            //         Text(
-            //           '+91',
-            //           style: TextStyle(
-            //             fontFamily: 'Poppins',
-            //             fontSize: 18,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
+                            ],
+                          ),
+                        ),
+                      );
+                  }
+                }),
+//  FutureBuilder(
+//                     future: data,
+//                     builder: (context, AsyncSnapshot snapshot) {
+//                       switch (snapshot.connectionState) {
+//                         case ConnectionState.waiting:
+//                           return Padding(
+//                               padding: EdgeInsets.all(10),
+//                               child: CupertinoActivityIndicator());
+//                         case ConnectionState.none:
+//                           return Text('none');
+//                         case ConnectionState.active:
+//                           return Text('active');
+//                         case ConnectionState.done:
+//                           if (snapshot.data[0] == 'null') {
+//                             return GestureDetector(
+//                               onTap: () {
+//                                 Navigator.push(
+//                                     context,
+//                                     MaterialPageRoute(
+//                                         builder: (context) => Profile()));
+//                               },
+//                               child: Padding(
+//                                 padding: const EdgeInsets.all(20.0),
+//                                 child: Column(
+//                                   mainAxisAlignment: MainAxisAlignment.start,
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   children: [
+//                                     SizedBox(
+//                                       height: 10,
+//                                     ),
+//                                     Text(
+//                                       snapshot.data[0],
+//                                       style: TextStyle(
+//                                         fontFamily: 'Poppins',
+//                                         fontSize: 18,
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             );
+//                           } else {
+//                             return GestureDetector(
+//                               onTap: () {
+//                                 Navigator.push(
+//                                     context,
+//                                     MaterialPageRoute(
+//                                         builder: (context) => Profile()));
+//                               },
+//                               child: Padding(
+//                                 padding: const EdgeInsets.all(20.0),
+//                                 child: Column(
+//                                   mainAxisAlignment: MainAxisAlignment.start,
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   children: [
+//                                     CircleAvatar(
+//                                       backgroundImage: path == null
+//                                           ? AssetImage(
+//                                                   'assets/logo/profile.png')
+//                                               as ImageProvider
+//                                           : FileImage(File(path.toString())),
+//                                       radius: 45,
+//                                     ),
+//                                     SizedBox(
+//                                       height: 10,
+//                                     ),
+//                                     Text(
+//                                       snapshot.data[0],
+//                                       style: TextStyle(
+//                                         fontFamily: 'Poppins',
+//                                         fontSize: 18,
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             );
+//                           }
+//                       }
+//
             Divider(
               color: Colors.grey,
               thickness: 1,
