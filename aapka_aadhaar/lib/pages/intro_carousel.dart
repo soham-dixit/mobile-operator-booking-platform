@@ -35,7 +35,7 @@ class _IntroCarouselState extends State<IntroCarousel> {
 
   void onDonePress() {
     // Do what you want
-    print("End of slides");
+    Navigator.pop(context);
   }
 
   ButtonStyle myButtonStyle() {

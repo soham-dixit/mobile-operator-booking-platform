@@ -289,10 +289,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               height: 11,
             ),
             buildMenuItem(
-              text: 'Carousel',
-              icon: Icons.chat,
+              text: 'How to Use?',
+              icon: Icons.info_outline,
               onTap: () {
-                Navigator.pushReplacement(context,
+                Navigator.push(context,
                     MaterialPageRoute(builder: (context) => IntroCarousel()));
               },
             ),
