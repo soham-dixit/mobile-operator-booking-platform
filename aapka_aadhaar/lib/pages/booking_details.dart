@@ -1288,7 +1288,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                             onPressed: () {
                               Widget noButton = ElevatedButton(
                                 onPressed: () {
-                                  checkTime(index);
+                                  // checkTime(index);
                                   invalid_booking
                                       ? showInvalidTimeSnack()
                                       : cancelBooking(context, "res");
