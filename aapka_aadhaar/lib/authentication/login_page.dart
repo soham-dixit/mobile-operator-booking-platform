@@ -4,6 +4,7 @@ import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:aapka_aadhaar/pages/intro_carousel.dart';
 import 'package:aapka_aadhaar/services/otp_verification.dart';
 import 'package:aapka_aadhaar/widgets/progress_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
@@ -70,6 +71,48 @@ class _LoginPageState extends State<LoginPage> {
     Map<ph.Permission, ph.PermissionStatus> statuses =
         await [ph.Permission.location].request();
     print(statuses[ph.Permission.location]);
+  }
+
+  loginGuest() {
+    print('loginGuest called ');
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    _auth.signInAnonymously().then((result) {
+      setState(() {
+        final User? user = result.user;
+        print('guest $user');
+        //get user uid
+        final uid = user?.uid;
+        saveGuestData(uid!);
+      });
+    });
+  }
+
+  saveGuestData(String uid) {
+    // print("uid2 $uid");
+    final databaseReference = FirebaseDatabase.instance.ref();
+    databaseReference.child('users').child('guests').child(uid).update({
+      'fullname': 'Guest',
+    });
+    //navigate to home page
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomePage(),
+      ),
+    );
+    //snackbar
+    final snackBar = SnackBar(
+      content: const Text(
+        'Welcome Guest!',
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 16,
+        ),
+      ),
+    );
+    // Find the ScaffoldMessenger in the widget tree
+    // and use it to show a SnackBar.
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -289,6 +332,30 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        // Text(
+                        //   'Login as Guest',
+                        //   style: TextStyle(
+                        //     fontFamily: 'Poppins',
+                        //     fontSize: 14,
+                        //     fontWeight: FontWeight.bold,
+                        //     color: Colors.black38,
+                        //   ),
+                        InkWell(
+                          onTap: loginGuest,
+                          child: Text(
+                            'Login as Guest',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFF23F44),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                         // GestureDetector(
                         //   onTap: () {

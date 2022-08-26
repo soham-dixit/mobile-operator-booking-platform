@@ -1,3 +1,5 @@
+import 'package:aapka_aadhaar/authentication/login_page.dart';
+import 'package:aapka_aadhaar/authentication/register_page.dart';
 import 'package:aapka_aadhaar/pages/booking_details.dart';
 import 'package:aapka_aadhaar/pages/navigation_drawer.dart';
 import 'package:aapka_aadhaar/pages/service_req.dart';
@@ -170,12 +172,33 @@ class _BookSlotsState extends State<BookSlots> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  navigate(i) {
-    Navigator.push(
+  navigate(i) async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    List keys_list = databaseData['users'].keys.toList();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    // final name = databaseData['users']['guests'][uid]['fullname'];
+    print('guest name $uid');
+    if (keys_list.contains(uid)) {
+      print('test1');
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ServiceRequest(),
+              settings: RouteSettings(arguments: [i, dayG])));
+    } else {
+      print('test');
+      //navigate to login page
+      Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ServiceRequest(),
-            settings: RouteSettings(arguments: [i, dayG])));
+          builder: (context) => RegisterPage(),
+        ),
+      );
+    }
   }
 
   @override

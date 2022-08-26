@@ -30,17 +30,35 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
   getData() async {
     final databaseReference = FirebaseDatabase.instance.ref();
+    DatabaseEvent event = await databaseReference.once();
     final FirebaseAuth auth = FirebaseAuth.instance;
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    final keys_list = databaseData['users'].keys.toList();
     final User user = await auth.currentUser!;
     final uid = user.uid;
     print('uid -- $uid');
-    DatabaseEvent event = await databaseReference.once();
-    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
-    if (databaseData['users'] != null) {
+    if (databaseData['users'] != null && keys_list.contains(uid)) {
       info.add(databaseData['users'][uid]['fullname']);
       print(info);
+      return info;
+    } else {
+      info.add('Guest, Please Register');
+      return info;
     }
-    return info;
+
+    //    final databaseReference = FirebaseDatabase.instance.ref();
+    // DatabaseEvent event = await databaseReference.once();
+    // final FirebaseAuth auth = FirebaseAuth.instance;
+    // Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    // final keys_list = databaseData['users'].keys.toList();
+    // final User user = await auth.currentUser!;
+    // final uid = user.uid;
+    // print('uid -- $uid');
+    // if (databaseData['users'] != null && keys_list.contains(uid)) {
+
+    // } else {
+    //   data = getData1();
+    // }
   }
 
   contactRedirect(BuildContext context) {
@@ -132,6 +150,14 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     checkPreviousPhoto();
   }
 
+  // checkUser() async {
+
+  // }
+
+  // getData1() {
+  //   info.add('null');
+  // }
+
   checkPreviousPhoto() async {
     final pref = await SharedPreferences.getInstance();
     path = pref.getString('profile-img');
@@ -160,10 +186,15 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     case ConnectionState.done:
                       return GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Profile()));
+                          snapshot.data[0] == 'Guest, Please Register'
+                              ? Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()))
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Profile()));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
@@ -194,39 +225,86 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                       );
                   }
                 }),
-            // GestureDetector(
-            //   onTap: () {},
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(20.0),
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.start,
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         CircleAvatar(
-            //           backgroundColor: Color(0xFFF23F44),
-            //           radius: 45,
-            //         ),
-            //         SizedBox(
-            //           height: 10,
-            //         ),
-            //         Text(
-            //           'userName',
-            //           style: TextStyle(
-            //             fontFamily: 'Poppins',
-            //             fontSize: 18,
-            //           ),
-            //         ),
-            //         Text(
-            //           '+91',
-            //           style: TextStyle(
-            //             fontFamily: 'Poppins',
-            //             fontSize: 18,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
+//  FutureBuilder(
+//                     future: data,
+//                     builder: (context, AsyncSnapshot snapshot) {
+//                       switch (snapshot.connectionState) {
+//                         case ConnectionState.waiting:
+//                           return Padding(
+//                               padding: EdgeInsets.all(10),
+//                               child: CupertinoActivityIndicator());
+//                         case ConnectionState.none:
+//                           return Text('none');
+//                         case ConnectionState.active:
+//                           return Text('active');
+//                         case ConnectionState.done:
+//                           if (snapshot.data[0] == 'null') {
+//                             return GestureDetector(
+//                               onTap: () {
+//                                 Navigator.push(
+//                                     context,
+//                                     MaterialPageRoute(
+//                                         builder: (context) => Profile()));
+//                               },
+//                               child: Padding(
+//                                 padding: const EdgeInsets.all(20.0),
+//                                 child: Column(
+//                                   mainAxisAlignment: MainAxisAlignment.start,
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   children: [
+//                                     SizedBox(
+//                                       height: 10,
+//                                     ),
+//                                     Text(
+//                                       snapshot.data[0],
+//                                       style: TextStyle(
+//                                         fontFamily: 'Poppins',
+//                                         fontSize: 18,
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             );
+//                           } else {
+//                             return GestureDetector(
+//                               onTap: () {
+//                                 Navigator.push(
+//                                     context,
+//                                     MaterialPageRoute(
+//                                         builder: (context) => Profile()));
+//                               },
+//                               child: Padding(
+//                                 padding: const EdgeInsets.all(20.0),
+//                                 child: Column(
+//                                   mainAxisAlignment: MainAxisAlignment.start,
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   children: [
+//                                     CircleAvatar(
+//                                       backgroundImage: path == null
+//                                           ? AssetImage(
+//                                                   'assets/logo/profile.png')
+//                                               as ImageProvider
+//                                           : FileImage(File(path.toString())),
+//                                       radius: 45,
+//                                     ),
+//                                     SizedBox(
+//                                       height: 10,
+//                                     ),
+//                                     Text(
+//                                       snapshot.data[0],
+//                                       style: TextStyle(
+//                                         fontFamily: 'Poppins',
+//                                         fontSize: 18,
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             );
+//                           }
+//                       }
+//
             Divider(
               color: Colors.grey,
               thickness: 1,
