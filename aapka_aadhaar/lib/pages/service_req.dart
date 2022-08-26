@@ -93,6 +93,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
     final uid = user.uid;
     var rng = new Random();
     var serviceOtp = rng.nextInt(9000) + 1000;
+    print('called bookapt');
 
     setState(() {
       uORe == 'update'
@@ -116,7 +117,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'ratingSubmitted': false,
               'user': uid,
               'args': [i, day],
-              'mode': 'online'
+              'mode': 'Online'
             })
           : databaseReference
               .child('operators')
@@ -136,7 +137,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'ratingSubmitted': false,
               'user': uid,
               'args': [i, day],
-              'mode': 'online'
+              'mode': 'Online'
             });
 
       index = i > 3 ? slot[i - 1] : slot[i];
@@ -148,9 +149,9 @@ class _ServiceRequestState extends State<ServiceRequest> {
         .child('location')
         .set({"latitude": location.latitude, "longitude": location.longitude});
 
-    pref.remove('arg0');
-    pref.remove('arg1');
-    pref.remove('arg2');
+    // pref.remove('arg0');
+    // pref.remove('arg1');
+    // pref.remove('arg2');
 
     buildShowDialog(context);
   }
@@ -307,7 +308,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'ratingSubmitted': false,
               'user': uid,
               'args': [i, day],
-              'mode': 'cos'
+              'mode': 'Cash on Service'
             })
           : databaseReference
               .child('operators')
@@ -327,7 +328,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
               'ratingSubmitted': false,
               'user': uid,
               'args': [i, day],
-              'mode': 'cos'
+              'mode': 'Cash on Service'
             });
     });
     databaseReference
@@ -814,13 +815,17 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                       if (selectedValues.isNotEmpty) {
                                         // print('Updation - ${_value2}');
                                         if (_value == 'Online Payment') {
-                                          final pref = await SharedPreferences
-                                              .getInstance();
-                                          pref.setString(
-                                              'arg0', args[0].toString());
-                                          pref.setString('arg1', args[1]);
-                                          pref.setString('arg2', 'update');
-                                          openCheckout();
+                                          print('Updation - ${_value}');
+                                          // cosBook(args[0], args[1], 'update');
+                                          bookAppointment(
+                                              args[0], args[1], 'update');
+                                          // final pref = await SharedPreferences
+                                          //     .getInstance();
+                                          // pref.setString(
+                                          //     'arg0', args[0].toString());
+                                          // pref.setString('arg1', args[1]);
+                                          // pref.setString('arg2', 'update');
+                                          // openCheckout();
                                         } else if (_value ==
                                             'Cash On Service') {
                                           cosBook(args[0], args[1], 'update');
@@ -1084,13 +1089,9 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                         .validate()) {
                                       // print('Enrollment - ${_value2}');
                                       if (_value2 == 'Online Payment') {
-                                        final pref = await SharedPreferences
-                                            .getInstance();
-                                        pref.setString(
-                                            'arg0', args[0].toString());
-                                        pref.setString('arg1', args[1]);
-                                        pref.setString('arg2', 'enrollment');
-                                        openCheckout();
+                                        print('Enrollment - ${_value2}');
+                                        bookAppointment(
+                                            args[0], args[1], 'enrollment');
                                       } else if (_value2 == 'Cash On Service') {
                                         cosBook(args[0], args[1], 'enrollment');
                                       }

@@ -365,16 +365,18 @@ class _BookingDetailsState extends State<BookingDetails> {
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          final check = databaseReference
-              .child('operators')
-              .child(key)
-              .child('slots')
-              .child(cancelBookingDate)
-              .child(slot[cancelBookingSlot - 1])
-              .child('mode')
+          final check = databaseData['operators'][key]['slots']
+                  [cancelBookingDate][slot[cancelBookingSlot - 1]]['mode']
               .toString();
+          // .child('operators')
+          // .child(key)
+          // .child('slots')
+          // .child(cancelBookingDate)
+          // .child(slot[cancelBookingSlot - 1])
+          // .child('mode')
+          // .toString();
           print('check $check');
-          if (check == 'online') {
+          if (check == 'Online') {
             makePayment();
           }
         } else {
@@ -418,7 +420,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                   [cancelBookingDate][slot[cancelBookingSlot]]['mode']
               .toString();
           print('check $check');
-          if (check == 'online') {
+          if (check == 'Online') {
             makePayment();
           }
         } else {
