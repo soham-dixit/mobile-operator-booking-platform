@@ -22,6 +22,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
   late Razorpay razorpay;
 
   String? _value = 'Cash On Service';
+  String? _value2 = 'Cash On Service';
 
   final GlobalKey<FormState> updationFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> enrollmentFormKey = GlobalKey<FormState>();
@@ -811,6 +812,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     if (updationFormKey.currentState!
                                         .validate()) {
                                       if (selectedValues.isNotEmpty) {
+                                        // print('Updation - ${_value2}');
                                         if (_value == 'Online Payment') {
                                           final pref = await SharedPreferences
                                               .getInstance();
@@ -1000,10 +1002,10 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                   Radio<String>(
                                     activeColor: Color(0xFFF23F44),
                                     value: 'Cash On Service',
-                                    groupValue: _value,
+                                    groupValue: _value2,
                                     onChanged: (String? value) {
                                       setState(() {
-                                        _value = value;
+                                        _value2 = value;
                                       });
                                     },
                                   ),
@@ -1018,10 +1020,10 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                   Radio<String>(
                                     activeColor: Color(0xFFF23F44),
                                     value: 'Online Payment',
-                                    groupValue: _value,
+                                    groupValue: _value2,
                                     onChanged: (String? value) {
                                       setState(() {
-                                        _value = value;
+                                        _value2 = value;
                                       });
                                     },
                                   ),
@@ -1080,7 +1082,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     // });
                                     if (enrollmentFormKey.currentState!
                                         .validate()) {
-                                      if (_value == 'Online Payment') {
+                                      // print('Enrollment - ${_value2}');
+                                      if (_value2 == 'Online Payment') {
                                         final pref = await SharedPreferences
                                             .getInstance();
                                         pref.setString(
@@ -1088,7 +1091,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                         pref.setString('arg1', args[1]);
                                         pref.setString('arg2', 'enrollment');
                                         openCheckout();
-                                      } else if (_value == 'Cash On Service') {
+                                      } else if (_value2 == 'Cash On Service') {
                                         cosBook(args[0], args[1], 'enrollment');
                                       }
                                     }

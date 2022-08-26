@@ -23,6 +23,7 @@ class _BookingDetailsState extends State<BookingDetails> {
   late int cancelBookingSlot;
   late int serviceOtp;
   final list = [];
+  String? mode;
 
   String? _reason;
   // late Future data;
@@ -73,7 +74,7 @@ class _BookingDetailsState extends State<BookingDetails> {
     final serviceOtp = i > 3
         ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['otp']
         : databaseData['operators'][uid]['slots'][date][slot[i]]['otp'];
-    final mode = i > 3
+    mode = i > 3
         ? databaseData['operators'][uid]['slots'][date][slot[i - 1]]['mode']
         : databaseData['operators'][uid]['slots'][date][slot[i]]['mode'];
 
@@ -275,7 +276,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                 return Text('active');
               case ConnectionState.done:
                 int index = snapshot.data[4];
-    
+
                 // var date = DateFormat('EEEE, d MMM, yyyy')
                 //     .format(DateTime.parse(snapshot.data[5]));
                 // print('null ${DateTime.parse(snapshot.data[5] + ' 00:00:00.000')}');
@@ -538,7 +539,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Mode of Payment ',
+                                'Mode of Payment ' + mode!,
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 16,

@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookingDetails extends StatefulWidget {
@@ -19,6 +20,7 @@ class BookingDetails extends StatefulWidget {
 }
 
 class _BookingDetailsState extends State<BookingDetails> {
+  late Razorpay razorpay;
   String cancelBookingDate = '';
   late int cancelBookingSlot;
   int currentRating = 0;
@@ -363,6 +365,18 @@ class _BookingDetailsState extends State<BookingDetails> {
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          final check = databaseReference
+              .child('operators')
+              .child(key)
+              .child('slots')
+              .child(cancelBookingDate)
+              .child(slot[cancelBookingSlot - 1])
+              .child('mode')
+              .toString();
+          print('check $check');
+          if (check == 'online') {
+            makePayment();
+          }
         } else {
           Navigator.pop(context);
           final snackBar = SnackBar(
@@ -400,6 +414,13 @@ class _BookingDetailsState extends State<BookingDetails> {
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          final check = databaseData['operators'][key]['slots']
+                  [cancelBookingDate][slot[cancelBookingSlot]]['mode']
+              .toString();
+          print('check $check');
+          if (check == 'online') {
+            makePayment();
+          }
         } else {
           Navigator.pop(context);
           final snackBar = SnackBar(
@@ -491,6 +512,16 @@ class _BookingDetailsState extends State<BookingDetails> {
         );
       });
     }
+  }
+
+  makePayment() async {
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    openCheckout();
   }
 
   showSnack() async {
@@ -728,6 +759,71 @@ class _BookingDetailsState extends State<BookingDetails> {
   //   // TODO: implement initState
   //   super.initState();
   // }
+
+  @override
+  void initState() {
+    super.initState();
+    razorpay = new Razorpay();
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlerPaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlerErrorFailure);
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handlerExternalWallet);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    razorpay.clear();
+  }
+
+  void openCheckout() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    var options = {
+      "key": "rzp_test_TWnK1D5r7DV05M",
+      "amount": 100 * 100,
+      "name": "Aapka Aadhaar",
+      "description": "Door Step Aadhaar Card Service",
+      "timeout": 120,
+      "prefill": {
+        "contact": databaseData['users'][uid]['phoneNumber'],
+        "email": databaseData['users'][uid]['email'],
+      },
+      "external": {
+        "wallets": ["paytm"]
+      }
+    };
+    try {
+      razorpay.open(options);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void handlerPaymentSuccess(PaymentSuccessResponse response) async {
+    // final pref = await SharedPreferences.getInstance();
+    // String? i = pref.getString('arg0');
+    // int i1 = int.parse(i!);
+    // String? day = pref.getString('arg1');
+    // String? uORe = pref.getString('arg2');
+    // bookAppointment(i1, day!, uORe!);
+    print('Payment Success');
+  }
+
+  void handlerErrorFailure(PaymentFailureResponse response) async {
+    // final pref = await SharedPreferences.getInstance();
+    // pref.remove('arg0');
+    // pref.remove('arg1');
+    // pref.remove('arg2');
+    print('payment error');
+  }
+
+  void handlerExternalWallet(ExternalWalletResponse response) {
+    print('external wallet');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1029,7 +1125,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                         Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: TextFormField(
-                            initialValue: 'Mode of payment: ',
+                            initialValue: 'Mode of payment: ' + mode,
                             maxLines: null,
                             readOnly: true,
                             style: TextStyle(
