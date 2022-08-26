@@ -4,6 +4,7 @@ import 'package:aapka_aadhaar/authentication/login_page.dart';
 import 'package:aapka_aadhaar/pages/about_us.dart';
 import 'package:aapka_aadhaar/pages/booking_details.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
+import 'package:aapka_aadhaar/pages/intro_carousel.dart';
 import 'package:aapka_aadhaar/pages/press-releases.dart';
 import 'package:aapka_aadhaar/pages/contact_page.dart';
 import 'package:aapka_aadhaar/pages/previous_bookings.dart';
@@ -110,8 +111,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('uid-user');
       print("logged out");
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginPage()));
+      while (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => LoginPage()));
     });
   }
 
@@ -172,7 +176,6 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                                     ? AssetImage('assets/logo/profile.png')
                                         as ImageProvider
                                     : FileImage(File(path.toString())),
-                                
                                 radius: 45,
                               ),
                               SizedBox(
@@ -280,6 +283,17 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               icon: Icons.chat,
               onTap: () {
                 pressReleaseRedirect(context);
+              },
+            ),
+            SizedBox(
+              height: 11,
+            ),
+            buildMenuItem(
+              text: 'How to Use?',
+              icon: Icons.info_outline,
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => IntroCarousel()));
               },
             ),
             SizedBox(

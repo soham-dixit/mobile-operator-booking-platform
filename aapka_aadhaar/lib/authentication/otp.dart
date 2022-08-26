@@ -46,7 +46,7 @@ class _OtpState extends State<Otp> {
       "email": email,
       "phoneNumber": phoneNumber
     }).whenComplete(() {
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => HomePage(),
         ),

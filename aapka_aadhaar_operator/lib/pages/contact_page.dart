@@ -1,3 +1,4 @@
+import 'package:aapka_aadhaar_operator/pages/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -12,6 +13,7 @@ class _ContactPageState extends State<ContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavigationDrawer(),
       backgroundColor: Color(0xFFFBF9F6),
       appBar: AppBar(
         title: Text('Contact Us'),

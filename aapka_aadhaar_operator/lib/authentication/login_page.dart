@@ -7,6 +7,7 @@ import 'package:aapka_aadhaar_operator/services/otp_verification.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 // import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 
 class OperatorLogin extends StatefulWidget {
@@ -26,6 +27,12 @@ class _OperatorLoginState extends State<OperatorLogin> {
     );
   }
 
+  final mobileValidator = MultiValidator([
+    RequiredValidator(errorText: 'Please enter a mobile number!!'),
+    PatternValidator(r'^[6-9]\d{9}$',
+        errorText: 'Please Enter a valid 10 digit Mobile Number')
+  ]);
+
   OTPVerification otpVerification = OTPVerification();
   TextEditingController phone = TextEditingController();
   bool phone_exists = false;
@@ -36,9 +43,10 @@ class _OperatorLoginState extends State<OperatorLogin> {
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     if (databaseData['operators'] != null) {
       dynamic keys_list = databaseData['operators'].keys.toList();
-      
+
       for (int i = 0; i < keys_list.length; i++) {
-        if (databaseData['operators'][keys_list[i]].containsValue(phoneNumber)) {
+        if (databaseData['operators'][keys_list[i]]
+            .containsValue(phoneNumber)) {
           phone_exists = true;
         }
       }
@@ -125,60 +133,54 @@ class _OperatorLoginState extends State<OperatorLogin> {
                     child: Column(
                       children: [
                         TextFormField(
-                          keyboardType: TextInputType.number,
-                          maxLength: 10,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          cursorColor: Colors.black,
-                          controller: phone,
-                          decoration: InputDecoration(
-                            label: Text('Mobile'),
-                            labelStyle: TextStyle(
-                              color: Colors.grey.shade700,
+                            keyboardType: TextInputType.phone,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            maxLength: 10,
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                            errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                                borderRadius: BorderRadius.circular(10)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            prefix: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              child: Text(
-                                '(+91)',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                            cursorColor: Colors.black,
+                            controller: phone,
+                            decoration: InputDecoration(
+                              label: Text('Mobile'),
+                              labelStyle: TextStyle(
+                                color: Colors.grey.shade700,
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(10)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.black12),
+                                  borderRadius: BorderRadius.circular(10)),
+                              prefix: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(
+                                  '(+91)',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
+                              // suffixIcon: Icon(
+                              //   Icons.check_circle,
+                              //   color: Colors.green,
+                              //   size: 32,
+                              // ),
                             ),
-                            // suffixIcon: Icon(
-                            //   Icons.check_circle,
-                            //   color: Colors.green,
-                            //   size: 32,
-                            // ),
-                          ),
-                          validator: (value) {
-                            try {
-                              if (value!.isEmpty ||
-                                  !RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
-                                return 'Please Enter a valid 10 digit Mobile Number';
-                              } else {
-                                return null;
-                              }
-                            } catch (e) {}
-                          },
-                        ),
+                            validator: mobileValidator),
                         const SizedBox(
                           height: 22,
                         ),
@@ -187,7 +189,8 @@ class _OperatorLoginState extends State<OperatorLogin> {
                           child: ElevatedButton(
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                check_phone_exists(phone.text).whenComplete(() {
+                                check_phone_exists(phone.text)
+                                    .whenComplete(() {
                                   phone_exists
                                       ? otpVerification
                                           .verifyPhone(phone.text)
@@ -195,8 +198,8 @@ class _OperatorLoginState extends State<OperatorLogin> {
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) => Otp(),
-                                              settings:
-                                                  RouteSettings(arguments: []),
+                                              settings: RouteSettings(
+                                                  arguments: []),
                                             ),
                                           );
                                         })
@@ -212,10 +215,11 @@ class _OperatorLoginState extends State<OperatorLogin> {
                               //     });
                             },
                             style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFFF23F44)),
+                              foregroundColor:
+                                  MaterialStateProperty.all<Color>(
+                                      Colors.white),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Color(0xFFF23F44)),
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -268,7 +272,7 @@ class _OperatorLoginState extends State<OperatorLogin> {
                         ),
                         // GestureDetector(
                         //   onTap: () {
-                        //     Navigator.of(context).pushReplacement(
+                        //     Navigator.of(context).push(
                         //         MaterialPageRoute(
                         //             builder: ((context) => HomePage())));
                         //   },

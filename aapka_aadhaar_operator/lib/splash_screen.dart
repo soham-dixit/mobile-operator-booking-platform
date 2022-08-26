@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   navigateToLogin() async {
     await Future.delayed(Duration(milliseconds: 2800), () {});
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => OperatorLogin(),
@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (uid != null) {
       print(uid);
       await Future.delayed(Duration(milliseconds: 2800), () {});
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => HomePage(),

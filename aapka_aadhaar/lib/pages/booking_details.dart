@@ -1,4 +1,5 @@
 import 'package:aapka_aadhaar/pages/book_slots.dart';
+import 'package:aapka_aadhaar/pages/book_slots_reschedule.dart';
 import 'package:aapka_aadhaar/pages/feedback_form.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
 import 'package:aapka_aadhaar/pages/navigation.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookingDetails extends StatefulWidget {
@@ -18,16 +20,19 @@ class BookingDetails extends StatefulWidget {
 }
 
 class _BookingDetailsState extends State<BookingDetails> {
+  late Razorpay razorpay;
   String cancelBookingDate = '';
   late int cancelBookingSlot;
   int currentRating = 0;
   final list = [];
   String opName = '';
+  String mode = '';
   String opPhone = '';
   String purpose = '';
   late int serviceOtp;
   String status = '';
   int count = 1;
+  String? cancelledTime;
   // late Future data;
   List slot = [
     '10_11',
@@ -58,6 +63,32 @@ class _BookingDetailsState extends State<BookingDetails> {
     '4:00 - 5:00 PM',
     '5:00 - 6:00 PM'
   ];
+
+  bool invalid_booking = false;
+
+  List timingsCheck = [11, 12, 13, 15, 16, 17, 18];
+
+  checkTime(int slot) {
+    final _currentDate = DateTime.now();
+    // print('${_currentDate.hour}');
+    for (int i = 0; i < timingsCheck.length; i++) {
+      if (_currentDate.hour > timingsCheck[slot]) {
+        invalid_booking = true;
+      }
+    }
+  }
+
+  showInvalidTimeSnack() async {
+    final SnackBar snackBar = SnackBar(
+      content: Text('Too late to cancel!',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 16,
+          )),
+      duration: Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   getData(int i, String date) async {
     list.clear();
@@ -168,6 +199,9 @@ class _BookingDetailsState extends State<BookingDetails> {
     final service = i > 3
         ? databaseData['operators'][key]['slots'][date][slot[i - 1]]['service']
         : databaseData['operators'][key]['slots'][date][slot[i]]['service'];
+    mode = i > 3
+        ? databaseData['operators'][key]['slots'][date][slot[i - 1]]['mode']
+        : databaseData['operators'][key]['slots'][date][slot[i]]['mode'];
     if (service == 'update') {
       final aadhaar = i > 3
           ? databaseData['operators'][key]['slots'][date][slot[i - 1]]
@@ -184,32 +218,106 @@ class _BookingDetailsState extends State<BookingDetails> {
     }
   }
 
-  void cancelBooking(BuildContext context) async {
+  void cancelBooking(BuildContext context, String cancelOrRes) async {
     final databaseReference = FirebaseDatabase.instance.ref();
     DatabaseEvent event = await databaseReference.once();
     Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
     final pref = await SharedPreferences.getInstance();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
     final key = pref.getString('operator-key');
+    var data;
     if (cancelBookingSlot > 3) {
-      databaseReference
-          .child('operators')
-          .child(key!)
-          .child('slots')
-          .child(cancelBookingDate)
-          .update({slot[cancelBookingSlot - 1]: false});
-      redirectHomePage(context);
+      if (cancelOrRes == 'cancel') {
+        databaseReference
+            .child('operators')
+            .child(key!)
+            .child('slots')
+            .child(cancelBookingDate)
+            .update({slot[cancelBookingSlot - 1]: false});
+      } else {
+        data = databaseData['operators'][key]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot - 1]];
+        print('Data $data');
+        databaseReference
+            .child('operators')
+            .child(key!)
+            .child('slots')
+            .child(cancelBookingDate)
+            .update({slot[cancelBookingSlot - 1]: false});
+      }
+
+      // redirectHomePage(context);
+      cancelledTime = timingsForPB[cancelBookingSlot - 1].toString();
     } else {
-      databaseReference
-          .child('operators')
-          .child(key!)
-          .child('slots')
-          .child(cancelBookingDate)
-          .update({slot[cancelBookingSlot]: false});
-      redirectHomePage(context);
+      if (cancelOrRes == 'cancel') {
+        databaseReference
+            .child('operators')
+            .child(key!)
+            .child('slots')
+            .child(cancelBookingDate)
+            .update({slot[cancelBookingSlot]: false});
+      } else {
+        data = databaseData['operators'][key]['slots'][cancelBookingDate]
+            [slot[cancelBookingSlot]];
+        print('Data $data');
+        databaseReference
+            .child('operators')
+            .child(key!)
+            .child('slots')
+            .child(cancelBookingDate)
+            .update({slot[cancelBookingSlot]: false});
+      }
+      // var data = databaseData['operators'][key]['slots'][cancelBookingDate]
+      //     [slot[cancelBookingSlot]];
+      // print('Data $data');
+
+      cancelledTime = timingsForPB[cancelBookingSlot].toString();
+      // redirectHomePage(context);
     }
+    cancelOrRes == 'cancel'
+        ? redirectHomePage(context)
+        : redirectBookSlots(context, data);
+  }
+
+  redirectBookSlots(BuildContext context, var data) {
+    final SnackBar snackBar = SnackBar(
+      content: Text('Your booking for $cancelledTime has been cancelled.',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 16,
+          )),
+      duration: Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookSlotsReschedule(),
+        settings: RouteSettings(arguments: data),
+      ),
+    );
   }
 
   redirectHomePage(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        });
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ));
+    showSnack();
+  }
+
+  redirectHomePageAfter(BuildContext context) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -223,7 +331,6 @@ class _BookingDetailsState extends State<BookingDetails> {
         MaterialPageRoute(
           builder: (context) => HomePage(),
         ));
-    showSnack();
   }
 
   verifyServiceOtp() async {
@@ -258,6 +365,20 @@ class _BookingDetailsState extends State<BookingDetails> {
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          final check = databaseData['operators'][key]['slots']
+                  [cancelBookingDate][slot[cancelBookingSlot - 1]]['mode']
+              .toString();
+          // .child('operators')
+          // .child(key)
+          // .child('slots')
+          // .child(cancelBookingDate)
+          // .child(slot[cancelBookingSlot - 1])
+          // .child('mode')
+          // .toString();
+          print('check $check');
+          if (check == 'Online') {
+            makePayment();
+          }
         } else {
           Navigator.pop(context);
           final snackBar = SnackBar(
@@ -295,6 +416,13 @@ class _BookingDetailsState extends State<BookingDetails> {
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          final check = databaseData['operators'][key]['slots']
+                  [cancelBookingDate][slot[cancelBookingSlot]]['mode']
+              .toString();
+          print('check $check');
+          if (check == 'Online') {
+            makePayment();
+          }
         } else {
           Navigator.pop(context);
           final snackBar = SnackBar(
@@ -344,7 +472,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                   );
                 });
             Future.delayed(Duration(seconds: 1), () {
-              Navigator.pushReplacement(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => FeedbackForm(),
@@ -386,6 +514,16 @@ class _BookingDetailsState extends State<BookingDetails> {
         );
       });
     }
+  }
+
+  makePayment() async {
+    final pref = await SharedPreferences.getInstance();
+    final key = pref.getString('operator-key');
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    openCheckout();
   }
 
   showSnack() async {
@@ -615,6 +753,7 @@ class _BookingDetailsState extends State<BookingDetails> {
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    redirectHomePage(context);
   }
 
   // @override
@@ -622,6 +761,71 @@ class _BookingDetailsState extends State<BookingDetails> {
   //   // TODO: implement initState
   //   super.initState();
   // }
+
+  @override
+  void initState() {
+    super.initState();
+    razorpay = new Razorpay();
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlerPaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlerErrorFailure);
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handlerExternalWallet);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    razorpay.clear();
+  }
+
+  void openCheckout() async {
+    final databaseReference = FirebaseDatabase.instance.ref();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = await auth.currentUser!;
+    final uid = user.uid;
+    DatabaseEvent event = await databaseReference.once();
+    Map<dynamic, dynamic> databaseData = event.snapshot.value as Map;
+    var options = {
+      "key": "rzp_test_TWnK1D5r7DV05M",
+      "amount": 100 * 100,
+      "name": "Aapka Aadhaar",
+      "description": "Door Step Aadhaar Card Service",
+      "timeout": 120,
+      "prefill": {
+        "contact": databaseData['users'][uid]['phoneNumber'],
+        "email": databaseData['users'][uid]['email'],
+      },
+      "external": {
+        "wallets": ["paytm"]
+      }
+    };
+    try {
+      razorpay.open(options);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void handlerPaymentSuccess(PaymentSuccessResponse response) async {
+    // final pref = await SharedPreferences.getInstance();
+    // String? i = pref.getString('arg0');
+    // int i1 = int.parse(i!);
+    // String? day = pref.getString('arg1');
+    // String? uORe = pref.getString('arg2');
+    // bookAppointment(i1, day!, uORe!);
+    print('Payment Success');
+  }
+
+  void handlerErrorFailure(PaymentFailureResponse response) async {
+    // final pref = await SharedPreferences.getInstance();
+    // pref.remove('arg0');
+    // pref.remove('arg1');
+    // pref.remove('arg2');
+    print('payment error');
+  }
+
+  void handlerExternalWallet(ExternalWalletResponse response) {
+    print('external wallet');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -920,6 +1124,21 @@ class _BookingDetailsState extends State<BookingDetails> {
                         SizedBox(
                           height: 10,
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: TextFormField(
+                            initialValue: 'Mode of payment: ' + mode,
+                            maxLines: null,
+                            readOnly: true,
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -1067,24 +1286,36 @@ class _BookingDetailsState extends State<BookingDetails> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              Widget noButton = TextButton(
-                                child: Text("No"),
+                              Widget noButton = ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  checkTime(index);
+                                  invalid_booking
+                                      ? showInvalidTimeSnack()
+                                      : cancelBooking(context, "res");
+
+                                  // cancelBooking(context, "res");
                                 },
+                                child: Text('Reschedule'),
+                                style: ElevatedButton.styleFrom(
+                                    shape: StadiumBorder(),
+                                    primary: Color(0xFFFFFFFF),
+                                    onPrimary: Color(0xFF000000)),
                               );
                               Widget yesButton = ElevatedButton(
                                 onPressed: () {
-                                  cancelBooking(context);
+                                  checkTime(index);
+                                  invalid_booking
+                                      ? showInvalidTimeSnack()
+                                      : cancelBooking(context, "cancel");
                                 },
-                                child: Text('Yes'),
+                                child: Text('Cancel'),
                                 style: ElevatedButton.styleFrom(
                                     shape: StadiumBorder(),
                                     primary: Color(0xFFF23F44)),
                               );
                               AlertDialog alert = AlertDialog(
                                 title: const Text(
-                                    "Are you sure you want cancel the booking?",
+                                    "Would you like to cancel or reschedule the booking?",
                                     style: TextStyle(
                                         fontFamily: 'Poppins', fontSize: 18)),
                                 actions: [
@@ -1114,7 +1345,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                             child: const Padding(
                               padding: EdgeInsets.all(14.0),
                               child: Text(
-                                'Cancel Booking',
+                                'Cancel / Reschedule Booking',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Poppins',
