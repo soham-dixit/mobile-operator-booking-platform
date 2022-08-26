@@ -1,6 +1,7 @@
 import 'package:aapka_aadhaar/authentication/otp.dart';
 import 'package:aapka_aadhaar/authentication/register_page.dart';
 import 'package:aapka_aadhaar/pages/home_page.dart';
+import 'package:aapka_aadhaar/pages/intro_carousel.dart';
 import 'package:aapka_aadhaar/services/otp_verification.dart';
 import 'package:aapka_aadhaar/widgets/progress_dialog.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -90,6 +91,20 @@ class _LoginPageState extends State<LoginPage> {
             padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
             child: Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => IntroCarousel()));
+                      },
+                      icon: Icon(Icons.info_outline),
+                    )
+                  ],
+                ),
                 SizedBox(
                   height: 18,
                 ),
